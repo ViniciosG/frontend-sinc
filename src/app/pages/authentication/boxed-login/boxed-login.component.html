@@ -69,19 +69,18 @@
 						</mat-form-field>
 
 						<div class="d-flex align-items-center m-b-12">
-							<!-- <mat-checkbox color="primary">Remember this Device</mat-checkbox>
-              <a
-                [routerLink]="['/authentication/boxed-forgot-pwd']"
-                class="text-primary f-w-600 text-decoration-none m-l-auto f-s-14"
-                >Forgot Password ?</a
-              > -->
+							<div class="d-flex align-items-center m-b-12">
+								<mat-checkbox color="primary" formControlName="rememberMe" (change)="toggleRememberMe()">Lembrar-me
+								  neste dispositivo</mat-checkbox>
+							  </div>
 						</div>
 						<button [class.spinner]="loading"
 							[disabled]="loading"
 							[disabled]="!form.valid"
 							mat-flat-button
 							color="primary"
-							class="w-100">
+							class="w-100"
+							(click)="authenticationUser()">
 							Entrar
 						</button>
 						<!-- input -->

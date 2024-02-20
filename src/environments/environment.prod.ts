@@ -1,5 +1,5 @@
 
-const VERSION = 'tags/v1'
+const VERSION = '/v1'
 const HTTP ='https://'
 const SERVER = 'engendra.com.br/sinc/api/'
 const PORT = ''
@@ -12,4 +12,14 @@ export const environment = {
   apiUrlApp: BASE_URL_APP,
   apiUrlLogin: BASE_URL_LOGIN
 };
+
+export const cookieOptions: any = {
+  expires: null,
+  path: null,
+  domain: null,
+  secure: true,
+  sameSite: 'Strict'
+}
+
+export const nameCookieAccessToken = "sessionTokenCookie";
 

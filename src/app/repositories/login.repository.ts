@@ -1,0 +1,16 @@
+import { Injectable } from '@angular/core';
+
+import { HttpClient } from '@angular/common/http';
+import { UsersModel } from '../pages/authentication/model/users.model';
+import { CrudRepository } from './crud.repository';
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LoginRepository extends CrudRepository<UsersModel> {
+  constructor(http: HttpClient) {
+    super(http, "login");
+  }
+}
+
