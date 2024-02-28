@@ -6,14 +6,14 @@ import {
   HttpRequest
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../service/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router,) { }
+
+  constructor(private authService: AuthService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
@@ -24,9 +24,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
       if (isTokenExpired) {
         this.authService.doLogout();
-
       } else {
-
+console.log("passou no interceptor")
         req = req.clone({
           setHeaders: {
             Authorization: authToken,

@@ -43,15 +43,15 @@ export abstract class CrudRepository<T> {
     return this.http.put<T>(`${this.apiUrl}/${this.endpoint}/${id}/goals`, item);
   }
 
-  getProductsSold(registerInitial: string, registerFinal: string, limit: number, offset: number,): Observable<any> {
-    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?register_initial=${registerInitial}&register_final=${registerFinal}&_limit=${limit}&_offset=${offset}`);
+  getGoalsBySellers(registerInitial: string, registerFinal: string): Observable<any> {
+    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}`);
   }
 
   getProductsSoldMarketplace(registerInitial: string, registerFinal: string, _limit: number, offset: number, _sort: string, marketplace_id: number): Observable<any> {
-    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?register_initial=${registerInitial}&register_final=${registerFinal}&_limit=${_limit}&_offset=${offset}&_sort=${_sort}&marketplace_id=${marketplace_id}`);
+    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_limit=${_limit}&_offset=${offset}&_sort=${_sort}&marketplace_id=${marketplace_id}`);
   }
 
-  getOrderByMarketplaces(registerInitial: string, registerFinal: string, _sort: string): Observable<any> {
+  getMarket(registerInitial: string, registerFinal: string, _sort: string): Observable<any> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?register_initial=${registerInitial}&register_final=${registerFinal}&_sort=${_sort}`);
   }
 

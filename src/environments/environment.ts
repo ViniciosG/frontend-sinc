@@ -16,7 +16,7 @@
 
 const VERSION = 'v1'
 const HTTP ='http://'
-const SERVER = 'www2.engendra.com.br/'
+const SERVER = 'www2.engendra.com.br:3001/'
 const PORT = ''
 const BASE_URL_APP = HTTP + SERVER + PORT + VERSION;
 const BASE_URL = HTTP + SERVER + PORT;

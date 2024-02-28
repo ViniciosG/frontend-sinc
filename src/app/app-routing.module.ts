@@ -16,6 +16,11 @@ const routes: Routes = [
         pathMatch: 'full',
       },
       {
+        path: 'sellers',
+        loadChildren: () =>
+          import('./pages/sinc/sinc.module').then((m) => m.SincModule),
+      },
+      {
         path: 'starter',
         loadChildren: () =>
           import('./pages/pages.module').then((m) => m.PagesModule),
