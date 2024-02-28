@@ -1,20 +1,20 @@
+import { CommonModule, NgForOf } from '@angular/common';
 import {
   Component,
-  Output,
   EventEmitter,
   Input,
+  Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { CoreService } from 'src/app/services/core.service';
+import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { navItems } from '../sidebar/sidebar-data';
+import { RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
-import { MaterialModule } from 'src/app/material.module';
-import { RouterModule } from '@angular/router';
-import { CommonModule, NgForOf } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { NgScrollbarModule } from 'ngx-scrollbar';
+import { MaterialModule } from 'src/app/material.module';
+import { CoreService } from 'src/app/services/core.service';
+import { navItems } from '../sidebar/sidebar-data';
 
 
 interface notifications {
@@ -60,7 +60,8 @@ export class HeaderComponent {
   @Output() toggleMobileNav = new EventEmitter<void>();
   @Output() toggleMobileFilterNav = new EventEmitter<void>();
   @Output() toggleCollapsed = new EventEmitter<void>();
-
+  @Output() doLogout = new EventEmitter<void>();
+  
   showFiller = false;
 
   public selectedLanguage: any = {
@@ -110,6 +111,10 @@ export class HeaderComponent {
     });
   }
 
+  makeLogout() {
+    this.doLogout.emit();
+  }
+
   changeLanguage(lang: any): void {
     this.translate.use(lang.code);
     this.selectedLanguage = lang;
@@ -149,27 +154,27 @@ export class HeaderComponent {
   ];
 
   profiledd: profiledd[] = [
-    {
-      id: 1,
-      img: '/assets/images/svgs/icon-account.svg',
-      title: 'My Profile',
-      subtitle: 'Account Settings',
-      link: '/',
-    },
-    {
-      id: 2,
-      img: '/assets/images/svgs/icon-inbox.svg',
-      title: 'My Inbox',
-      subtitle: 'Messages & Email',
-      link: '/apps/email/inbox',
-    },
-    {
-      id: 3,
-      img: '/assets/images/svgs/icon-tasks.svg',
-      title: 'My Tasks',
-      subtitle: 'To-do and Daily Tasks',
-      link: '/apps/taskboard',
-    },
+    // {
+    //   id: 1,
+    //   img: '/assets/images/svgs/icon-account.svg',
+    //   title: 'My Profile',
+    //   subtitle: 'Account Settings',
+    //   link: '/',
+    // },
+    // {
+    //   id: 2,
+    //   img: '/assets/images/svgs/icon-inbox.svg',
+    //   title: 'My Inbox',
+    //   subtitle: 'Messages & Email',
+    //   link: '/apps/email/inbox',
+    // },
+    // {
+    //   id: 3,
+    //   img: '/assets/images/svgs/icon-tasks.svg',
+    //   title: 'My Tasks',
+    //   subtitle: 'To-do and Daily Tasks',
+    //   link: '/apps/taskboard',
+    // },
   ];
 
   apps: apps[] = [

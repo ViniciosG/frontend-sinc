@@ -1,15 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { AppBoxedForgotPasswordComponent } from './boxed-forgot-password/boxed-forgot-password.component';
 import { AppBoxedLoginComponent } from './boxed-login/boxed-login.component';
-import { AppBoxedRegisterComponent } from './boxed-register/boxed-register.component';
-import { AppBoxedTwoStepsComponent } from './boxed-two-steps/boxed-two-steps.component';
 import { AppErrorComponent } from './error/error.component';
-import { AppMaintenanceComponent } from './maintenance/maintenance.component';
-import { AppSideForgotPasswordComponent } from './side-forgot-password/side-forgot-password.component';
-import { AppSideLoginComponent } from './side-login/side-login.component';
-import { AppSideRegisterComponent } from './side-register/side-register.component';
-import { AppSideTwoStepsComponent } from './side-two-steps/side-two-steps.component';
 
 export const AuthenticationRoutes: Routes = [
   {
@@ -37,10 +29,10 @@ export const AuthenticationRoutes: Routes = [
       //   path: 'boxed-two-steps',
       //   component: AppBoxedTwoStepsComponent,
       // },
-      // {
-      //   path: 'error',
-      //   component: AppErrorComponent,
-      // },
+      {
+        path: 'error',
+        component: AppErrorComponent,
+      },
       // {
       //   path: 'maintenance',
       //   component: AppMaintenanceComponent,

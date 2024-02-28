@@ -214,7 +214,7 @@
   <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
     <ng-scrollbar
       class="position-relative"
-      style="height: 647px"
+      style="height: 250px"
     >
       <div class="p-x-32 p-y-16">
         <h6 class="f-s-16 f-w-600 m-0">User Profile</h6>
@@ -261,7 +261,7 @@
         </a>
 
         <!-- upgrade -->
-        <div
+        <!-- <div
           class="p-24 overflow-hidden bg-light-primary rounded position-relative m-y-16"
         >
           <div class="d-flex align-items-center">
@@ -280,16 +280,15 @@
               />
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="p-y-12 p-x-32">
         <a
-          [routerLink]="['/authentication/side-login']"
+        (click)="makeLogout()"
           mat-stroked-button
           color="primary"
-          class="w-100"
-          >Logout</a
+          class="w-100">Sair</a
         >
       </div>
     </ng-scrollbar>

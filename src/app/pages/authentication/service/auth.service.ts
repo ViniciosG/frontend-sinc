@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject, throwError } from 'rxjs';
-import { UsersModel } from '../model/users.model';
 import { LoginRepository } from 'src/app/repositories/login.repository';
 import { cookieOptions, nameCookieAccessToken } from 'src/environments/environment';
+import { UsersModel } from '../model/users.model';
 
 @Injectable({
   providedIn: 'root',
@@ -29,12 +29,10 @@ export class AuthService {
     this.authService.post(user).subscribe({
       next: (res: any) => {
         this.cookieService.set(nameCookieAccessToken, res.authorization, cookieOptions);
-        this.router.navigate(['/dashboards/home']);
+        this.router.navigate(['/dashboards/dashboard1']);
       },
       error: () => {
-        console.log("teste errado")
         this.removeAccessTokenFromCookie();
-        //window.location.reload();
         this.setError(true);
       },
     });
@@ -57,7 +55,7 @@ export class AuthService {
   doLogout() {
     let removeToken = this.removeAccessTokenFromCookie();
     if (removeToken === undefined) {
-      this.router.navigate(['/authentication/side-login']);
+      this.router.navigate(['/authentication/login']);
     } else {
       window.location.reload();
     }
@@ -109,6 +107,16 @@ export class AuthService {
   }
 
   removeAccessTokenFromCookie(): void {
+    this.limparTodosOsCookies();
     return this.cookieService.delete(nameCookieAccessToken);
   }
+
+  limparTodosOsCookies() {
+    const cookies: {} = this.cookieService.getAll();
+    for (const cookieName in cookies) {
+        if (cookies.hasOwnProperty(cookieName)) {
+            this.cookieService.delete(cookieName);
+        }
+    }
+}
 }
