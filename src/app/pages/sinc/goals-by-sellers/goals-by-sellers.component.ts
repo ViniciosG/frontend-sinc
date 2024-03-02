@@ -151,7 +151,6 @@ export class GoalsBySellersComponent implements OnInit {
         this.goals = resp;
 
         if (!isEqual(this.SALVAR_RESPOSTA, this.goals)) {
-          console.log("ATUALIZANDO...")
           takeUntil(this.destroy$)
           this.SALVAR_RESPOSTA = resp;
           this.graficos = [];

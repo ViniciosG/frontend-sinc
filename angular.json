@@ -31,9 +31,9 @@
             "styles": [
               "src/styles.scss",
               "src/assets/scss/style.scss",
-              "node_modules/angular-calendar/css/angular-calendar.css",
+              "node_modules/angular-calendar/css/angular-calendar.css"
             ],
-            "scripts": []
+            "scripts": ["node_modules/echarts/dist/echarts.min.js"]
           },
           "configurations": {
             "production": {

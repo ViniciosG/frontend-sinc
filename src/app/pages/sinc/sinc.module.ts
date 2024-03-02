@@ -10,6 +10,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import * as TablerIcons from 'angular-tabler-icons/icons';
 
 import { GoalsBySellersComponent } from './goals-by-sellers/goals-by-sellers.component';
+import { ProductsSoldComponent } from './products-sold/products-sold.component';
 import { SincRoutes } from './sinc.routing';
 
 @NgModule({
@@ -21,7 +22,8 @@ import { SincRoutes } from './sinc.routing';
     MaterialModule,
     TablerIconsModule.pick(TablerIcons),
     MatNativeDateModule,
-    GoalsBySellersComponent
+    GoalsBySellersComponent,
+    ProductsSoldComponent
   ],
 })
 export class SincModule {}

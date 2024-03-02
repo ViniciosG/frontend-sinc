@@ -27,6 +27,7 @@
     "angular-tabler-icons": "^2.7.0",
     "apexcharts": "^3.46.0",
     "date-fns": "^2.29.3",
+    "echarts": "^5.5.0",
     "lodash": "^4.17.21",
     "ng-apexcharts": "^1.7.6",
     "ng2-search-filter": "^0.5.1",
