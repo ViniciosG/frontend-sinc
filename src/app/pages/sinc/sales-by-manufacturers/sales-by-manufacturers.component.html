@@ -1,0 +1,156 @@
+<mat-accordion>
+	<mat-panel-title class="f-w-600 f-s-16">Filtros</mat-panel-title>
+
+	<div class="row">
+		<div class="col-lg-6 col-sm-6">
+			<div class="row">
+				<div class="col-sm-4 d-flex align-items-center justify-content-end">
+					<mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">Quantidade</mat-label>
+				</div>
+				<div class="col-sm-8">
+					<mat-form-field appearance="outline"
+						class="w-10">
+						<mat-select [value]="5"
+							[(ngModel)]="selectValue"
+							(ngModelChange)="onSelectChange($event)"
+							placeholder="Ranking">
+							<mat-option *ngFor="let month of options"
+								[value]="month.value">
+								{{ month.viewValue }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 d-flex align-items-center justify-content-end">
+					<mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">Data Início</mat-label>
+				</div>
+				<div class="col-sm-8">
+					<mat-form-field appearance="outline"
+						class="w-100">
+						<input [matDatepicker]="startDatePicker"
+							[(ngModel)]="startDate"
+							[matDatepickerFilter]="dateFilter"
+							(dateChange)="onDateChangeInitial($event)"
+							matInput
+							placeholder="Data início">
+						<mat-datepicker-toggle [for]="startDatePicker"
+							matSuffix></mat-datepicker-toggle>
+						<mat-datepicker #startDatePicker></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 d-flex align-items-center justify-content-end">
+					<mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">Data Fim</mat-label>
+				</div>
+				<div class="col-sm-8">
+					<mat-form-field appearance="outline"
+						class="w-100">
+						<input [matDatepicker]="endDatePicker"
+							[(ngModel)]="endDate"
+							[matDatepickerFilter]="dateFilter"
+							(dateChange)="onDateChangeFinal($event)"
+							matInput
+							placeholder="Data final">
+						<mat-datepicker-toggle [for]="endDatePicker"
+							matSuffix></mat-datepicker-toggle>
+						<mat-datepicker #endDatePicker></mat-datepicker>
+					</mat-form-field>
+				</div>
+			</div>
+			<!-- <div class="row">
+				<div class="col-sm-8">
+					<mat-radio-group aria-label="Select an option"
+						class="m-t-8">
+						<mat-radio-button value="1"
+							color="primary">
+							Home (All day delivery)
+						</mat-radio-button>
+						<mat-radio-button value="2"
+							color="primary">
+							Office (Delivery between 10 AM - 5 PM)
+						</mat-radio-button>
+					</mat-radio-group>
+				</div>
+			</div> -->
+		</div>
+		<div class="col-lg-6 col-sm-6">
+			<div class="row">
+				<div class="col-sm-4 d-flex align-items-center justify-content-end">
+					<mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">Phone</mat-label>
+				</div>
+				<div class="col-sm-8">
+					<mat-form-field appearance="outline"
+						class="w-100">
+						<input matInput
+							placeholder="123 4561 213">
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 d-flex align-items-center justify-content-end">
+					<mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">Pincode</mat-label>
+				</div>
+				<div class="col-sm-8">
+					<mat-form-field appearance="outline"
+						class="w-100">
+						<input matInput
+							placeholder="630012">
+					</mat-form-field>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-4 d-flex align-items-center justify-content-end">
+					<mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">Landmark</mat-label>
+				</div>
+				<div class="col-sm-8">
+					<mat-form-field appearance="outline"
+						class="w-100">
+						<input matInput
+							placeholder="Nr. wall street">
+					</mat-form-field>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</mat-accordion>
+
+<div class="d-flex align-items-center justify-content-between">
+
+	
+	<h4 class="mat-headline-6 m-y-24">Gráficos</h4>
+
+	<div class="d-flex flex-column align-items-center justify-content-center">
+		<span class="mat-subtitle-2">
+		  Faturamento total dos itens listados:
+		</span>
+		<h5 class="mat-body-2 f-w-700 m-t-4">{{totalValue}}</h5>
+	  </div>
+	<div>
+		<b>De:</b>
+		{{inititalContext}}
+		<b>à</b>
+		{{endContext}}
+	</div>
+</div>
+
+<mat-card class="cardWithShadow theme-card">
+	<mat-tab-group mat-stretch-tabs="false"
+		mat-align-tabs="start"
+		animationDuration="0ms">
+		<mat-tab label="Valor">
+			<mat-card-content>
+				<div id="grafico-echarts"
+					style="height: 400px; width: 100%;"></div>
+			</mat-card-content>
+		</mat-tab>
+		<mat-tab label="Quantidade">
+
+			<mat-card-content></mat-card-content>
+		</mat-tab>
+	</mat-tab-group>
+</mat-card>
+

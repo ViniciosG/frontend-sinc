@@ -8,26 +8,27 @@ import { isEqual } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 import { option } from 'src/app/interfaces/options';
 import { MaterialModule } from 'src/app/material.module';
-import { ProductsSoldModel } from 'src/app/models/products-sold.model';
-import { ProductsSoldsRepository } from 'src/app/repositories/products-sold.repository';
+import { SalesByManufacturersModel } from 'src/app/models/sales-by-manufacturers.model';
+import { SalesByManufacturersRepository } from 'src/app/repositories/sales-by-manufacturers.repsository';
 
 @Component({
-  selector: 'app-products-sold',
+  selector: 'app-sales-by-manufacturers',
   standalone: true,
   imports: [MaterialModule, CommonModule, FormsModule],
-  templateUrl: './products-sold.component.html',
-  styleUrls: ['./products-sold.component.css']
+  templateUrl: './sales-by-manufacturers.component.html',
+  styleUrls: ['./sales-by-manufacturers.component.css']
 })
-export class ProductsSoldComponent implements OnInit {
+export class SalesByManufacturersComponent implements OnInit {
+
   private destroy$: Subject<void> = new Subject<void>();
-  showValue: boolean = true;
+
   startDate: Date = new Date();
   endDate: Date = new Date();
-  products: ProductsSoldModel;
+  manufacturers: SalesByManufacturersModel;
   date_inital: string;
   date_final: string;
   inititalContext: string;
-  endContext: string
+  endContext: string;
   SALVAR_RESPOSTA: any;
   option: any;
   totalValue: string;
@@ -44,7 +45,7 @@ export class ProductsSoldComponent implements OnInit {
 
 
 
-  constructor(private repository: ProductsSoldsRepository) {
+  constructor(private repository: SalesByManufacturersRepository) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -65,18 +66,18 @@ export class ProductsSoldComponent implements OnInit {
   }
 
   obterDadosERenderizarGrafico() {
-    this.repository.getProductsSold(this.date_inital, this.date_final, this.selectValue, "DESC", "value").subscribe({
+    this.repository.getSalesByManufacturers(this.date_inital, this.date_final, this.selectValue, "DESC", "value").subscribe({
       next: resp => {
-        this.products = resp;
+        this.manufacturers = resp;
   
-        if (!isEqual(this.SALVAR_RESPOSTA, this.products)) {
+        if (!isEqual(this.SALVAR_RESPOSTA, this.manufacturers)) {
           takeUntil(this.destroy$)
           this.SALVAR_RESPOSTA = resp;
-          const value = this.products.items.reduce((total, item) => total + item.value, 0);
+          const value = this.manufacturers.items.reduce((total, item) => total + item.value, 0);
 
           this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   
-          this.executar(this.products.items);
+          this.executar(this.manufacturers.items);
 
         }
       },
@@ -90,7 +91,7 @@ export class ProductsSoldComponent implements OnInit {
     items.sort((a: any, b: any) => a.value - b.value);
 
     const ultimoElemento = items[items.length - 1];
-console.log(items)  
+
     const opcoes: echarts.EChartsOption = {
       dataset: {
         source: items
@@ -116,7 +117,7 @@ console.log(items)
       }],
       yAxis: { 
         type: 'category', 
-        data: items.map((item: any) => ({ value: item.productName, textStyle: { fontWeight: 'bold' } })) 
+        data: items.map((item: any) => ({ value: item.manufacturerName, textStyle: { fontWeight: 'bold' } })) 
       },
       visualMap: {
         orient: 'horizontal',
@@ -134,7 +135,7 @@ console.log(items)
           barWidth: 0, 
           encode: {
             x: 'value', 
-            y: 'productName' 
+            y: 'manufacturerName' 
           },
         }
       ],
@@ -196,4 +197,5 @@ console.log(items)
       meuGrafico.resize();
     }
   }
-  }
+
+}
