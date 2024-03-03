@@ -5,6 +5,7 @@ import { NewCustomersPerSellersComponent } from './new-customers-per-sellers/new
 import { ProductsSoldComponent } from './products-sold/products-sold.component';
 import { SalesByDayOfWeekComponent } from './sales-by-day-of-week/sales-by-day-of-week.component';
 import { SalesByManufacturersComponent } from './sales-by-manufacturers/sales-by-manufacturers.component';
+import { SalesByMonthComponent } from './sales-by-month/sales-by-month.component';
 
 // Forms
 
@@ -72,6 +73,17 @@ export const SincRoutes: Routes = [
         component: SalesByDayOfWeekComponent,
         data: {
           title: 'Vendas / Dia da Semana',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Sales' },
+          ],
+        },
+      },
+      {
+        path: 'salesByMonth',
+        component: SalesByMonthComponent,
+        data: {
+          title: 'Vendas / Mês',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Sales' },

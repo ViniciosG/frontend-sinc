@@ -15,6 +15,7 @@ import { NewCustomersPerSellersComponent } from './new-customers-per-sellers/new
 import { ProductsSoldComponent } from './products-sold/products-sold.component';
 import { SalesByDayOfWeekComponent } from './sales-by-day-of-week/sales-by-day-of-week.component';
 import { SalesByManufacturersComponent } from './sales-by-manufacturers/sales-by-manufacturers.component';
+import { SalesByMonthComponent } from './sales-by-month/sales-by-month.component';
 import { SincRoutes } from './sinc.routing';
 
 @NgModule({
@@ -31,7 +32,8 @@ import { SincRoutes } from './sinc.routing';
     NewCustomersPerSellersComponent,
     NewCustomersPerMonthComponent,
     SalesByManufacturersComponent,
-    SalesByDayOfWeekComponent
+    SalesByDayOfWeekComponent,
+    SalesByMonthComponent
   ],
 })
 export class SincModule {}

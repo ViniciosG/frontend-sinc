@@ -60,6 +60,14 @@ export abstract class CrudRepository<T> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}&_limit=${limit}`);
   }
 
+  getSalesByDaysWeek(registerInitial: string, registerFinal: string): Observable<any> {
+    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}`);
+  }
+
+  getSalesByMonth(registerInitial: string, registerFinal: string): Observable<any> {
+    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}`);
+  }
+
   getNewCustomersSellers(registerInitial: string, registerFinal: string,limit:number, direction:string, sort:string, ): Observable<any> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}&_limit=${limit}`);
   }

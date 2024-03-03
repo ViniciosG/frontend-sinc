@@ -1,29 +1,29 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { subDays } from 'date-fns';
-import format from 'date-fns/format';
+import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
 import { isEqual } from 'lodash';
 import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
-import { SalesByDayOfWeekModel } from 'src/app/models/sales-by-day-of-week.model';
-import { SalesByDayOfWeekRepository } from 'src/app/repositories/sales-by-day-of-week.repository';
+import { SalesByMonthModel } from 'src/app/models/sales-by-month.model';
+import { SalesByMonthRepository } from 'src/app/repositories/sales-by-month.repository';
 
 @Component({
-  selector: 'app-sales-by-day-of-week',
+  selector: 'app-sales-by-month',
   standalone: true,
   imports: [MaterialModule, CommonModule, FormsModule],
-  templateUrl: './sales-by-day-of-week.component.html',
-  styleUrls: ['./sales-by-day-of-week.component.css']
+  templateUrl: './sales-by-month.component.html',
+  styleUrls: ['./sales-by-month.component.css']
 })
-export class SalesByDayOfWeekComponent implements OnInit {
+export class SalesByMonthComponent implements OnInit {
+
   private destroy$: Subject<void> = new Subject<void>();
 
   startDate: Date = new Date();
   endDate: Date = new Date();
-  sales: SalesByDayOfWeekModel;
+  sales: SalesByMonthModel;
   date_inital: string;
   date_final: string;
   inititalContext: string;
@@ -33,19 +33,20 @@ export class SalesByDayOfWeekComponent implements OnInit {
   totalValue: string;
   selectValue: number = 5;
 
-  constructor(private repository: SalesByDayOfWeekRepository) {
+  constructor(private repository: SalesByMonthRepository) {
     const dataAtual = new Date();
-  
-    const dataSeteDiasAtras = subDays(dataAtual, 7);
-  
-    this.startDate = dataSeteDiasAtras;
+    dataAtual.setDate(1);
+    dataAtual.setHours(0, 0, 0, 0);
+    dataAtual.setFullYear(new Date().getFullYear(), 0, 1);
+
+
+    this.startDate = dataAtual;
+
     this.endDate = new Date();
-  
+
     this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
-  
-    this.inititalContext = format(this.startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-    this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+    this.selectValue = dataAtual.getFullYear()
   }
 
   ngOnInit(): void {
@@ -53,7 +54,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
   }
 
   obterDadosERenderizarGrafico() {
-    this.repository.getSalesByDaysWeek(this.date_inital, this.date_final).subscribe({
+    this.repository.getSalesByMonth(this.date_inital, this.date_final).subscribe({
       next: resp => {
         this.sales = resp;
   
@@ -76,11 +77,11 @@ export class SalesByDayOfWeekComponent implements OnInit {
 
   executarGraficoBarras(item: any): echarts.EChartsOption {
     // Ordena os dados pelo dia da semana de forma ascendente
-    item.sort((a: any, b: any) => parseInt(a.dayOfWeek) - parseInt(b.dayOfWeek));
+    item.sort((a: any, b: any) => parseInt(a.month) - parseInt(b.month));
   
     const sourceData = item.map((data:any) => {
       return {
-        dayOfWeek: this.numeroParaDiaDaSemana(parseInt(data.dayOfWeek)),
+        month: this.numeroParaMes(parseInt(data.month)),
         value: data.value,
         qty: data.qty,
         qtyItems: data.qtyItems
@@ -125,7 +126,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
         { 
           name: 'Valor', 
           type: 'bar', 
-          encode: { x: 'dayOfWeek', y: 'value' },
+          encode: { x: 'month', y: 'value' },
           label: {
             show: true,
             position: 'top',
@@ -135,7 +136,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
         { 
           name: 'Qtd. Vendas', 
           type: 'bar', 
-          encode: { x: 'dayOfWeek', y: 'qty' }, 
+          encode: { x: 'month', y: 'qty' }, 
           yAxisIndex: 1,
           label: {
             show: true,
@@ -146,7 +147,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
         { 
           name: 'Qtd. Itens', 
           type: 'bar', 
-          encode: { x: 'dayOfWeek', y: 'qtyItems' }, 
+          encode: { x: 'month', y: 'qtyItems' }, 
           yAxisIndex: 1,
           label: {
             show: true,
@@ -182,31 +183,27 @@ export class SalesByDayOfWeekComponent implements OnInit {
     return option;
 }
 
-  
-  
+numeroParaMes(numero: number): string {
+  const data = parse(`${numero}/2024`, 'MM/yyyy', new Date());
+  return format(data, 'MMMM', { locale: ptBR });
+}
 
-  numeroParaDiaDaSemana(numero: number): string {
-    const diasDaSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
-    return diasDaSemana[numero - 1]; // Subtrai 1 porque os dias da semana normalmente começam em 0 (Domingo)
+
+
+
+@HostListener('window:resize', ['$event'])
+onResize(event: any) {
+  this.atualizarGrafico();
+}
+
+
+
+atualizarGrafico() {
+  const elementoGrafico = document.getElementById('grafico-echarts');    
+  if (elementoGrafico) {
+    const meuGrafico = echarts.init(elementoGrafico);
+    meuGrafico.resize();
   }
-  
-  
-  
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.atualizarGrafico();
-  }
-
-
-
-  atualizarGrafico() {
-    const elementoGrafico = document.getElementById('grafico-echarts');    
-    if (elementoGrafico) {
-      const meuGrafico = echarts.init(elementoGrafico);
-      meuGrafico.resize();
-    }
-  }
-  
+}
 
 }
