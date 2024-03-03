@@ -48,6 +48,10 @@ export abstract class CrudRepository<T> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}`);
   }
 
+  getNewCustomersMonth(registerInitial: string, registerFinal: string): Observable<any> {
+    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}`);
+  }
+
   getProductsSold(registerInitial: string, registerFinal: string,limit:number, direction:string, sort:string, ): Observable<any> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}&_limit=${limit}`);
   }

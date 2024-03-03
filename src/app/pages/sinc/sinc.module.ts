@@ -10,6 +10,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import * as TablerIcons from 'angular-tabler-icons/icons';
 
 import { GoalsBySellersComponent } from './goals-by-sellers/goals-by-sellers.component';
+import { NewCustomersPerMonthComponent } from './new-customers-per-month/new-customers-per-month.component';
 import { NewCustomersPerSellersComponent } from './new-customers-per-sellers/new-customers-per-sellers.component';
 import { ProductsSoldComponent } from './products-sold/products-sold.component';
 import { SincRoutes } from './sinc.routing';
@@ -25,7 +26,8 @@ import { SincRoutes } from './sinc.routing';
     MatNativeDateModule,
     GoalsBySellersComponent,
     ProductsSoldComponent,
-    NewCustomersPerSellersComponent
+    NewCustomersPerSellersComponent,
+    NewCustomersPerMonthComponent
   ],
 })
 export class SincModule {}
