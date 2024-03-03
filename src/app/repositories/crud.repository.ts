@@ -16,6 +16,7 @@ export abstract class CrudRepository<T> {
   protected brands = "marketplaces";
   protected product = "products";
   protected logs = "logs";
+  protected asc = "asc"
 
   constructor(protected http: HttpClient, protected endpoint: String) { }
 
@@ -45,6 +46,10 @@ export abstract class CrudRepository<T> {
 
   getGoalsBySellers(registerInitial: string, registerFinal: string): Observable<any> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}`);
+  }
+
+  getProductsSold(registerInitial: string, registerFinal: string,limit:number, direction:string, sort:string, ): Observable<any> {
+    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}&_limit=${limit}`);
   }
 
   getProductsSoldMarketplace(registerInitial: string, registerFinal: string, _limit: number, offset: number, _sort: string, marketplace_id: number): Observable<any> {
