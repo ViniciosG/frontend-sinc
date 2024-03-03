@@ -1,3 +1,41 @@
-<p>
-  new-customers-per-sellers works!
-</p>
+<mat-card class="cardWithShadow">
+  <mat-card-content class="p-y-30">
+    <div class="d-flex align-items-center justify-content-between">
+
+	
+      <mat-card-title>Vendedor</mat-card-title>
+
+    
+      <div class="d-flex flex-column align-items-center justify-content-center">
+        <mat-card-title>Novos clientes</mat-card-title>
+        </div>
+      <!-- <div>
+        <b>De:</b>
+        {{inititalContext}}
+        <b>à</b>
+        {{endContext}}
+      </div> -->
+    </div>
+    <div *ngFor="let item of customers.items" class="m-t-32">
+      <div class="d-flex align-items-center m-b-24">
+        <span
+        [style.background-color]="item.color"
+        class="text-white rounded icon-40 d-flex align-items-center justify-content-center"
+      >
+        <div>{{ item.index }}</div>
+      </span>
+
+        <div class="m-l-16 m-r-auto">
+          <h6 class="mat-subtitle-1 f-s-16 f-w-600">{{ item.sellerName }}</h6>
+          <!-- <span class="mat-body-1">{{ stat.subtitle }}</span> -->
+        </div>
+        <span  class="bg-light-success text-success rounded f-w-600 p-6 p-y-4 f-s-12"> +{{ item.qty }} </span>
+        
+      </div>
+    </div>
+
+    <button mat-stroked-button color="primary" class="w-100 m-t-8">
+      View all Transctions
+    </button>
+  </mat-card-content>
+</mat-card>

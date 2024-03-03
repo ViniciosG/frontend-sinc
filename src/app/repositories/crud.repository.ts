@@ -52,6 +52,10 @@ export abstract class CrudRepository<T> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}&_limit=${limit}`);
   }
 
+  getNewCustomersSellers(registerInitial: string, registerFinal: string,limit:number, direction:string, sort:string, ): Observable<any> {
+    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}&_limit=${limit}`);
+  }
+
   getProductsSoldMarketplace(registerInitial: string, registerFinal: string, _limit: number, offset: number, _sort: string, marketplace_id: number): Observable<any> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_limit=${_limit}&_offset=${offset}&_sort=${_sort}&marketplace_id=${marketplace_id}`);
   }

@@ -22,6 +22,7 @@ import { FullComponent } from './layouts/full/full.component';
 
 import { FilterPipe } from './pipe/filter.pipe';
 
+import { CommonModule } from '@angular/common';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -43,6 +44,7 @@ export function HttpLoaderFactory(http: HttpClient): any {
     HttpClientModule,
     BrowserAnimationsModule,
     FormsModule,
+    CommonModule,
     ReactiveFormsModule,
     MaterialModule,
     TablerIconsModule.pick(TablerIcons),
