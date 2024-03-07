@@ -56,12 +56,17 @@ export abstract class CrudRepository<T> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}&_limit=${limit}`);
   }
 
+  getSalesByStates(registerInitial: string, registerFinal: string, direction:string, sort:string,): Observable<any> {
+    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}`);
+  }
+
   getSalesByManufacturers(registerInitial: string, registerFinal: string,limit:number, direction:string, sort:string, ): Observable<any> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}&_limit=${limit}`);
   }
 
-  getSalesByDaysWeek(registerInitial: string, registerFinal: string): Observable<any> {
-    return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}`);
+  getSalesByDaysWeek(params: any): Observable<any> {
+    const queryString = this.serializeParams(params);
+    return this.http.get<any>(`${this.apiUrl}/${this.endpoint}?${queryString}`);
   }
 
   getSalesByMonth(registerInitial: string, registerFinal: string): Observable<any> {
@@ -123,27 +128,10 @@ export abstract class CrudRepository<T> {
     return this.http.put<T>(`${this.apiUrl}/${this.endpoint}/${id}/sendPlatform?marketplace_id=${marletplace_id}`, item);
   }
 
-  // public getAllMarketplaces(): Observable<T[]> {
-  //   return this.http.get<T[]>(`${this.apiUrl}/${this.endpoint_marketplaces}`);
-  // }
 
-  // public getAllSubCategories(internal_id: string): Observable<T[]> {
-  //   return this.http.get<T[]>(`${this.apiUrl}/${this.endpoint_marketplaces}?father_id=${internal_id}`);
-  // }
-
-  etLabelsForMonths() {
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth();
-
-    const labels = [];
-
-    for (let month = 0; month <= currentMonth; month++) {
-      const date = new Date(currentYear, month, 1);
-      const monthName = date.toLocaleString('default', { month: 'long' });
-      labels.push(`${monthName}`);
-    }
-
-    return labels;
+  private serializeParams(params: any): string {
+    return Object.keys(params)
+      .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`)
+      .join('&');
   }
 }

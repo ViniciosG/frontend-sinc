@@ -1,0 +1,34 @@
+<mat-accordion>
+  <mat-panel-title class="f-w-600 f-s-16">Filtros</mat-panel-title>
+
+  <div class="row">
+    <!-- Adicionando os campos "Quantidade" e "Data Início" -->
+    <div class="col-lg-4 col-sm-4" *ngFor="let campo of camposFiltro">
+      <div class="row" *ngIf="campo.visivel">
+        <div class="col-sm-4 d-flex align-items-center justify-content-end">
+          <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">{{ campo.label }}</mat-label>
+        </div>
+        <div class="col-sm-8">
+          
+          <mat-form-field appearance="outline" class="w-100" *ngIf="campo.type === 'select'">
+              <mat-select [(ngModel)]="campo.value" placeholder="{{ campo.placeholder }}">
+                <mat-option *ngFor="let option of campo.options" [value]="option.value">
+                  {{ option.viewValue }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100" *ngIf="campo.type === 'date'">
+              <input  [matDatepicker]="startDatePicker" [matDatepickerFilter]="dateFilter" matInput [(ngModel)]="campo.value" [placeholder]="campo.placeholder">
+              <mat-datepicker-toggle [for]="startDatePicker"
+							matSuffix></mat-datepicker-toggle>
+						<mat-datepicker #startDatePicker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100" *ngIf="campo.type === 'text'">
+              <input matInput [(ngModel)]="campo.value" [placeholder]="campo.placeholder">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-accordion>

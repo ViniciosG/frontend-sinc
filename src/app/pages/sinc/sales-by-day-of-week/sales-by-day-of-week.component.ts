@@ -10,11 +10,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { SalesByDayOfWeekModel } from 'src/app/models/sales-by-day-of-week.model';
 import { SalesByDayOfWeekRepository } from 'src/app/repositories/sales-by-day-of-week.repository';
+import { FiltersComponent } from '../components/filters/filters.component';
 
 @Component({
   selector: 'app-sales-by-day-of-week',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule],
+  imports: [MaterialModule, CommonModule, FormsModule, FiltersComponent],
   templateUrl: './sales-by-day-of-week.component.html',
   styleUrls: ['./sales-by-day-of-week.component.css']
 })
@@ -32,6 +33,36 @@ export class SalesByDayOfWeekComponent implements OnInit {
   option: any;
   totalValue: string;
   selectValue: number = 5;
+  params: any;
+
+
+  // camposFiltro = [
+  //   { label: 'Quantidade Itens', placeholder: 'Quantidade Itens', visivel: true },
+  //   { label: 'Quantidade Vendas', placeholder: 'Quantidade Vendas', visivel: true },
+  //   { label: 'Valor', placeholder: 'Valor', visivel: true },
+  //   { label: 'Vendedor', placeholder: 'Vendedor', visivel: true },
+  //   { label: 'Tipo Vendedor', placeholder: 'Tipo Vendedor', visivel: true }, 
+  //   { label: 'Direção', placeholder: 'Direção', visivel: true },
+  //   { label: 'Data Inicial', placeholder: 'Data Inicial', visivel: true },
+  //   { label: 'Data Final', placeholder: 'Data Final', visivel: true },
+  //   { label: 'Campo', placeholder: 'Campo', visivel: true }, 
+  //   { label: 'Limite', placeholder: 'Limite', visivel: true }, 
+
+  // ];
+
+  camposFiltro = [
+    { label: 'Quantidade', placeholder: 'Quantidade', type: 'text', visivel: true, value: 5 },
+    { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: new Date() },
+    { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: new Date() },
+    { label: 'Vendedor', placeholder: 'Selecione o vendedor', type: 'select', visivel: true, value: '', 
+      options: [ 
+        { value: 'vendedor1', viewValue: 'Vendedor 1' },
+        { value: 'vendedor2', viewValue: 'Vendedor 2' },
+        { value: 'vendedor3', viewValue: 'Vendedor 3' }
+      ]
+    }
+    // Adicione os outros campos de filtro aqui conforme necessário
+  ];
 
   constructor(private repository: SalesByDayOfWeekRepository) {
     const dataAtual = new Date();
@@ -46,14 +77,42 @@ export class SalesByDayOfWeekComponent implements OnInit {
   
     this.inititalContext = format(this.startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+
+    this.params = {
+      registerInitial: this.date_inital,
+      registerFinal:  this.date_final,
+    }
   }
+  
 
   ngOnInit(): void {
     this.obterDadosERenderizarGrafico();
   }
 
+  onFiltroAlterado(event: any) {
+    console.log('Filtro alterado:', event.campo.label, 'Valor:', event.valor);
+    
+    this.params = {
+      qtyItems: 5,
+      qty: 10,
+      value: 100,
+      sellerName: 'Nome do vendedor',
+      sellerType: 'Tipo do vendedor',
+      _sort: 'dayOfWeek',
+      _direction: 'ASC',
+      registerInitial: '2024-02-25T13:53:23-03:00',
+      registerFinal: '2024-03-03T13:53:23-03:00',
+      _limit: 5
+    };
+
+    this.obterDadosERenderizarGrafico();
+
+  }
+
+
+
   obterDadosERenderizarGrafico() {
-    this.repository.getSalesByDaysWeek(this.date_inital, this.date_final).subscribe({
+    this.repository.getSalesByDaysWeek(this.params).subscribe({
       next: resp => {
         this.sales = resp;
   

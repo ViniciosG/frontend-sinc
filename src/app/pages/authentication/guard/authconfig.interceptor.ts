@@ -25,7 +25,6 @@ export class AuthInterceptor implements HttpInterceptor {
       if (isTokenExpired) {
         this.authService.doLogout();
       } else {
-console.log("passou no interceptor")
         req = req.clone({
           setHeaders: {
             Authorization: authToken,

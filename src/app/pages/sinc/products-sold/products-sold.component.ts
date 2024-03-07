@@ -89,8 +89,7 @@ export class ProductsSoldComponent implements OnInit {
   executar(items: any) {
     items.sort((a: any, b: any) => a.value - b.value);
 
-    const ultimoElemento = items[items.length - 1];
-console.log(items)  
+    const ultimoElemento = items[items.length - 1]; 
     const opcoes: echarts.EChartsOption = {
       dataset: {
         source: items
