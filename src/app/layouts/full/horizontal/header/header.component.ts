@@ -1,19 +1,19 @@
+import { NgFor, NgForOf } from '@angular/common';
 import {
   Component,
-  Output,
   EventEmitter,
   Input,
+  Output,
 } from '@angular/core';
-import { CoreService } from 'src/app/services/core.service';
+import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { navItems } from '../../vertical/sidebar/sidebar-data';
-import { TranslateService } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
+import { CoreService } from 'src/app/services/core.service';
 import { BrandingComponent } from '../../vertical/sidebar/branding.component';
-import { NgFor, NgForOf } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { navItems } from '../../vertical/sidebar/sidebar-data';
 
 
 interface notifications {

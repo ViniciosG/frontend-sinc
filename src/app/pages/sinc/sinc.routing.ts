@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { GoalsBySellersMonthComponent } from './goals-by-sellers-month/goals-by-sellers-month.component';
 import { GoalsBySellersComponent } from './goals-by-sellers/goals-by-sellers.component';
 import { NewCustomersPerMonthComponent } from './new-customers-per-month/new-customers-per-month.component';
 import { NewCustomersPerSellersComponent } from './new-customers-per-sellers/new-customers-per-sellers.component';
@@ -18,7 +19,7 @@ export const SincRoutes: Routes = [
         path: 'goalsBySellers',
         component: GoalsBySellersComponent,
         data: {
-          title: 'Sales',
+          title: 'Metas',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Sales' },
@@ -96,6 +97,17 @@ export const SincRoutes: Routes = [
         component: SalesByStatesComponent,
         data: {
           title: 'Vendas / Estado',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Sales' },
+          ],
+        },
+      },
+      {
+        path: 'goalsBySellersByMonth',
+        component: GoalsBySellersMonthComponent,
+        data: {
+          title: 'Metas / Mês',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Sales' },

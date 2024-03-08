@@ -7,7 +7,7 @@ export const navItems: NavItem[] = [
   {
     displayName: 'Diária',
     iconName: 'aperture',
-    route: '/sellers/teste',
+    route: '/sellers/goalsBySellersByMonth',
   },
   {
     displayName: 'Mensal',
@@ -25,7 +25,7 @@ export const navItems: NavItem[] = [
   {
     displayName: 'Vendas mensal',
     iconName: 'calendar-event',
-    route: 'apps/salesByMonth',
+    route: '/sellers/salesByMonth',
   },
   {
     displayName: 'Por Produtos',

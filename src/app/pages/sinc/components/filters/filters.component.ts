@@ -1,26 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 
 @Component({
   selector: 'app-filters',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule],
+  imports: [MaterialModule, CommonModule, FormsModule,TablerIconsModule],
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.css']
 })
 export class FiltersComponent implements OnInit {
   
   @Input() camposFiltro: any[] = [];
-  @Output() filtroAlterado = new EventEmitter<any>();
+  @Output() filtrosEnviados = new EventEmitter<any>();
+
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  onInputChange(event: any, campo: any) {
-    this.filtroAlterado.emit({ campo: campo, valor: event.target.value });
+  enviarFiltros() {
+    this.filtrosEnviados.emit(this.camposFiltro);
   }
 
   dateFilter = (date: Date | null): boolean => {

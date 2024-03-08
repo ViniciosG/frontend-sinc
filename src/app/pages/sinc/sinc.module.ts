@@ -12,6 +12,7 @@ import * as TablerIcons from 'angular-tabler-icons/icons';
 import * as echarts from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { FiltersComponent } from './components/filters/filters.component';
+import { GoalsBySellersMonthComponent } from './goals-by-sellers-month/goals-by-sellers-month.component';
 import { GoalsBySellersComponent } from './goals-by-sellers/goals-by-sellers.component';
 import { NewCustomersPerMonthComponent } from './new-customers-per-month/new-customers-per-month.component';
 import { NewCustomersPerSellersComponent } from './new-customers-per-sellers/new-customers-per-sellers.component';
@@ -40,6 +41,7 @@ import { SincRoutes } from './sinc.routing';
     SalesByMonthComponent,
     SalesByStatesComponent,
     FiltersComponent,
+    GoalsBySellersMonthComponent,
     NgxEchartsModule.forRoot({
       echarts
     })

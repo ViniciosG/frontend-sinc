@@ -47,20 +47,19 @@ export class SalesByDayOfWeekComponent implements OnInit {
   //   { label: 'Data Final', placeholder: 'Data Final', visivel: true },
   //   { label: 'Campo', placeholder: 'Campo', visivel: true }, 
   //   { label: 'Limite', placeholder: 'Limite', visivel: true }, 
-
+//   { label: 'Vendedor', placeholder: 'Selecione o vendedor', type: 'select', visivel: true, value: '', id: "sellerName", 
+//   options: [ 
+//     { value: 'vendedor1', viewValue: 'Vendedor 1' },
+//     { value: 'vendedor2', viewValue: 'Vendedor 2' },
+//     { value: 'vendedor3', viewValue: 'Vendedor 3' }
+//   ]
+// }
   // ];
 
   camposFiltro = [
-    { label: 'Quantidade', placeholder: 'Quantidade', type: 'text', visivel: true, value: 5 },
-    { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: new Date() },
-    { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: new Date() },
-    { label: 'Vendedor', placeholder: 'Selecione o vendedor', type: 'select', visivel: true, value: '', 
-      options: [ 
-        { value: 'vendedor1', viewValue: 'Vendedor 1' },
-        { value: 'vendedor2', viewValue: 'Vendedor 2' },
-        { value: 'vendedor3', viewValue: 'Vendedor 3' }
-      ]
-    }
+    { label: 'Quantidade', placeholder: 'Quantidade', type: 'text', visivel: true, value: 5, id: "qty" },
+    { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: new Date(), id: "registerInitial" },
+    { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: new Date(), id: "registerFinal" },
     // Adicione os outros campos de filtro aqui conforme necessário
   ];
 
@@ -89,24 +88,27 @@ export class SalesByDayOfWeekComponent implements OnInit {
     this.obterDadosERenderizarGrafico();
   }
 
-  onFiltroAlterado(event: any) {
-    console.log('Filtro alterado:', event.campo.label, 'Valor:', event.valor);
-    
-    this.params = {
-      qtyItems: 5,
-      qty: 10,
-      value: 100,
-      sellerName: 'Nome do vendedor',
-      sellerType: 'Tipo do vendedor',
-      _sort: 'dayOfWeek',
-      _direction: 'ASC',
-      registerInitial: '2024-02-25T13:53:23-03:00',
-      registerFinal: '2024-03-03T13:53:23-03:00',
-      _limit: 5
-    };
-
-    this.obterDadosERenderizarGrafico();
-
+  receberFiltros(event: any) {
+    console.log('Filtros recebidos:', event);
+  
+    // Iterar sobre os campos de filtro
+    this.camposFiltro.forEach(campo => {
+      // Verificar se o campo tem um valor e um id definido
+      if (campo.id && campo.value !== undefined) {
+        // Verificar se o campo é do tipo "date"
+        if (campo.type === 'date') {
+          // Formatando a data usando o date-fns
+          const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
+          // Atualizar o valor correspondente no objeto params com base no id do campo
+          this.params[campo.id] = dataFormatada;
+        } else {
+          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
+          this.params[campo.id] = campo.value;
+        }
+      }
+    });
+  
+    console.log('Params atualizado:', this.params);
   }
 
 

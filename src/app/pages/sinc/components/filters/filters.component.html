@@ -1,34 +1,63 @@
 <mat-accordion>
-  <mat-panel-title class="f-w-600 f-s-16">Filtros</mat-panel-title>
+	<mat-expansion-panel expanded>
+		<mat-expansion-panel-header class="f-w-600 f-s-16">Filtros</mat-expansion-panel-header>
+		<div class="row">
+			<ng-container *ngFor="let campo of camposFiltro; let i = index"
+				class="col-lg-4 col-sm-4">
+				<div *ngIf="campo.visivel"
+					[ngClass]="{'last-row': (i + 1) % 3 === 0}"
+					class="row">
+					<div class="col-sm-4 d-flex align-items-center justify-content-end">
+						<mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">{{ campo.label }}</mat-label>
+					</div>
+					<div class="col-sm-8">
+						<mat-form-field *ngIf="campo.type === 'select'"
+							appearance="outline"
+							class="w-100">
+							<mat-select [(ngModel)]="campo.value"
+								placeholder="{{ campo.placeholder }}">
+								<mat-option *ngFor="let option of campo.options"
+									[value]="option.value">
+									{{ option.viewValue }}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
 
-  <div class="row">
-    <!-- Adicionando os campos "Quantidade" e "Data Início" -->
-    <div class="col-lg-4 col-sm-4" *ngFor="let campo of camposFiltro">
-      <div class="row" *ngIf="campo.visivel">
-        <div class="col-sm-4 d-flex align-items-center justify-content-end">
-          <mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">{{ campo.label }}</mat-label>
-        </div>
-        <div class="col-sm-8">
-          
-          <mat-form-field appearance="outline" class="w-100" *ngIf="campo.type === 'select'">
-              <mat-select [(ngModel)]="campo.value" placeholder="{{ campo.placeholder }}">
-                <mat-option *ngFor="let option of campo.options" [value]="option.value">
-                  {{ option.viewValue }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+						<mat-form-field *ngIf="campo.type === 'date'"
+							appearance="outline"
+							class="w-100">
+							<input [matDatepicker]="startDatePicker"
+								[matDatepickerFilter]="dateFilter"
+								[(ngModel)]="campo.value"
+								[placeholder]="campo.placeholder"
+								matInput>
+							<mat-datepicker-toggle [for]="startDatePicker"
+								matSuffix></mat-datepicker-toggle>
+							<mat-datepicker #startDatePicker></mat-datepicker>
+						</mat-form-field>
 
-            <mat-form-field appearance="outline" class="w-100" *ngIf="campo.type === 'date'">
-              <input  [matDatepicker]="startDatePicker" [matDatepickerFilter]="dateFilter" matInput [(ngModel)]="campo.value" [placeholder]="campo.placeholder">
-              <mat-datepicker-toggle [for]="startDatePicker"
-							matSuffix></mat-datepicker-toggle>
-						<mat-datepicker #startDatePicker></mat-datepicker>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="w-100" *ngIf="campo.type === 'text'">
-              <input matInput [(ngModel)]="campo.value" [placeholder]="campo.placeholder">
-          </mat-form-field>
-        </div>
+						<mat-form-field *ngIf="campo.type === 'text'"
+							appearance="outline"
+							class="w-100">
+							<input [(ngModel)]="campo.value"
+								[attr.id]="campo.id"
+								[placeholder]="campo.placeholder"
+								matInput>
+						</mat-form-field>
+					</div>
+				</div>
+			</ng-container>
+		</div>
+		<div class="row">
+      <div class="col-12">
+        <button (click)="enviarFiltros()" mat-button color="accent" class="shadow-none text-center bg-light-accent w-100">
+          <div class="d-flex align-items-center justify-content-between">
+            <span class="mr-2">Atualizar</span>
+            <i-tabler name="refresh" class="icon-20"></i-tabler>
+          </div>
+        </button>
       </div>
-    </div>
-  </div>
+      
+		</div>
+	</mat-expansion-panel>
 </mat-accordion>
