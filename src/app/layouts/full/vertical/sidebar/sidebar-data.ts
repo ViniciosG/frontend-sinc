@@ -28,6 +28,11 @@ export const navItems: NavItem[] = [
     route: '/sellers/salesByMonth',
   },
   {
+    displayName: 'Vendas sub grupos',
+    iconName: 'calendar-event',
+    route: '/sellers/subGroupsSold',
+  },
+  {
     displayName: 'Por Produtos',
     iconName: 'calendar-event',
     route: '/sellers/salesByManufacturers',

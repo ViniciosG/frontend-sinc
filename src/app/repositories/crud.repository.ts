@@ -64,7 +64,7 @@ export abstract class CrudRepository<T> {
     return this.http.get<T>(`${this.apiUrl}/${this.endpoint}?registerInitial=${registerInitial}&registerFinal=${registerFinal}&_direction=${direction}&_sort=${sort}&_limit=${limit}`);
   }
 
-  getSalesByDaysWeek(params: any): Observable<any> {
+  call(params: any): Observable<any> {
     const queryString = this.serializeParams(params);
     return this.http.get<any>(`${this.apiUrl}/${this.endpoint}?${queryString}`);
   }

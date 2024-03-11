@@ -114,7 +114,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
 
 
   obterDadosERenderizarGrafico() {
-    this.repository.getSalesByDaysWeek(this.params).subscribe({
+    this.repository.call(this.params).subscribe({
       next: resp => {
         this.sales = resp;
   

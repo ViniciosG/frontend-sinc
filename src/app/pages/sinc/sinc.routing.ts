@@ -8,6 +8,7 @@ import { SalesByDayOfWeekComponent } from './sales-by-day-of-week/sales-by-day-o
 import { SalesByManufacturersComponent } from './sales-by-manufacturers/sales-by-manufacturers.component';
 import { SalesByMonthComponent } from './sales-by-month/sales-by-month.component';
 import { SalesByStatesComponent } from './sales-by-states/sales-by-states.component';
+import { SubGroupsSoldComponent } from './sub-groups-sold/sub-groups-sold.component';
 
 // Forms
 
@@ -108,6 +109,17 @@ export const SincRoutes: Routes = [
         component: GoalsBySellersMonthComponent,
         data: {
           title: 'Metas / Mês',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Sales' },
+          ],
+        },
+      },
+      {
+        path: 'subGroupsSold',
+        component: SubGroupsSoldComponent,
+        data: {
+          title: 'Vendas / Sub Grupos',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Sales' },

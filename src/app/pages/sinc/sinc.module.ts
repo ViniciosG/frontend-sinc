@@ -22,6 +22,7 @@ import { SalesByManufacturersComponent } from './sales-by-manufacturers/sales-by
 import { SalesByMonthComponent } from './sales-by-month/sales-by-month.component';
 import { SalesByStatesComponent } from './sales-by-states/sales-by-states.component';
 import { SincRoutes } from './sinc.routing';
+import { SubGroupsSoldComponent } from './sub-groups-sold/sub-groups-sold.component';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import { SincRoutes } from './sinc.routing';
     SalesByStatesComponent,
     FiltersComponent,
     GoalsBySellersMonthComponent,
+    SubGroupsSoldComponent,
     NgxEchartsModule.forRoot({
       echarts
     })
