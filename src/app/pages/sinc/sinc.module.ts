@@ -14,6 +14,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { FiltersComponent } from './components/filters/filters.component';
 import { GoalsBySellersMonthComponent } from './goals-by-sellers-month/goals-by-sellers-month.component';
 import { GoalsBySellersComponent } from './goals-by-sellers/goals-by-sellers.component';
+import { MarginByProductsComponent } from './margin-by-products/margin-by-products.component';
+import { MarginBySubGroupsComponent } from './margin-by-sub-groups/margin-by-sub-groups.component';
 import { NewCustomersPerMonthComponent } from './new-customers-per-month/new-customers-per-month.component';
 import { NewCustomersPerSellersComponent } from './new-customers-per-sellers/new-customers-per-sellers.component';
 import { ProductsSoldComponent } from './products-sold/products-sold.component';
@@ -44,6 +46,8 @@ import { SubGroupsSoldComponent } from './sub-groups-sold/sub-groups-sold.compon
     FiltersComponent,
     GoalsBySellersMonthComponent,
     SubGroupsSoldComponent,
+    MarginBySubGroupsComponent,
+    MarginByProductsComponent,
     NgxEchartsModule.forRoot({
       echarts
     })

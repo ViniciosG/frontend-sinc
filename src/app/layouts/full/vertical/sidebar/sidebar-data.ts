@@ -55,6 +55,19 @@ export const navItems: NavItem[] = [
     iconName: 'certificate',
     route: 'sellers/newCustomersPerMonth',
   },
+  {
+    navCap: 'Margens',
+  },
+  {
+    displayName: 'Produtos',
+    iconName: 'certificate',
+    route: 'sellers/marginByProducts',
+  },
+  {
+    displayName: 'Sub Grupos',
+    iconName: 'certificate',
+    route: 'sellers/marginBySubGroups',
+  },
   // {
   //   displayName: 'Employee',
   //   iconName: 'brand-ctemplar',
