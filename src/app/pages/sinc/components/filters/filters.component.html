@@ -11,14 +11,27 @@
 						<mat-label class="mat-subtitle-2 f-w-600 d-block m-b-24">{{ campo.label }}</mat-label>
 					</div>
 					<div class="col-sm-8">
-						<mat-form-field *ngIf="campo.type === 'select'"
+
+						<mat-form-field *ngIf="campo.type === 'select' && campo.id === 'dateSelector'"
+							appearance="outline"
+							class="w-100">
+							<mat-select [(ngModel)]="campo.value"
+								placeholder="{{ campo.placeholder }}" (selectionChange)="onChangeOption(campo.value)">
+								<mat-option *ngFor="let option of campo.options"
+									[value]="option.value">
+									{{ option.label }}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>
+
+						<mat-form-field *ngIf="campo.type === 'select' && campo.id !== 'dateSelector'"
 							appearance="outline"
 							class="w-100">
 							<mat-select [(ngModel)]="campo.value"
 								placeholder="{{ campo.placeholder }}">
 								<mat-option *ngFor="let option of campo.options"
 									[value]="option.value">
-									{{ option.viewValue }}
+									{{ option }}
 								</mat-option>
 							</mat-select>
 						</mat-form-field>

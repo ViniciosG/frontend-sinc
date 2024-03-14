@@ -1,5 +1,7 @@
+<app-filters [camposFiltro]="camposFiltro" (filtrosEnviados)="receberFiltros($event)"></app-filters>
+<br>
 <mat-card class="cardWithShadow">
-  <mat-card-content class="p-y-30">
+  <mat-card-content class="p-y-30" *ngIf="!isLoading && !errorTrue; else loadingTemplate">
     <div class="d-flex align-items-center justify-content-between">
 
 	
@@ -27,15 +29,21 @@
 
         <div class="m-l-16 m-r-auto">
           <h6 class="mat-subtitle-1 f-s-16 f-w-600">{{ item.sellerName }}</h6>
-          <!-- <span class="mat-body-1">{{ stat.subtitle }}</span> -->
         </div>
         <span  class="bg-light-success text-success rounded f-w-600 p-6 p-y-4 f-s-12"> +{{ item.qty }} </span>
-        
       </div>
     </div>
 
-    <button mat-stroked-button color="primary" class="w-100 m-t-8">
-      View all Transctions
+    <button mat-stroked-button color="primary" class="w-100 m-t-8" (click)="parametrosPadrao()" [hidden]="visible">
+      Ver tudo
     </button>
   </mat-card-content>
+
+  <ng-template #loadingTemplate>
+    <div class="d-flex align-items-center justify-content-center">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  </ng-template>
+  
+  <div *ngIf="errorTrue">Nenhum item encontrado.</div>
 </mat-card>

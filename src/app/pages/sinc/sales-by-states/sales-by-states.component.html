@@ -1,1 +1,9 @@
+<app-filters [camposFiltro]="camposFiltro" (filtrosEnviados)="receberFiltros($event)"></app-filters>
+<br>
+<div>
+    <input type="range" id="fontSlider" name="font" min="5" max="18" step="1" [(ngModel)]="fontSize">
+    <label for="fontSlider">Tamanho da Fonte: {{ fontSize }}</label>
+  </div>
+  <button mat-raised-button color="primary" (click)="applyFontSize()">Aplicar Tamanho da Fonte</button>
+  
 <div id="map" style="width: 100%; height: 800px;"></div>
