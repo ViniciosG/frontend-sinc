@@ -30,7 +30,7 @@
 							<mat-select [(ngModel)]="campo.value"
 								placeholder="{{ campo.placeholder }}">
 								<mat-option *ngFor="let option of campo.options"
-									[value]="option.value">
+									[value]="option">
 									{{ option }}
 								</mat-option>
 							</mat-select>
@@ -43,7 +43,7 @@
 								[matDatepickerFilter]="dateFilter"
 								[(ngModel)]="campo.value"
 								[placeholder]="campo.placeholder"
-								matInput>
+								matInput (keydown.enter)="enviarFiltros()">
 							<mat-datepicker-toggle [for]="startDatePicker"
 								matSuffix></mat-datepicker-toggle>
 							<mat-datepicker #startDatePicker></mat-datepicker>
@@ -55,7 +55,7 @@
 							<input [(ngModel)]="campo.value"
 								[attr.id]="campo.id"
 								[placeholder]="campo.placeholder"
-								matInput>
+								matInput (keydown.enter)="enviarFiltros()">
 						</mat-form-field>
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 		</div>
 		<div class="row">
       <div class="col-12">
-        <button (click)="enviarFiltros()" mat-button color="accent" class="shadow-none text-center bg-light-accent w-100">
+        <button (click)="enviarFiltros()" (keyup.enter)="enviarFiltros()" mat-button color="accent" class="shadow-none text-center bg-light-accent w-100">
           <div class="d-flex align-items-center justify-content-between">
             <span class="mr-2">Atualizar</span>
             <i-tabler name="refresh" class="icon-20"></i-tabler>

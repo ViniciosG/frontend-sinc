@@ -34,13 +34,9 @@ export class SubGroupsSoldComponent implements OnInit {
   totalValue: string;
   selectValue: number = 5;
   params: any;
+  camposFiltro:any
 
-  camposFiltro = [
-    { label: 'Quantidade', placeholder: 'Quantidade', type: 'text', visivel: true, value: 5, id: "qty" },
-    { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: new Date(), id: "registerInitial" },
-    { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: new Date(), id: "registerFinal" },
-    // Adicione os outros campos de filtro aqui conforme necessário
-  ];
+
 
   constructor(private repository: SubGroupSoldRepository) {
     const dataAtual = new Date();
@@ -62,7 +58,23 @@ export class SubGroupsSoldComponent implements OnInit {
       registerFinal:  this.date_final,
       _limit: 5
     }
+
+    this.camposFiltro = [
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+      { label: 'Ranking', placeholder: 'Ranking', type: 'select',value: '5', visivel: true, options: ['5', '10', '20','30'], id: "_limit" },
+      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
+      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
+      { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value:'thisMonth', options: [
+        { label: 'Hoje', value: 'today' },
+        { label: 'Semana', value: 'lastWeek' },
+        { label: 'Mês', value: 'thisMonth' }
+      ], id: 'dateSelector' },
+      
+    ];
   }
+
+
 
 
   ngOnInit(): void {
@@ -70,24 +82,24 @@ export class SubGroupsSoldComponent implements OnInit {
   }
 
   receberFiltros(event: any) {
-    console.log('Filtros recebidos:', event);
-  
-    this.camposFiltro.forEach(campo => {
-
+    console.log(event)
+    this.camposFiltro.forEach((campo: any) => {
+      // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
-
+        // Verificar se o campo é do tipo "date"
         if (campo.type === 'date') {
-
+          // Formatando a data usando o date-fns
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-
+          // Atualizar o valor correspondente no objeto params com base no id do campo
           this.params[campo.id] = dataFormatada;
         } else {
+          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
           this.params[campo.id] = campo.value;
         }
       }
     });
-  
-    console.log('Params atualizado:', this.params);
+    delete this.params['dateSelector'];
+    this.obterDadosERenderizarGrafico();
   }
 
   obterDadosERenderizarGrafico() {
@@ -116,12 +128,18 @@ export class SubGroupsSoldComponent implements OnInit {
     items.sort((a: any, b: any) => a.value - b.value);
 
     const ultimoElemento = items[items.length - 1];
-
+  
     const opcoes: echarts.EChartsOption = {
       dataset: {
         source: items
       },
-      grid: { containLabel: true },
+      grid: {
+        containLabel: true,
+        left: 10,
+        right: 10,
+        top: 50,
+        bottom: 10
+      },
       xAxis: [{
         name: 'Valor',
         //type: 'value', 
@@ -142,7 +160,11 @@ export class SubGroupsSoldComponent implements OnInit {
       }],
       yAxis: { 
         type: 'category', 
-        data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold' } })) 
+        data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold' } })),
+        axisLabel: {
+          interval: 0, // Exibir todos os rótulos do eixo y
+          margin: 10 // Margem entre os rótulos e o eixo
+        }
       },
       visualMap: {
         orient: 'horizontal',
@@ -162,6 +184,23 @@ export class SubGroupsSoldComponent implements OnInit {
             x: 'value', 
             y: 'subGroupName' 
           },
+          
+          label: {  
+            show: true,
+            position: 'insideRight',
+            formatter: (params: any) => {
+              const value = params.value.value;
+              const formattedValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+              return `{a|${formattedValue}}`; 
+            },
+            rich: {
+              a: {
+                fontWeight: 'bold',
+                color: 'black' 
+              }
+            }          
+          }
+          
         }
       ],
       darkMode: true

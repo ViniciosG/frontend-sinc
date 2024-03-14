@@ -238,6 +238,15 @@ export class SalesByDayOfWeekComponent implements OnInit {
     if (elementoGrafico) {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.setOption(option);
+
+      meuGrafico.dispatchAction({
+        type: 'legendToggleSelect',
+        name: 'Qtd. Itens'
+      });
+      meuGrafico.dispatchAction({
+        type: 'legendToggleSelect',
+        name: 'Qtd. Vendas'
+      });
     }
   
     return option;

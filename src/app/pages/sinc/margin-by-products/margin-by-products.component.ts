@@ -194,7 +194,8 @@ export class MarginByProductsComponent implements OnInit {
                 fontWeight: 'bold',
                 color: 'white' // Alterando a cor da fonte
               }
-            }          }
+            }          
+          }
         }
       ],
     };
