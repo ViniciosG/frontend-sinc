@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
-import { endOfDay, endOfWeek, startOfDay, startOfMonth, startOfWeek } from 'date-fns';
+import { endOfDay, endOfWeek, endOfYear, startOfDay, startOfMonth, startOfWeek, startOfYear } from 'date-fns';
 import { MaterialModule } from 'src/app/material.module';
 
 @Component({
@@ -33,7 +33,6 @@ export class FiltersComponent implements OnInit {
   
   onChangeOption(option: string) {
     const today = new Date();
-  
     if (option === 'today') {
       const startOfToday = startOfDay(today); // Início do dia atual (00:00)
       const endOfToday = endOfDay(today); // Fim do dia atual (último segundo)
@@ -45,17 +44,24 @@ export class FiltersComponent implements OnInit {
     } else if (option === 'thisMonth') {
       const thisMonthStartDate = startOfMonth(today);
       this.updateDateFilterValue(thisMonthStartDate, today);
+    } else if (/^\d{4}$/.test(option)) {
+      const selectedYear = parseInt(option, 10);
+      const yearStartDate = startOfYear(new Date(selectedYear, 0, 1));
+      const yearEndDate = endOfYear(yearStartDate); // Último dia do ano do yearStartDate
+      this.updateDateFilterValue(yearStartDate, yearEndDate);
     }
   }
   
+  
   private updateDateFilterValue(startDate: Date, endDate: Date) {
+    console.log(endDate)
     const campoInicial = this.camposFiltro.find(campo => campo.id === 'registerInitial');
     const campoFinal = this.camposFiltro.find(campo => campo.id === 'registerFinal');
     
-    if (campoInicial && campoFinal) {
+
       campoInicial.value = startDate;
       campoFinal.value = endDate;
-    }
+    
   }
   enviarFiltros() {
     this.filtrosEnviados.emit(this.camposFiltro);

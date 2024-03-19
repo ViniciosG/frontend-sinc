@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { format, parse } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
@@ -10,6 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { SalesByMonthModel } from 'src/app/models/sales-by-month.model';
 import { SalesByMonthRepository } from 'src/app/repositories/sales-by-month.repository';
+import { FiltersComponent } from '../components/filters/filters.component';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -44,7 +46,7 @@ export type ChartOptionsMixed2 = {
 @Component({
   selector: 'app-sales-by-month',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule, NgApexchartsModule],
+  imports: [MaterialModule, CommonModule, FormsModule, NgApexchartsModule,TablerIconsModule, FiltersComponent],
   templateUrl: './sales-by-month.component.html',
   styleUrls: ['./sales-by-month.component.css']
 })
@@ -63,6 +65,11 @@ export class SalesByMonthComponent implements OnInit {
   option: any;
   totalValue: string;
   selectValue: number = 5;
+  legendStateInitialized = false;
+  quantidadeVendas: string;
+  quantidadeItems:string;
+  params: any;
+  camposFiltro:any;
 
   public areaChartOptions: Partial<ChartOptions> | any;
   public chartOptionsMixed: Partial<ChartOptions> | any;
@@ -80,15 +87,60 @@ export class SalesByMonthComponent implements OnInit {
 
     this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
-    this.selectValue = dataAtual.getFullYear()
+    this.selectValue = dataAtual.getFullYear();
+
+    const anoAtual = new Date().getFullYear();
+    const listaAnos = Array.from({ length: anoAtual - 2008 + 1 }, (_, index) => (2008 + index).toString());
+    
+    this.camposFiltro = [
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
+      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: false, value: this.endDate, id: "registerFinal" },
+
+      { 
+        label: 'Ano', 
+        placeholder: 'Ano', 
+        type: 'select', 
+        visivel: true, 
+        value: anoAtual.toString(), 
+        options: listaAnos.map(ano => ({ label: ano, value: ano })) 
+        , id: 'yearSelecetor' 
+      },
+    ];
+
+    this.params = {
+      registerInitial: this.date_inital,
+      registerFinal:  this.date_final,
+    };
   }
 
   ngOnInit(): void {
     this.obterDadosERenderizarGrafico();
   }
 
+  receberFiltros(event: any) {
+    console.log(event)
+    this.camposFiltro.forEach((campo: any) => {
+      // Verificar se o campo tem um valor e um id definido
+      if (campo.id && campo.value !== undefined) {
+        // Verificar se o campo é do tipo "date"
+        if (campo.type === 'date') {
+          // Formatando a data usando o date-fns
+          const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
+          // Atualizar o valor correspondente no objeto params com base no id do campo
+          this.params[campo.id] = dataFormatada;
+        } else {
+          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
+          this.params[campo.id] = campo.value;
+        }
+      }
+    });
+    this.obterDadosERenderizarGrafico();
+  }
+
   obterDadosERenderizarGrafico() {
-    this.repository.getSalesByMonth(this.date_inital, this.date_final).subscribe({
+    this.repository.call(this.params).subscribe({
       next: resp => {
         this.sales = resp;
   
@@ -97,7 +149,10 @@ export class SalesByMonthComponent implements OnInit {
           this.SALVAR_RESPOSTA = resp;
           const value = this.sales.items.reduce((total, item) => total + item.value, 0);
 
+          
           this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          this.quantidadeVendas = this.sales.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
+          this.quantidadeItems = this.sales.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
   
           this.executarGraficoBarras(this.sales.items);
           this.montarGrafico(this.sales.items);
@@ -125,7 +180,7 @@ export class SalesByMonthComponent implements OnInit {
   
     const option: echarts.EChartsOption = {
       title: {
-        text: 'Vendas por Dia da Semana', // Título do gráfico
+        text: 'Vendas por Mês', // Título do gráfico
         left: 'center' // Alinhamento do título
       },
       legend: {
@@ -143,7 +198,8 @@ export class SalesByMonthComponent implements OnInit {
       },
       xAxis: { 
         type: 'category',
-        name: 'Dia da Semana', // Rótulo do eixo X
+        name: 'Mês', // Rótulo do eixo X
+        data: sourceData.month
       },
       yAxis: [
         { 
@@ -237,15 +293,19 @@ export class SalesByMonthComponent implements OnInit {
     if (elementoGrafico) {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.setOption(option);
+      
+      if (!this.legendStateInitialized) {
+        meuGrafico.dispatchAction({
+          type: 'legendToggleSelect',
+          name: 'Qtd. Itens'
+        });
+        meuGrafico.dispatchAction({
+          type: 'legendToggleSelect',
+          name: 'Qtd. Vendas'
+        });
 
-      meuGrafico.dispatchAction({
-        type: 'legendToggleSelect',
-        name: 'Qtd. Itens'
-      });
-      meuGrafico.dispatchAction({
-        type: 'legendToggleSelect',
-        name: 'Qtd. Vendas'
-      });
+        this.legendStateInitialized = true;
+      }
     }
 
 
@@ -254,6 +314,7 @@ export class SalesByMonthComponent implements OnInit {
 }
 
 numeroParaMes(numero: number): string {
+  console.log(numero)
   const data = parse(`${numero}/2024`, 'MM/yyyy', new Date());
   return format(data, 'MMMM', { locale: ptBR });
 }
@@ -278,9 +339,21 @@ atualizarGrafico() {
 
 
 montarGrafico(months: any) {
+
+  months.sort((a: any, b: any) => parseInt(a.month) - parseInt(b.month));
+  
+  const sourceData = months.map((data:any) => {
+    return {
+      month: this.numeroParaMes(parseInt(data.month)),
+      value: data.value,
+      qty: data.qty,
+      qtyItems: data.qtyItems
+    };
+  });
     
   const seriesData = months.map((item: any) => item.qty);
   const additionalSeriesData = months.map((item: any) => item.value);
+  const monsths = sourceData.map((item: any) => item.month);
 
   return this.areaChartOptions = {
     series: [
@@ -342,7 +415,7 @@ montarGrafico(months: any) {
     },
     xaxis: {
       type: 'category',
-      categories: this.getLabelsForMonths(),
+      categories: monsths,
     },
     yaxis: [
       {

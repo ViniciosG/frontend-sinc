@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
@@ -14,13 +15,14 @@ import { FiltersComponent } from '../components/filters/filters.component';
 @Component({
   selector: 'app-sub-groups-sold',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent],
+  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent,TablerIconsModule],
   templateUrl: './sub-groups-sold.component.html',
   styleUrls: ['./sub-groups-sold.component.css']
 })
 export class SubGroupsSoldComponent implements OnInit {
 
   private destroy$: Subject<void> = new Subject<void>();
+  @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
 
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -35,8 +37,11 @@ export class SubGroupsSoldComponent implements OnInit {
   selectValue: number = 5;
   params: any;
   camposFiltro:any
-
-
+  carregandoDados: boolean = false;
+  altura: any = 600;
+  loading: boolean = false;
+  quantidadeVendas: string;
+  quantidadeItems:string;
 
   constructor(private repository: SubGroupSoldRepository) {
     const dataAtual = new Date();
@@ -56,7 +61,8 @@ export class SubGroupsSoldComponent implements OnInit {
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
-      _limit: 5
+      _limit: 5,
+      _offset: 0
     }
 
     this.camposFiltro = [
@@ -82,7 +88,6 @@ export class SubGroupsSoldComponent implements OnInit {
   }
 
   receberFiltros(event: any) {
-    console.log(event)
     this.camposFiltro.forEach((campo: any) => {
       // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
@@ -103,22 +108,32 @@ export class SubGroupsSoldComponent implements OnInit {
   }
 
   obterDadosERenderizarGrafico() {
+    this.carregandoDados = false;
+
+    if (this.loading) return;
+    this.loading = true;
+
     this.repository.call(this.params).subscribe({
       next: resp => {
         this.subGroups = resp;
-  
+        this.altura = this.altura + this.subGroups.returnedTotal * 31 + 200;
+        this.atualizarGrafico();
+        this.loading = false;
         if (!isEqual(this.SALVAR_RESPOSTA, this.subGroups)) {
           takeUntil(this.destroy$)
           this.SALVAR_RESPOSTA = resp;
           const value = this.subGroups.items.reduce((total, item) => total + item.value, 0);
 
           this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          this.quantidadeVendas = this.subGroups.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
+          this.quantidadeItems = this.subGroups.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
   
           this.executar(this.subGroups.items);
 
         }
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });
@@ -126,92 +141,88 @@ export class SubGroupsSoldComponent implements OnInit {
 
   executar(items: any) {
     items.sort((a: any, b: any) => a.value - b.value);
-
-    const ultimoElemento = items[items.length - 1];
-  
+    
     const opcoes: echarts.EChartsOption = {
       dataset: {
         source: items
       },
       grid: {
         containLabel: true,
-        left: 10,
-        right: 10,
-        top: 50,
-        bottom: 10
+        width: '80%', // Define a largura do gráfico como 80% do container
+        height: '80%', // Define a altura do gráfico como 80% do container
       },
       xAxis: [{
         name: 'Valor',
         //type: 'value', 
         axisLabel: {
-          formatter: (value: number) => value.toFixed(2) 
-        },
+      formatter: (value: number) => {
+          return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }        },
         axisLine: {
           lineStyle: {
-            color: '#333' 
+            color: '#333'
           }
         },
         axisTick: {
-          show: false 
+          show: false
         },
         splitLine: {
-          show: false 
+          show: false
         },
       }],
-      yAxis: { 
-        type: 'category', 
-        data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold' } })),
+      yAxis: {
+        type: 'category',
+        data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold',color:'black' } })),
         axisLabel: {
-          interval: 0, // Exibir todos os rótulos do eixo y
-          margin: 10 // Margem entre os rótulos e o eixo
+          // interval: 0, // Exibir todos os rótulos do eixo y
+          // margin: 10 // Margem entre os rótulos e o eixo
         }
       },
-      visualMap: {
-        orient: 'horizontal',
-        left: 'center',
-        max: ultimoElemento.value,
-        text: ['Alto valor', 'Baixo valor'],
-        dimension: 2,
-        inRange: {
-          color: ['#FD665F', '#FFCE34', '#65B581']
-        }
-      },
-      series: [
-        {
-          type: 'bar',
-          barWidth: 0, 
-          encode: {
-            x: 'value', 
-            y: 'subGroupName' 
+      series: [{
+        type: 'bar',
+        barWidth: 0,
+        encode: {
+          x: 'value',
+          y: 'subGroupName'
+        },
+        label: {
+          show: true,
+          position: 'right', // Colocar os rótulos à direita das barras
+          formatter: (params: any) => {
+            const value = params.value.value;
+            const quantidade = params.value.qty;
+            const quantidadeItens = params.value.qtyItems;
+            const formattedValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            return `{a|${formattedValue}}\n{b|Vendas: ${quantidade}}\n{c|Itens: ${quantidadeItens}}`;
           },
-          
-          label: {  
-            show: true,
-            position: 'insideRight',
-            formatter: (params: any) => {
-              const value = params.value.value;
-              const formattedValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-              return `{a|${formattedValue}}`; 
+          rich: {
+            a: {
+              fontWeight: 'bold',
+              color: 'black'
             },
-            rich: {
-              a: {
-                fontWeight: 'bold',
-                color: 'black' 
-              }
-            }          
+            b: {
+              color: '#999',
+              lineHeight: 20
+            },
+            c: {
+              color: '#999',
+              lineHeight: 20
+            }
           }
-          
         }
-      ],
+      }],
       darkMode: true
     };
   
-    const elementoGrafico = document.getElementById('grafico-echarts');    
+    const elementoGrafico = document.getElementById('grafico-echarts');
     if (elementoGrafico) {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.setOption(opcoes);
     }
+    this.loading = false
   }
+  
+  
 
   
 

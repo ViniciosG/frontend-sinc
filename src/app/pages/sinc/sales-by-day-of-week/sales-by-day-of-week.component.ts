@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { subDays } from 'date-fns';
+import { TablerIconsModule } from 'angular-tabler-icons';
+import { startOfWeek } from 'date-fns';
 import format from 'date-fns/format';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
@@ -15,7 +16,7 @@ import { FiltersComponent } from '../components/filters/filters.component';
 @Component({
   selector: 'app-sales-by-day-of-week',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule, FiltersComponent],
+  imports: [MaterialModule, CommonModule, FormsModule, FiltersComponent,TablerIconsModule],
   templateUrl: './sales-by-day-of-week.component.html',
   styleUrls: ['./sales-by-day-of-week.component.css']
 })
@@ -32,55 +33,37 @@ export class SalesByDayOfWeekComponent implements OnInit {
   SALVAR_RESPOSTA: any;
   option: any;
   totalValue: string;
+  quantidadeVendas: string;
+  quantidadeItems:string;
   selectValue: number = 5;
   params: any;
+  camposFiltro:any;
+  legendStateInitialized = false;
 
-
-  // camposFiltro = [
-  //   { label: 'Quantidade Itens', placeholder: 'Quantidade Itens', visivel: true },
-  //   { label: 'Quantidade Vendas', placeholder: 'Quantidade Vendas', visivel: true },
-  //   { label: 'Valor', placeholder: 'Valor', visivel: true },
-  //   { label: 'Vendedor', placeholder: 'Vendedor', visivel: true },
-  //   { label: 'Tipo Vendedor', placeholder: 'Tipo Vendedor', visivel: true }, 
-  //   { label: 'Direção', placeholder: 'Direção', visivel: true },
-  //   { label: 'Data Inicial', placeholder: 'Data Inicial', visivel: true },
-  //   { label: 'Data Final', placeholder: 'Data Final', visivel: true },
-  //   { label: 'Campo', placeholder: 'Campo', visivel: true }, 
-  //   { label: 'Limite', placeholder: 'Limite', visivel: true }, 
-//   { label: 'Vendedor', placeholder: 'Selecione o vendedor', type: 'select', visivel: true, value: '', id: "sellerName", 
-//   options: [ 
-//     { value: 'vendedor1', viewValue: 'Vendedor 1' },
-//     { value: 'vendedor2', viewValue: 'Vendedor 2' },
-//     { value: 'vendedor3', viewValue: 'Vendedor 3' }
-//   ]
-// }
-  // ];
-
-  camposFiltro = [
-    { label: 'Quantidade', placeholder: 'Quantidade', type: 'text', visivel: true, value: 5, id: "qty" },
-    { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: new Date(), id: "registerInitial" },
-    { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: new Date(), id: "registerFinal" },
-    // Adicione os outros campos de filtro aqui conforme necessário
-  ];
 
   constructor(private repository: SalesByDayOfWeekRepository) {
     const dataAtual = new Date();
-  
-    const dataSeteDiasAtras = subDays(dataAtual, 7);
-  
-    this.startDate = dataSeteDiasAtras;
+    const primeiroDiaSemana = startOfWeek(dataAtual, { weekStartsOn: 0 }); // 0 para domingo, 1 para segunda, e assim por diante
+    
+    this.startDate = primeiroDiaSemana;
     this.endDate = new Date();
-  
+    
     this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
-  
+    
     this.inititalContext = format(this.startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+  
+    this.camposFiltro = [
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
+    ];
 
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
-    }
+    };
   }
   
 
@@ -89,10 +72,8 @@ export class SalesByDayOfWeekComponent implements OnInit {
   }
 
   receberFiltros(event: any) {
-    console.log('Filtros recebidos:', event);
-  
-    // Iterar sobre os campos de filtro
-    this.camposFiltro.forEach(campo => {
+    console.log(event)
+    this.camposFiltro.forEach((campo: any) => {
       // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
         // Verificar se o campo é do tipo "date"
@@ -107,8 +88,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
         }
       }
     });
-  
-    console.log('Params atualizado:', this.params);
+    this.obterDadosERenderizarGrafico()
   }
 
 
@@ -124,7 +104,9 @@ export class SalesByDayOfWeekComponent implements OnInit {
           const value = this.sales.items.reduce((total, item) => total + item.value, 0);
 
           this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  
+          this.quantidadeVendas = this.sales.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
+          this.quantidadeItems = this.sales.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
+
           this.executarGraficoBarras(this.sales.items);
 
         }
@@ -136,7 +118,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
   }
 
   executarGraficoBarras(item: any): echarts.EChartsOption {
-    // Ordena os dados pelo dia da semana de forma ascendente
+    
     item.sort((a: any, b: any) => parseInt(a.dayOfWeek) - parseInt(b.dayOfWeek));
   
     const sourceData = item.map((data:any) => {
@@ -186,50 +168,74 @@ export class SalesByDayOfWeekComponent implements OnInit {
         { 
           name: 'Valor', 
           type: 'bar', 
-          encode: { x: 'dayOfWeek', y: 'value' },
+          encode: { x: 'month', y: 'value' },
           label: {
             show: true,
             position: 'top',
-            formatter: '\n💰' // Adiciona o emoji acima de cada barra
+            formatter: (params: any) => {
+              console.log(params.value.value)
+              const valueFormatted = params.value.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+              return `{a|${valueFormatted}} 💰`; // Usando formatação de texto enriquecido
+            },
+            rich: {
+              a: {
+                fontWeight: 'bold',
+                color: 'black' // Alterando a cor da fonte
+              }
+            }  
           } 
         },
         { 
-          name: 'Qtd. Vendas', 
+          name: 'Qtd. Vendas',
           type: 'bar', 
-          encode: { x: 'dayOfWeek', y: 'qty' }, 
+          encode: { x: 'month', y: 'qty' }, 
           yAxisIndex: 1,
           label: {
             show: true,
             position: 'top',
-            formatter: '\n🛒' // Adiciona o emoji acima de cada barra
+            formatter: (params: any) => {
+              const valueFormatted = params.value.qty.toLocaleString('pt-BR');
+              return `{a|${valueFormatted}} 🛒`; // Usando formatação de texto enriquecido
+            },
+            rich: {
+              a: {
+                fontWeight: 'bold',
+                color: 'black' // Alterando a cor da fonte
+              }
+            }  
           }
         },
         { 
           name: 'Qtd. Itens', 
           type: 'bar', 
-          encode: { x: 'dayOfWeek', y: 'qtyItems' }, 
+          encode: { x: 'month', y: 'qtyItems' }, 
           yAxisIndex: 1,
           label: {
             show: true,
             position: 'top',
-            formatter: '\n📦' // Adiciona o emoji acima de cada barra
+            formatter: (params: any) => {
+              const valueFormatted = params.value.qtyItems.toLocaleString('pt-BR');
+              return `{a|${valueFormatted}} 📦`; // Usando formatação de texto enriquecido
+            },
+            rich: {
+              a: {
+                fontWeight: 'bold',
+                color: 'black' // Alterando a cor da fonte
+              }
+            }  
           }
         }
       ],
       toolbox: {
         feature: {
           magicType: {
-            type: ['line', 'bar'], // Remova 'pie' do array de tipos de série
+            type: ['line', 'bar'], 
             show: true,
             title: {
               line: 'Exibir como linha',
               bar: 'Exibir como barra'
             }
           },
-          pieToggle: { // Adicione um botão separado para alternar para tipo "pie"
-            show: true,
-            title: 'Exibir como pizza'
-          }
         }
       }
     };
@@ -238,15 +244,19 @@ export class SalesByDayOfWeekComponent implements OnInit {
     if (elementoGrafico) {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.setOption(option);
+      
+      if (!this.legendStateInitialized) {
+        meuGrafico.dispatchAction({
+          type: 'legendToggleSelect',
+          name: 'Qtd. Itens'
+        });
+        meuGrafico.dispatchAction({
+          type: 'legendToggleSelect',
+          name: 'Qtd. Vendas'
+        });
 
-      meuGrafico.dispatchAction({
-        type: 'legendToggleSelect',
-        name: 'Qtd. Itens'
-      });
-      meuGrafico.dispatchAction({
-        type: 'legendToggleSelect',
-        name: 'Qtd. Vendas'
-      });
+        this.legendStateInitialized = true;
+      }
     }
   
     return option;

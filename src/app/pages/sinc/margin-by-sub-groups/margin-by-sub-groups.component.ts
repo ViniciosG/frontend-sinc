@@ -117,8 +117,7 @@ export class MarginBySubGroupsComponent implements OnInit {
     
     items.sort((a: any, b: any) => a.margin - b.margin);
 
-    // const primeiroElemento = items[0];
-    // const ultimoElemento = items[items.length - 1];
+
     const opcoes: echarts.EChartsOption = {
       dataset: {
         source: items

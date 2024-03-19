@@ -24,7 +24,19 @@
 							</mat-select>
 						</mat-form-field>
 
-						<mat-form-field *ngIf="campo.type === 'select' && campo.id !== 'dateSelector'"
+						<mat-form-field *ngIf="campo.type === 'select' && campo.id === 'yearSelecetor'"
+						appearance="outline"
+						class="w-100">
+						<mat-select [(ngModel)]="campo.value"
+							placeholder="{{ campo.placeholder }}" (selectionChange)="onChangeOption(campo.value)">
+							<mat-option *ngFor="let option of campo.options"
+								[value]="option.value">
+								{{ option.label }}
+							</mat-option>
+						</mat-select>
+					</mat-form-field>
+
+						<mat-form-field *ngIf="campo.type === 'select' && campo.id !== 'dateSelector' && campo.id !== 'yearSelecetor'" 
 							appearance="outline"
 							class="w-100">
 							<mat-select [(ngModel)]="campo.value"

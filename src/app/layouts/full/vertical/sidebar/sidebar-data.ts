@@ -33,12 +33,12 @@ export const navItems: NavItem[] = [
     route: '/sellers/subGroupsSold',
   },
   {
-    displayName: 'Por Produtos',
+    displayName: 'Fabricantes',
     iconName: 'calendar-event',
     route: '/sellers/salesByManufacturers',
   },
   {
-    displayName: 'Por Estados',
+    displayName: 'Estados',
     iconName: 'calendar-event',
     route: '/sellers/salesByStates',
   },
