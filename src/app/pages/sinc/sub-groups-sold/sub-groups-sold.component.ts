@@ -38,7 +38,7 @@ export class SubGroupsSoldComponent implements OnInit {
   params: any;
   camposFiltro:any
   carregandoDados: boolean = false;
-  altura: any = 600;
+  altura: any = 20000;
   loading: boolean = false;
   quantidadeVendas: string;
   quantidadeItems:string;
@@ -61,14 +61,13 @@ export class SubGroupsSoldComponent implements OnInit {
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
-      _limit: 5,
+      _limit: 300,
       _offset: 0
     }
 
     this.camposFiltro = [
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
-      { label: 'Ranking', placeholder: 'Ranking', type: 'select',value: '5', visivel: true, options: ['5', '10', '20','30'], id: "_limit" },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
       { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value:'thisMonth', options: [
@@ -116,8 +115,6 @@ export class SubGroupsSoldComponent implements OnInit {
     this.repository.call(this.params).subscribe({
       next: resp => {
         this.subGroups = resp;
-        this.altura = this.altura + this.subGroups.returnedTotal * 31 + 200;
-        this.atualizarGrafico();
         this.loading = false;
         if (!isEqual(this.SALVAR_RESPOSTA, this.subGroups)) {
           takeUntil(this.destroy$)

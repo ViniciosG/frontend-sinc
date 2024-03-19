@@ -30,6 +30,17 @@ export const SincRoutes: Routes = [
         },
       },
       {
+        path: 'goalsBySellersByMonth',
+        component: GoalsBySellersMonthComponent,
+        data: {
+          title: 'Metas / Mês',
+          urls: [
+            { title: 'Dashboard', url: '/dashboards/dashboard1' },
+            { title: 'Sales' },
+          ],
+        },
+      },
+      {
         path: 'productsSold',
         component: ProductsSoldComponent,
         data: {
@@ -100,17 +111,6 @@ export const SincRoutes: Routes = [
         component: SalesByStatesComponent,
         data: {
           title: 'Vendas / Estado',
-          urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
-          ],
-        },
-      },
-      {
-        path: 'goalsBySellersByMonth',
-        component: GoalsBySellersMonthComponent,
-        data: {
-          title: 'Metas / Mês',
           urls: [
             { title: 'Dashboard', url: '/dashboards/dashboard1' },
             { title: 'Sales' },

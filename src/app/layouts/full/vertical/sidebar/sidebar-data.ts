@@ -5,54 +5,59 @@ export const navItems: NavItem[] = [
     navCap: 'Metas ' + new Date().getFullYear(),
   },
   {
-    displayName: 'Diária',
-    iconName: 'aperture',
-    route: '/sellers/goalsBySellersByMonth',
+    displayName: 'Diário',
+    iconName: 'chart-histogram',
+    route: '/sellers/goalsBySellers',
   },
   {
     displayName: 'Mensal',
-    iconName: 'shopping-cart',
-    route: '/sellers/goalsBySellers',
+    iconName: 'chart-histogram',
+    route: '/sellers/goalsBySellersByMonth',
   },
   {
     navCap: 'Vendas',
   },
   {
-    displayName: 'Vendas semanal',
-    iconName: 'message-2',
+    displayName: 'Semanal',
+    iconName: 'chart-histogram',
     route: '/sellers/salesByDayOfWeek',
   },
   {
-    displayName: 'Vendas mensal',
-    iconName: 'calendar-event',
+    displayName: 'Mensal',
+    iconName: 'chart-histogram',
     route: '/sellers/salesByMonth',
   },
   {
-    displayName: 'Vendas sub grupos',
-    iconName: 'calendar-event',
+    displayName: 'Sub Grupos',
+    iconName: 'chart-histogram',
     route: '/sellers/subGroupsSold',
   },
   {
     displayName: 'Fabricantes',
-    iconName: 'calendar-event',
+    iconName: 'chart-histogram',
     route: '/sellers/salesByManufacturers',
   },
   {
     displayName: 'Estados',
-    iconName: 'calendar-event',
+    iconName: 'chart-histogram',
     route: '/sellers/salesByStates',
+  },
+  {
+    displayName: 'Produtos',
+    iconName: 'chart-histogram',
+    route: '/sellers/productsSold',
   },
   {
     navCap: 'Gerencimaento ',
   },
   {
     displayName: 'Clientes / Vendedor',
-    iconName: 'phone',
+    iconName: 'chart-histogram',
     route: '/sellers/newCustomersPerSellers',
   },
   {
     displayName: 'Clientes / Mês',
-    iconName: 'certificate',
+    iconName: 'chart-histogram',
     route: 'sellers/newCustomersPerMonth',
   },
   {
@@ -60,14 +65,35 @@ export const navItems: NavItem[] = [
   },
   {
     displayName: 'Produtos',
-    iconName: 'certificate',
+    iconName: 'chart-histogram',
     route: 'sellers/marginByProducts',
   },
   {
     displayName: 'Sub Grupos',
-    iconName: 'certificate',
+    iconName: 'chart-histogram',
     route: 'sellers/marginBySubGroups',
   },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // {
   //   displayName: 'Employee',
   //   iconName: 'brand-ctemplar',

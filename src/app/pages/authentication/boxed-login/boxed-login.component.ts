@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
-import { CoreService } from 'src/app/services/core.service';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { MaterialModule } from '../../../material.module';
 import { NgIf } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, RouterModule } from '@angular/router';
+import { CoreService } from 'src/app/services/core.service';
+import { MaterialModule } from '../../../material.module';
 import { AuthService } from '../service/auth.service';
 
 @Component({
@@ -47,30 +47,6 @@ export class AppBoxedLoginComponent {
     this.authService.isErrorSubject.subscribe((isError) => {
       this.authValid = isError;
     });
-  }
-
-  submit() {
-    // this.loading = true
-    // this.authService.signIn(this.form.value).subscribe({
-    //   complete: () => {
-
-    //   },
-    //   error: (data) => {
-    //     if (data.error.message) {
-    //       this._snackBar.open(data.error.message);
-    //     } else {
-    //       this._snackBar.open('Falha na conexão com a internet', '', {
-    //         duration: 2000,
-    //       });
-    //     }
-    //     this.loading = false
-    //   },
-    //   next: (data: any) => {
-    //     // this.authService.login(data.authorization, data.id, data.name, this.form.value.auth, data.access_permissions, data.is_adm)
-    //     this.loading = false
-    //   }
-
-    // });
   }
 
   authenticationUser() {

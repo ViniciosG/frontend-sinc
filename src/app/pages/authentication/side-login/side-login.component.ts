@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { CoreService } from 'src/app/services/core.service';
-import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { MaterialModule } from '../../../material.module';
 import { NgIf } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { CoreService } from 'src/app/services/core.service';
+import { MaterialModule } from '../../../material.module';
 
 @Component({
   selector: 'app-side-login',
@@ -26,7 +26,6 @@ export class AppSideLoginComponent {
   }
 
   submit() {
-    // console.log(this.form.value);
     this.router.navigate(['/dashboards/dashboard1']);
   }
 }

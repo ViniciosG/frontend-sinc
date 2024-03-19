@@ -29,7 +29,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
   private destroy$: Subject<void> = new Subject<void>();
   graficos: any[] = [];
-  showValue: boolean = true;
+  showValue: boolean = false;
   startDate: Date = new Date();
   endDate: Date = new Date();
   goals: GoalsBySellersModel;
@@ -39,7 +39,9 @@ export class GoalsBySellersMonthComponent implements OnInit {
   endContext: string
   graficoIds: string[] = [];
   SALVAR_RESPOSTA: any;
-
+  params: any;
+  camposFiltro:any
+  quantidadeValor: string;
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions!: Partial<customerChart> | any;;
 
@@ -50,16 +52,33 @@ export class GoalsBySellersMonthComponent implements OnInit {
     dataAtual.setHours(0, 0, 0, 0);
 
     this.startDate = dataAtual;
+
     this.endDate = new Date();
 
     this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
-
     this.inititalContext = format(this.startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-    this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+    this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR }); 
 
-
-
+    this.params = {
+      registerInitial: this.date_inital,
+      registerFinal:  this.date_final,
+      _direction: 'DESC',
+      _sort: 'goal',
+    }
+    
+    this.camposFiltro = [
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: false, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: false, id: "sellerType" },
+      { label: 'Ranking', placeholder: 'Ranking', type: 'select', visivel: false, options: ['5', '10', '20','30'], id: "_limit" },
+      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: false, value: this.startDate, id: "registerInitial" },
+      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: false, value: this.endDate, id: "registerFinal" },
+      { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: false, value:'thisMonth', options: [
+        { label: 'Hoje', value: 'today' },
+        { label: 'Semana', value: 'lastWeek' },
+        { label: 'Mês', value: 'thisMonth' }
+      ], id: 'dateSelector' },
+    ];
   }
 
   ngOnDestroy(): void {
@@ -87,8 +106,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
       chart: {
         type: "radialBar",
         offsetY: 0,
-        width: 300,
-        height: 300
+        height: 175
       },
       plotOptions: {
         radialBar: {
@@ -129,8 +147,6 @@ export class GoalsBySellersMonthComponent implements OnInit {
         },
         colors: ["#7edfb4"],
       },
-
-      labels: ["Average Results"]
     };
 
   }
@@ -145,10 +161,13 @@ export class GoalsBySellersMonthComponent implements OnInit {
   }
 
   getGoalsBySellers() {
-    this.repository.getGoalsBySellers(this.date_inital, this.date_final).subscribe({
+    this.repository.call(this.params).subscribe({
       next: resp => {
         this.goals = resp;
 
+
+        const value = this.goals.items.reduce((total, item) => total + item.value, 0);
+        this.quantidadeValor = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         if (!isEqual(this.SALVAR_RESPOSTA, this.goals)) {
           takeUntil(this.destroy$)
           this.SALVAR_RESPOSTA = resp;
@@ -164,5 +183,35 @@ export class GoalsBySellersMonthComponent implements OnInit {
       }
     });
   }
+
+  abreviarNome(nome: string): string {
+    // Verificar se o nome contém ponto
+    if (nome.includes('.')) {
+      return nome; // Retornar o nome original se contiver ponto
+    }
+  
+    // Verificar se o nome tem apenas 4 letras
+    if (nome.trim().length === 4) {
+      return nome; // Retornar o nome original se tiver apenas 4 letras
+    }
+  
+    // Dividir o nome em partes
+    const partesNome = nome.split(' ');
+  
+    // Verificar se há mais de duas partes no nome
+    if (partesNome.length > 2) {
+      // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
+      if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
+          // Se o segundo nome tiver apenas 2 letras, retornar o terceiro nome
+          return partesNome[0] + ' ' + partesNome[2];
+      } else {
+          // Caso contrário, manter apenas a primeira e a segunda parte
+          return partesNome[0] + ' ' + partesNome[1];
+      }
+    } else {
+      // Se houver duas partes no nome, retorne o nome original
+      return nome;
+    }
+}
 
 }

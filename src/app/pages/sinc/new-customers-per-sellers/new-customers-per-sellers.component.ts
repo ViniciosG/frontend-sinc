@@ -30,6 +30,8 @@ export class NewCustomersPerSellersComponent implements OnInit {
   visible: boolean = true;
   isLoading: boolean = false;
   errorTrue: boolean = false;
+  quantidadeClientes: string;
+  totalValue: string;
 
   constructor(private repository: NewCustomersPerSellersRepository) {
     const dataAtual = new Date();
@@ -58,7 +60,6 @@ export class NewCustomersPerSellersComponent implements OnInit {
    this.camposFiltro = [
     { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
     { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
-    { label: 'Ranking', placeholder: 'Quantidade', type: 'text', visivel: true, value: 5, id: "_limit" },
     { label: 'Ranking', placeholder: 'Ranking', type: 'select', visivel: true, options: ['5', '10', '20','30'], id: "_limit" },
     { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
     { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
@@ -77,7 +78,6 @@ export class NewCustomersPerSellersComponent implements OnInit {
   }
 
   receberFiltros(event: any) {
-    console.log(event)
     this.camposFiltro.forEach((campo: any) => {
       // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
@@ -114,6 +114,8 @@ export class NewCustomersPerSellersComponent implements OnInit {
           // Atualizar o objeto 'resp' com o novo array de items
           resp.items = itemsComNovosCampos;
           this.customers = resp;
+          this.quantidadeClientes = this.customers.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
+
           this.errorTrue = false;
         }
       },

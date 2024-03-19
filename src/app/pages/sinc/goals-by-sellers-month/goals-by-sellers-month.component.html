@@ -1,54 +1,66 @@
-<div class="container">
-  <div class="d-flex align-items-center">
-    <i-tabler name="circle-filled" class="text-primary icon-12 d-flex"></i-tabler>
-    <div class="mat-body-1 m-l-12">Meta a ser batida!</div>
-    <img src="./assets/images/profile/triste.png" width="25" height="25">
-    <span> 0% - 50% </span>
-    <img src="./assets/images/profile/médio.png" width="25" height="25">
-    <span> 51% - 99% </span>
-    <img src="./assets/images/profile/feliz.png" width="25" height="25">
-    <span> 100% </span>
-  </div>
-  <br>
-  <div class="row">
-    <div class="col-12 col-md-6 col-lg-3" *ngFor="let item of goals.items; let i = index">
-      <mat-card class="cardWithShadow">
-        <mat-card-header>
-          <mat-card-title>
-            {{ item.sellerName}}
-          </mat-card-title>
-          <div class="col-4 d-flex flex-column align-items-end">
-            <img *ngIf="(item.value / item.goal) * 100 <= 99 && (item.value / item.goal) * 100 >= 50 && item.goal !=0"
-              src="./assets/images/profile/médio.png" width="25" height="25">
-            <img *ngIf="(item.value / item.goal) * 100 <= 50 && (item.value / item.goal) * 100 >= 0 && item.goal !=0"
-              src="./assets/images/profile/triste.png" width="25" height="25">
-            <img *ngIf="(item.value / item.goal) * 100 >= 100 && item.goal != 0" src="./assets/images/profile/feliz.png"
-              width="25" height="25">
-          </div>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="row m-t-24">
-            <div class="col-7">
-              <span style="font-size: 20px">
-                <i-tabler *ngIf="showValue; else hideValue" name="eye" class="text-primary icon-20"
-                  (click)="showValue = !showValue"></i-tabler>
-                <ng-template #hideValue>
-                  <i-tabler name="eye-off" class="text-secondary icon-20" (click)="showValue = !showValue"></i-tabler>
-                </ng-template>
-                <span *ngIf="showValue"><b>{{ formatarParaReais(item.value) }}</b></span>
-              </span>
-              <div class="d-flex align-items-center m-t-32">
-                <i-tabler name="circle-filled" class="text-primary icon-12 d-flex"></i-tabler>
-                <div class="mat-body-1 m-l-12" style="font-size: 12px">{{ formatarParaReais(item.goal) }}</div>
-              </div>
-            </div>
-          </div>
-        </mat-card-content>
-        <div id="{{ graficoIds[i] }}" class="col-12 d-flex flex-column align-items-center">
-          <apx-chart [series]="graficos[i].series" [chart]="graficos[i].chart" [plotOptions]="graficos[i].plotOptions"
-            [labels]="graficos[i].labels" [fill]="graficos[i].fill"></apx-chart>
-        </div>
-      </mat-card>
-    </div>
-  </div>
+<mat-card class="cardWithShadow">
+    <mat-card-header class="d-flex align-items-center">
+      <mat-card-title>Resultado</mat-card-title>
+      <div class="m-l-auto"></div>
+    </mat-card-header>
+    <mat-card-content class="m-b-32 d-flex align-items-center justify-content-center">
+      <h4 class="mat-headline-5" style="color: green">+ {{quantidadeValor}}</h4>
+    </mat-card-content>
+  </mat-card>
+<br>
+
+<div class="row justify-content-center">
+	<div *ngFor="let cardimg of goals.items; let i = index" class="col-sm-5 col-lg-2">
+		<div class="cardWithShadow card2 position-relative card-hover">
+      
+			<mat-card-header class="d-flex align-items-start justify-content-between">
+				<mat-card-title style="font-size: 16px;" class="mb-0">
+					{{ abreviarNome(cardimg.sellerName) }}
+				</mat-card-title>
+				<div class="align-self-start">
+					<img *ngIf="(cardimg.value / cardimg.goal) * 100 <= 99 && (cardimg.value / cardimg.goal) * 100 >= 50 && cardimg.goal !=0"
+						src="./assets/images/profile/médio.png"
+						class="rounded-circle"
+						width="30"
+						style="margin-right: 5px;">
+
+					<img *ngIf="(cardimg.value / cardimg.goal) * 100 <= 50 && (cardimg.value / cardimg.goal) * 100 >= 0 && cardimg.goal !=0"
+						src="./assets/images/profile/triste.png"
+						class="rounded-circle"
+						width="30"
+						style="margin-right: 5px;">
+
+					<img *ngIf="(cardimg.value / cardimg.goal) * 100 >= 100 && cardimg.goal != 0"
+						src="./assets/images/profile/feliz.png"
+						class="rounded-circle"
+						width="30"
+						style="margin-right: 5px;">
+
+					<img *ngIf="cardimg.goal ===0"
+						src="./assets/images/profile/triste.png"
+						class="rounded-circle"
+						width="30"
+						style="margin-right: 5px;">
+				</div>
+			</mat-card-header>
+
+			<mat-chip class="f-s-16 f-w-700 m-y-8 m-r-8 bg-white d-flex align-items-center">
+				<i-tabler *ngIf="showValue; else hideValue" name="eye" class="text-primary icon-16" style="margin-top: 2px;" (click)="showValue = !showValue"></i-tabler>
+				<ng-template #hideValue>
+					<i-tabler name="eye-off" class="text-secondary icon-16" style="margin-top: 2px;" (click)="showValue = !showValue"></i-tabler>
+				</ng-template>
+				<span *ngIf="showValue"><b> {{ formatarParaReais(cardimg.value)}}</b></span>
+			</mat-chip>
+
+			<div id="{{ graficoIds[i] }}" class="col-12 d-flex flex-column align-items-center" style="margin-bottom: 8px;">
+				<apx-chart [series]="graficos[i].series" [chart]="graficos[i].chart" [plotOptions]="graficos[i].plotOptions" [labels]="graficos[i].labels" [fill]="graficos[i].fill"></apx-chart>
+			</div>
+
+  <mat-chip class="f-s-12 f-w-600 m-y-8 m-r-8 bg-white d-flex align-items-center">
+				<i-tabler name="circle-filled" class="text-primary icon-12"></i-tabler>
+				<span> {{ formatarParaReais(cardimg.goal) }}</span>
+			</mat-chip>
+		</div>
+	</div>
 </div>
+
