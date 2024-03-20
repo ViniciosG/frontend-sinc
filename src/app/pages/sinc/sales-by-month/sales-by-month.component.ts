@@ -75,6 +75,7 @@ export class SalesByMonthComponent implements OnInit {
   public chartOptionsMixed: Partial<ChartOptions> | any;
 
   constructor(private repository: SalesByMonthRepository) {
+
     const dataAtual = new Date();
     dataAtual.setDate(1);
     dataAtual.setHours(0, 0, 0, 0);
@@ -87,6 +88,7 @@ export class SalesByMonthComponent implements OnInit {
 
     this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
+    
     this.selectValue = dataAtual.getFullYear();
 
     const anoAtual = new Date().getFullYear();

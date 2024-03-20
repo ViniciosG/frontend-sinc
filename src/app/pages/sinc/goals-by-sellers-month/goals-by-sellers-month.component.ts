@@ -29,6 +29,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
   private destroy$: Subject<void> = new Subject<void>();
   graficos: any[] = [];
+  graficosGeral: any[] = [];
   showValue: boolean = false;
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -42,6 +43,8 @@ export class GoalsBySellersMonthComponent implements OnInit {
   params: any;
   camposFiltro:any
   quantidadeValor: string;
+  valorTotalGeral: number;
+  metaTotalGeral: number;
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions!: Partial<customerChart> | any;;
 
@@ -100,7 +103,6 @@ export class GoalsBySellersMonthComponent implements OnInit {
     if (percentage.toString() == "Infinity") {
       percentage = 0
     }
-
     return this.chartOptions = {
       series: [percentage],
       chart: {
@@ -151,6 +153,64 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
   }
 
+  montarGraficoGeral(item: any) {
+    var percentage;
+    if(item.value == null) {
+      percentage = 0
+    }
+    percentage = Math.round((item.value / item.goal) * 100);
+    if (percentage.toString() == "Infinity") {
+      percentage = 0
+    }
+    return this.chartOptions = {
+      series: [percentage],
+      chart: {
+        type: "radialBar",
+        offsetY: 0,
+        height: 300,
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: -90,
+          endAngle: 90,
+          track: {
+            background: "#ff414e",
+            strokeWidth: "97%",
+            margin: 5,
+            dropShadow: {
+              enabled: true,
+              top: 2,
+              left: 0,
+              opacity: 0.31,
+              blur: 2
+            }
+          },
+          dataLabels: {
+            name: {
+              show: false
+            },
+            value: {
+              offsetY: -4,
+              fontSize: "22px"
+            }
+          }
+        }
+      },
+      fill: {
+        type: "gradient",
+        gradient: {
+          shade: "light",
+          shadeIntensity: 0.4,
+          inverseColors: false,
+          opacityFrom: 1,
+          opacityTo: 1,
+          stops: [0, 50, 53, 91]
+        },
+        colors: ["#7edfb4"],
+      },
+    };
+  }
+
 
   formatarParaReais(valor: number): string {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -164,18 +224,40 @@ export class GoalsBySellersMonthComponent implements OnInit {
     this.repository.call(this.params).subscribe({
       next: resp => {
         this.goals = resp;
-
-
-        const value = this.goals.items.reduce((total, item) => total + item.value, 0);
-        this.quantidadeValor = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         if (!isEqual(this.SALVAR_RESPOSTA, this.goals)) {
           takeUntil(this.destroy$)
           this.SALVAR_RESPOSTA = resp;
           this.graficos = [];
+          this.graficosGeral = [];
+          let somaValues = 0;
+
+          for (const item of resp.items) {
+              if (typeof item.value === 'number' && !isNaN(item.value)) {
+                  somaValues += item.value;
+              }
+          }
+          
+          const somaArredondada = Math.round(somaValues * 100) / 100;
+
+          this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
+
+          const sellerData = {
+            sellerId: -999,
+            sellerName: "META MENSAL",
+            value: somaArredondada,
+            qty: 1,
+            qtyItems: 1,
+            goal: this.metaTotalGeral
+          };
+
+          this.goals.items.push(sellerData)
+
+          this.graficosGeral.push(this.montarGraficoGeral(sellerData))
 
           for (const item of this.goals.items) {
             this.graficos.push(this.montarGrafico(item));
-          }
+        }
+
         }
       },
       error: error => {
@@ -185,32 +267,37 @@ export class GoalsBySellersMonthComponent implements OnInit {
   }
 
   abreviarNome(nome: string): string {
+    // Verificar se o nome está em branco ou é nulo
+    if (!nome || nome.trim().length === 0) {
+        return "SEM NOME"; // Retorna "SEM NOME" se o nome estiver em branco ou for nulo
+    }
+
     // Verificar se o nome contém ponto
     if (nome.includes('.')) {
-      return nome; // Retornar o nome original se contiver ponto
+        return nome; // Retornar o nome original se contiver ponto
     }
-  
+
     // Verificar se o nome tem apenas 4 letras
     if (nome.trim().length === 4) {
-      return nome; // Retornar o nome original se tiver apenas 4 letras
+        return nome; // Retornar o nome original se tiver apenas 4 letras
     }
-  
+
     // Dividir o nome em partes
     const partesNome = nome.split(' ');
-  
+
     // Verificar se há mais de duas partes no nome
     if (partesNome.length > 2) {
-      // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
-      if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
-          // Se o segundo nome tiver apenas 2 letras, retornar o terceiro nome
-          return partesNome[0] + ' ' + partesNome[2];
-      } else {
-          // Caso contrário, manter apenas a primeira e a segunda parte
-          return partesNome[0] + ' ' + partesNome[1];
-      }
+        // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
+        if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
+            // Se o segundo nome tiver apenas 2 letras, retornar o terceiro nome
+            return partesNome[0] + ' ' + partesNome[2];
+        } else {
+            // Caso contrário, manter apenas a primeira e a segunda parte
+            return partesNome[0] + ' ' + partesNome[1];
+        }
     } else {
-      // Se houver duas partes no nome, retorne o nome original
-      return nome;
+        // Se houver duas partes no nome, retorne o nome original
+        return nome;
     }
 }
 

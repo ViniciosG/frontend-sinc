@@ -1,20 +1,66 @@
-<mat-card class="cardWithShadow">
-    <mat-card-header class="d-flex align-items-center">
-      <mat-card-title>Resultado</mat-card-title>
-      <div class="m-l-auto"></div>
-    </mat-card-header>
-    <mat-card-content class="m-b-32 d-flex align-items-center justify-content-center">
-      <h4 class="mat-headline-5" style="color: green">+ {{quantidadeValor}}</h4>
-    </mat-card-content>
-  </mat-card>
-<br>
+<div class="row">
+    <div *ngFor="let cardimg of goals.items; let i = index" class="col-lg-12">
+        <div *ngIf="cardimg.sellerId === -999">
 
+            <mat-card-header class="d-flex align-items-center justify-content-between ">
+                <mat-card-title style="font-size: 16px;" class="mb-0">
+                    {{ abreviarNome(cardimg.sellerName) }}
+                </mat-card-title>
+                <div class="align-self-start">
+                    <img *ngIf="(cardimg.value / cardimg.goal) * 100 <= 99 && (cardimg.value / cardimg.goal) * 100 >= 50 && cardimg.goal !=0"
+                        src="./assets/images/profile/médio.png"
+                        class="rounded-circle"
+                        width="30"
+                        style="margin-right: 5px;">
+
+                    <img *ngIf="(cardimg.value / cardimg.goal) * 100 <= 50 && (cardimg.value / cardimg.goal) * 100 >= 0 && cardimg.goal !=0"
+                        src="./assets/images/profile/triste.png"
+                        class="rounded-circle"
+                        width="30"
+                        style="margin-right: 5px;">
+
+                    <img *ngIf="(cardimg.value / cardimg.goal) * 100 >= 100 && cardimg.goal != 0"
+                        src="./assets/images/profile/feliz.png"
+                        class="rounded-circle"
+                        width="30"
+                        style="margin-right: 5px;">
+
+                    <img *ngIf="cardimg.goal ===0"
+                        src="./assets/images/profile/triste.png"
+                        class="rounded-circle"
+                        width="30"
+                        style="margin-right: 5px;">
+                </div>
+            </mat-card-header>
+
+            <mat-chip class="f-s-16 f-w-700 m-y-8 m-r-8 bg-white d-flex align-items-center">
+                <i-tabler *ngIf="showValue; else hideValue" (click)="showValue = !showValue" name="eye" class="text-primary icon-16" style="margin-top: 2px;"></i-tabler>
+                <ng-template #hideValue>
+                    <i-tabler (click)="showValue = !showValue" name="eye-off" class="text-secondary icon-16" style="margin-top: 2px;"></i-tabler>
+                </ng-template>
+                <span *ngIf="showValue"><b>{{ formatarParaReais(cardimg.value)}}</b></span>
+            </mat-chip>
+
+			
+            <mat-chip class="f-s-12 f-w-600 m-y-8 m-r-8 bg-white d-flex align-items-center">
+                <i-tabler name="circle-filled" class="text-primary icon-12"></i-tabler>
+                <span>{{ formatarParaReais(cardimg.goal) }}</span>
+            </mat-chip>
+
+            <div id="{{ graficoIds[0] }}" class="col-12 d-flex flex-column align-items-center">
+                <apx-chart [series]="graficosGeral[0].series" [chart]="graficosGeral[0].chart" [plotOptions]="graficosGeral[0].plotOptions" [labels]="graficosGeral[0].labels" [fill]="graficos[0].fill"></apx-chart>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row justify-content-center">
-	<div *ngFor="let cardimg of goals.items; let i = index" class="col-sm-5 col-lg-2">
-		<div class="cardWithShadow card2 position-relative card-hover">
-      
+	<div *ngFor="let cardimg of goals.items; let i = index"
+		class="col-sm-5 col-lg-2">
+		<div class="cardWithShadow card2 position-relative card-hover" *ngIf="cardimg.sellerId !== -999">
+
 			<mat-card-header class="d-flex align-items-start justify-content-between">
-				<mat-card-title style="font-size: 16px;" class="mb-0">
+				<mat-card-title style="font-size: 16px;"
+					class="mb-0">
 					{{ abreviarNome(cardimg.sellerName) }}
 				</mat-card-title>
 				<div class="align-self-start">
@@ -45,22 +91,41 @@
 			</mat-card-header>
 
 			<mat-chip class="f-s-16 f-w-700 m-y-8 m-r-8 bg-white d-flex align-items-center">
-				<i-tabler *ngIf="showValue; else hideValue" name="eye" class="text-primary icon-16" style="margin-top: 2px;" (click)="showValue = !showValue"></i-tabler>
+				<i-tabler *ngIf="showValue; else hideValue"
+					(click)="showValue = !showValue"
+					name="eye"
+					class="text-primary icon-16"
+					style="margin-top: 2px;"></i-tabler>
 				<ng-template #hideValue>
-					<i-tabler name="eye-off" class="text-secondary icon-16" style="margin-top: 2px;" (click)="showValue = !showValue"></i-tabler>
+					<i-tabler (click)="showValue = !showValue"
+						name="eye-off"
+						class="text-secondary icon-16"
+						style="margin-top: 2px;"></i-tabler>
 				</ng-template>
-				<span *ngIf="showValue"><b> {{ formatarParaReais(cardimg.value)}}</b></span>
+				<span *ngIf="showValue">
+					<b>
+						{{ formatarParaReais(cardimg.value)}}
+					</b>
+				</span>
 			</mat-chip>
 
-			<div id="{{ graficoIds[i] }}" class="col-12 d-flex flex-column align-items-center" style="margin-bottom: 8px;">
-				<apx-chart [series]="graficos[i].series" [chart]="graficos[i].chart" [plotOptions]="graficos[i].plotOptions" [labels]="graficos[i].labels" [fill]="graficos[i].fill"></apx-chart>
+			<div id="{{ graficoIds[i] }}"
+				class="col-12 d-flex flex-column align-items-center"
+				style="margin-bottom: 8px;">
+				<apx-chart [series]="graficos[i].series"
+					[chart]="graficos[i].chart"
+					[plotOptions]="graficos[i].plotOptions"
+					[labels]="graficos[i].labels"
+					[fill]="graficos[i].fill"></apx-chart>
 			</div>
 
-  <mat-chip class="f-s-12 f-w-600 m-y-8 m-r-8 bg-white d-flex align-items-center">
-				<i-tabler name="circle-filled" class="text-primary icon-12"></i-tabler>
-				<span> {{ formatarParaReais(cardimg.goal) }}</span>
+			<mat-chip class="f-s-12 f-w-600 m-y-8 m-r-8 bg-white d-flex align-items-center">
+				<i-tabler name="circle-filled"
+					class="text-primary icon-12"></i-tabler>
+				<span>
+					{{ formatarParaReais(cardimg.goal) }}
+				</span>
 			</mat-chip>
 		</div>
 	</div>
 </div>
-
