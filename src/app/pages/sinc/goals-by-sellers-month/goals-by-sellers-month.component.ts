@@ -99,10 +99,16 @@ export class GoalsBySellersMonthComponent implements OnInit {
   }
 
   montarGrafico(item: any) {
-    var percentage = Math.round((item.value / item.goal) * 100);
-    if (percentage.toString() == "Infinity") {
+    var percentage;
+    if(item.value !== null && item.goal !== null) {
+      percentage  = Math.round((item.value / item.goal) * 100);
+      if (percentage.toString() == "Infinity") {
+        percentage = 0
+      }
+    } else {
       percentage = 0
     }
+
     return this.chartOptions = {
       series: [percentage],
       chart: {
@@ -155,11 +161,12 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
   montarGraficoGeral(item: any) {
     var percentage;
-    if(item.value == null) {
-      percentage = 0
-    }
-    percentage = Math.round((item.value / item.goal) * 100);
-    if (percentage.toString() == "Infinity") {
+    if(item.value !== null && item.goal !== null) {
+      percentage  = Math.round((item.value / item.goal) * 100);
+      if (percentage.toString() == "Infinity") {
+        percentage = 0
+      }
+    } else {
       percentage = 0
     }
     return this.chartOptions = {
@@ -214,10 +221,6 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
   formatarParaReais(valor: number): string {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }
-
-  isInfinity(value: any) {
-    console.log((value.value / value.goal) * 100)
   }
 
   getGoalsBySellers() {
