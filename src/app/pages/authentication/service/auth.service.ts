@@ -29,7 +29,7 @@ export class AuthService {
     this.authService.post(user).subscribe({
       next: (res: any) => {
         this.cookieService.set(nameCookieAccessToken, res.authorization, cookieOptions);
-        this.router.navigate(['/dashboards/dashboard1']);
+        this.router.navigate(['/sellers/goalsBySellers']);
       },
       error: () => {
         this.removeAccessTokenFromCookie();
