@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { isEqual } from 'lodash';
-import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
+import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { Subject, interval, switchMap, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { GoalsBySellersModel } from 'src/app/models/goals-by-sellers.model';
@@ -29,8 +29,8 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
   private destroy$: Subject<void> = new Subject<void>();
   graficos: any[] = [];
-  graficosGeral: any[] = [];
-  showValue: boolean = false;
+  isValorVisible = false;
+  isValorVisibleGeral = true;
   startDate: Date = new Date();
   endDate: Date = new Date();
   goals: GoalsBySellersModel;
@@ -45,7 +45,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
   quantidadeValor: string;
   valorTotalGeral: number;
   metaTotalGeral: number;
-  @ViewChild("chart") chart: ChartComponent;
+  somaArredondada:any;
   public chartOptions!: Partial<customerChart> | any;;
 
   constructor(private repository: GoalsBySellersByMonthRepository) {
@@ -122,8 +122,8 @@ export class GoalsBySellersMonthComponent implements OnInit {
           endAngle: 90,
           track: {
             background: "#ff414e",
-            strokeWidth: "97%",
-            margin: 5,
+            strokeWidth: "100%",
+            margin: 6,
             dropShadow: {
               enabled: true,
               top: 2,
@@ -137,8 +137,8 @@ export class GoalsBySellersMonthComponent implements OnInit {
               show: false
             },
             value: {
-              offsetY: -4,
-              fontSize: "22px"
+              offsetY: -5,
+              fontSize: "16px"
             }
           }
         }
@@ -158,66 +158,6 @@ export class GoalsBySellersMonthComponent implements OnInit {
     };
 
   }
-
-  montarGraficoGeral(item: any) {
-    var percentage;
-    if(item.value !== null && item.goal !== null) {
-      percentage  = Math.round((item.value / item.goal) * 100);
-      if (percentage.toString() == "Infinity") {
-        percentage = 0
-      }
-    } else {
-      percentage = 0
-    }
-    return this.chartOptions = {
-      series: [percentage],
-      chart: {
-        type: "radialBar",
-        offsetY: 0,
-        height: 300,
-      },
-      plotOptions: {
-        radialBar: {
-          startAngle: -90,
-          endAngle: 90,
-          track: {
-            background: "#ff414e",
-            strokeWidth: "97%",
-            margin: 5,
-            dropShadow: {
-              enabled: true,
-              top: 2,
-              left: 0,
-              opacity: 0.31,
-              blur: 2
-            }
-          },
-          dataLabels: {
-            name: {
-              show: false
-            },
-            value: {
-              offsetY: -4,
-              fontSize: "22px"
-            }
-          }
-        }
-      },
-      fill: {
-        type: "gradient",
-        gradient: {
-          shade: "light",
-          shadeIntensity: 0.4,
-          inverseColors: false,
-          opacityFrom: 1,
-          opacityTo: 1,
-          stops: [0, 50, 53, 91]
-        },
-        colors: ["#7edfb4"],
-      },
-    };
-  }
-
 
   formatarParaReais(valor: number): string {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -231,7 +171,6 @@ export class GoalsBySellersMonthComponent implements OnInit {
           takeUntil(this.destroy$)
           this.SALVAR_RESPOSTA = resp;
           this.graficos = [];
-          this.graficosGeral = [];
           let somaValues = 0;
 
           for (const item of resp.items) {
@@ -241,6 +180,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
           }
           
           const somaArredondada = Math.round(somaValues * 100) / 100;
+          this.somaArredondada = somaArredondada
 
           this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
 
@@ -253,9 +193,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
             goal: this.metaTotalGeral
           };
 
-          this.goals.items.push(sellerData)
-
-          this.graficosGeral.push(this.montarGraficoGeral(sellerData))
+          this.goals.items.unshift(sellerData)
 
           for (const item of this.goals.items) {
             this.graficos.push(this.montarGrafico(item));
@@ -269,26 +207,28 @@ export class GoalsBySellersMonthComponent implements OnInit {
     });
   }
 
+  toggleValorVisibility() {
+    this.isValorVisible = !this.isValorVisible; // Alternar a visibilidade do valor
+  }
+
+  toggleValorVisibilityGeral() {
+    this.isValorVisibleGeral = !this.isValorVisibleGeral; // Alternar a visibilidade do valor
+  }
   abreviarNome(nome: string): string {
-    // Verificar se o nome está em branco ou é nulo
     if (!nome || nome.trim().length === 0) {
         return "SEM NOME"; // Retorna "SEM NOME" se o nome estiver em branco ou for nulo
     }
 
-    // Verificar se o nome contém ponto
     if (nome.includes('.')) {
         return nome; // Retornar o nome original se contiver ponto
     }
 
-    // Verificar se o nome tem apenas 4 letras
     if (nome.trim().length === 4) {
         return nome; // Retornar o nome original se tiver apenas 4 letras
     }
 
-    // Dividir o nome em partes
     const partesNome = nome.split(' ');
 
-    // Verificar se há mais de duas partes no nome
     if (partesNome.length > 2) {
         // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
         if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {

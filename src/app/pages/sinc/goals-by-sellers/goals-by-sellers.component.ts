@@ -7,6 +7,7 @@ import { ptBR } from 'date-fns/locale';
 import { isEqual } from 'lodash';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { Subject, interval, switchMap, takeUntil } from 'rxjs';
+import { yearlyChart } from 'src/app/components/dashboard1/yearly-breakup/yearly-breakup.component';
 import { MaterialModule } from 'src/app/material.module';
 import { GoalsBySellersModel } from 'src/app/models/goals-by-sellers.model';
 import { GoalsBySellersRepository } from 'src/app/repositories/goals-by-sellers.repository';
@@ -31,8 +32,8 @@ export class GoalsBySellersComponent implements OnInit {
 
   private destroy$: Subject<void> = new Subject<void>();
   graficos: any[] = [];
-  graficosGeral: any[] = [];
-  showValue: boolean = false;
+  isValorVisible = false;
+  isValorVisibleGeral = true;
   startDate: Date = new Date();
   endDate: Date = new Date();
   goals: GoalsBySellersModel;
@@ -47,15 +48,16 @@ export class GoalsBySellersComponent implements OnInit {
   quantidadeValor: string;
   valorTotalGeral: number;
   metaTotalGeral: number;
+  somaArredondada:any;
+  metaGeral:any;
+  public yearlyChart!: Partial<yearlyChart> | any;
   public chartOptions!: Partial<customerChart> | any;;
-  public chartOptions2!: Partial<customerChart> | any;;
 
   constructor(private repository: GoalsBySellersRepository) {
     const dataAtual = new Date();
 
-    // Configurando a data inicial para o início do dia de hoje
     const startDate = startOfDay(dataAtual);
-    const endDate = new Date(); // Data final será o horário atual
+    const endDate = new Date();
   
     this.date_inital = format(startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -85,25 +87,20 @@ export class GoalsBySellersComponent implements OnInit {
   }
 
   abreviarNome(nome: string): string {
-    // Verificar se o nome está em branco ou é nulo
     if (!nome || nome.trim().length === 0) {
         return "SEM NOME"; // Retorna "SEM NOME" se o nome estiver em branco ou for nulo
     }
 
-    // Verificar se o nome contém ponto
     if (nome.includes('.')) {
         return nome; // Retornar o nome original se contiver ponto
     }
 
-    // Verificar se o nome tem apenas 4 letras
     if (nome.trim().length === 4) {
         return nome; // Retornar o nome original se tiver apenas 4 letras
     }
 
-    // Dividir o nome em partes
     const partesNome = nome.split(' ');
 
-    // Verificar se há mais de duas partes no nome
     if (partesNome.length > 2) {
         // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
         if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
@@ -119,21 +116,18 @@ export class GoalsBySellersComponent implements OnInit {
     }
 }
 
-
+toggleValorVisibilityGeral() {
+  this.isValorVisibleGeral = !this.isValorVisibleGeral; // Alternar a visibilidade do valor
+}
 
 
   receberFiltros(event: any) {
     this.camposFiltro.forEach((campo: any) => {
-      // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
-        // Verificar se o campo é do tipo "date"
         if (campo.type === 'date') {
-          // Formatando a data usando o date-fns
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-          // Atualizar o valor correspondente no objeto params com base no id do campo
           this.params[campo.id] = dataFormatada;
         } else {
-          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
           this.params[campo.id] = campo.value;
         }
       }
@@ -156,9 +150,10 @@ export class GoalsBySellersComponent implements OnInit {
       .subscribe();
   }
 
+
   montarGrafico(item: any) {
     var percentage;
-    if(item.value !== null && item.goal !== null) {
+    if(item.value !== 0 && item.goal !== 0) {
       percentage  = Math.round((item.value / item.goal) * 100);
       if (percentage.toString() == "Infinity") {
         percentage = 0
@@ -179,8 +174,8 @@ export class GoalsBySellersComponent implements OnInit {
           endAngle: 90,
           track: {
             background: "#ff414e",
-            strokeWidth: "97%",
-            margin: 5,
+            strokeWidth: "100%",
+            margin: 6,
             dropShadow: {
               enabled: true,
               top: 2,
@@ -194,8 +189,8 @@ export class GoalsBySellersComponent implements OnInit {
               show: false
             },
             value: {
-              offsetY: -4,
-              fontSize: "22px"
+              offsetY: -5,
+              fontSize: "16px"
             }
           }
         }
@@ -215,67 +210,6 @@ export class GoalsBySellersComponent implements OnInit {
     };
 
   }
-
-  montarGraficoGeral(item: any) {
-    var percentage;
-    if(item.value !== null && item.goal !== null) {
-      percentage  = Math.round((item.value / item.goal) * 100);
-      if (percentage.toString() == "Infinity") {
-        percentage = 0
-      }
-    } else {
-      percentage = 0
-    }
-    return this.chartOptions = {
-      series: [percentage],
-      chart: {
-        type: "radialBar",
-        offsetY: 0,
-        height: 300,
-      },
-      plotOptions: {
-        radialBar: {
-          startAngle: -90,
-          endAngle: 90,
-          track: {
-            background: "#ff414e",
-            strokeWidth: "97%",
-            margin: 5,
-            dropShadow: {
-              enabled: true,
-              top: 2,
-              left: 0,
-              opacity: 0.31,
-              blur: 2
-            }
-          },
-          dataLabels: {
-            name: {
-              show: false
-            },
-            value: {
-              offsetY: -4,
-              fontSize: "22px"
-            }
-          }
-        }
-      },
-      fill: {
-        type: "gradient",
-        gradient: {
-          shade: "light",
-          shadeIntensity: 0.4,
-          inverseColors: false,
-          opacityFrom: 1,
-          opacityTo: 1,
-          stops: [0, 50, 53, 91]
-        },
-        colors: ["#7edfb4"],
-      },
-    };
-
-  }
-
 
   formatarParaReais(valor: number): string {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -287,48 +221,58 @@ export class GoalsBySellersComponent implements OnInit {
 
   getGoalsBySellers() {
     this.repository.call(this.params).subscribe({
-      next: resp => {
-        this.goals = resp;
-        if (!isEqual(this.SALVAR_RESPOSTA, this.goals)) {
-          takeUntil(this.destroy$)
-          this.SALVAR_RESPOSTA = resp;
-          this.graficos = [];
-          this.graficosGeral = [];
-          let somaValues = 0;
+        next: resp => {
+            this.goals = resp;
+            if (!isEqual(this.SALVAR_RESPOSTA, this.goals)) {
+                takeUntil(this.destroy$)
+                this.SALVAR_RESPOSTA = resp;
+                this.graficos = [];
+                let somaValues = 0;
 
-          for (const item of resp.items) {
-              if (typeof item.value === 'number' && !isNaN(item.value)) {
-                  somaValues += item.value;
-              }
-          }
-          
-          const somaArredondada = Math.round(somaValues * 100) / 100;
+                for (const item of resp.items) {
+                    // Verifica se item.value e item.goal são nulos e, se forem, atribui 0 a eles
+                    if (item.value === null || item.value === undefined) {
+                        item.value = 0;
+                    }
+                    if (item.goal === null || item.goal === undefined) {
+                        item.goal = 0;
+                    }
 
-          this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
+                    if (typeof item.value === 'number' && !isNaN(item.value)) {
+                        somaValues += item.value;
+                    }
+                }
 
-          const sellerData = {
-            sellerId: -999,
-            sellerName: "META DIÁRIA",
-            value: somaArredondada,
-            qty: 1,
-            qtyItems: 1,
-            goal: this.metaTotalGeral
-          };
+                const somaArredondada = Math.round(somaValues * 100) / 100;
+                this.somaArredondada = somaArredondada
 
-          this.goals.items.push(sellerData)
+                this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
 
-          this.graficosGeral.push(this.montarGraficoGeral(sellerData))
+                const sellerData = {
+                    sellerId: -999,
+                    sellerName: "META DIÁRIA",
+                    value: somaArredondada,
+                    qty: 1,
+                    qtyItems: 1,
+                    goal: this.metaTotalGeral
+                };
 
-          for (const item of this.goals.items) {
-            this.graficos.push(this.montarGrafico(item));
+                this.goals.items.unshift(sellerData);
+
+                for (const item of this.goals.items) {
+                    this.graficos.push(this.montarGrafico(item));
+                }
+            }
+        },
+        error: error => {
+            console.log(error);
         }
-
-        }
-      },
-      error: error => {
-        console.log(error);
-      }
     });
+}
+
+
+  toggleValorVisibility() {
+    this.isValorVisible = !this.isValorVisible; // Alternar a visibilidade do valor
   }
 
 
