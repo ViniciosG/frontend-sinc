@@ -25,4 +25,9 @@
   background-color: #e3fff6;
 }
 
+.fixed-height-card {
+  height: 250px!important; /* Defina a altura desejada */
+  overflow: hidden!important;
+  margin-bottom: 3%;
+}
 

@@ -7,6 +7,7 @@ import { ptBR } from 'date-fns/locale';
 import { isEqual } from 'lodash';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { Subject, interval, switchMap, takeUntil } from 'rxjs';
+import { yearlyChart } from 'src/app/components/dashboard1/yearly-breakup/yearly-breakup.component';
 import { MaterialModule } from 'src/app/material.module';
 import { GoalsBySellersModel } from 'src/app/models/goals-by-sellers.model';
 import { GoalsBySellersByMonthRepository } from 'src/app/repositories/goals-by-sellers-by-month.repository';
@@ -27,6 +28,7 @@ export interface customerChart {
 })
 export class GoalsBySellersMonthComponent implements OnInit {
 
+
   private destroy$: Subject<void> = new Subject<void>();
   graficos: any[] = [];
   isValorVisible = false;
@@ -46,6 +48,8 @@ export class GoalsBySellersMonthComponent implements OnInit {
   valorTotalGeral: number;
   metaTotalGeral: number;
   somaArredondada:any;
+  metaGeral:any;
+  public yearlyChart!: Partial<yearlyChart> | any;
   public chartOptions!: Partial<customerChart> | any;;
 
   constructor(private repository: GoalsBySellersByMonthRepository) {
@@ -84,6 +88,52 @@ export class GoalsBySellersMonthComponent implements OnInit {
     ];
   }
 
+  abreviarNome(nome: string): string {
+    if (!nome || nome.trim().length === 0) {
+        return "SEM NOME"; // Retorna "SEM NOME" se o nome estiver em branco ou for nulo
+    }
+
+    if (nome.includes('.')) {
+        return nome; // Retornar o nome original se contiver ponto
+    }
+
+    if (nome.trim().length === 4) {
+        return nome; // Retornar o nome original se tiver apenas 4 letras
+    }
+
+    const partesNome = nome.split(' ');
+
+    if (partesNome.length > 2) {
+        // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
+        if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
+            // Se o segundo nome tiver apenas 2 letras, retornar o terceiro nome
+            return partesNome[0] + ' ' + partesNome[2];
+        } else {
+            // Caso contrário, manter apenas a primeira e a segunda parte
+            return partesNome[0] + ' ' + partesNome[1];
+        }
+    } else {
+        // Se houver duas partes no nome, retorne o nome original
+        return nome;
+    }
+}
+
+
+  receberFiltros(event: any) {
+    this.camposFiltro.forEach((campo: any) => {
+      if (campo.id && campo.value !== undefined) {
+        if (campo.type === 'date') {
+          const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
+          this.params[campo.id] = dataFormatada;
+        } else {
+          this.params[campo.id] = campo.value;
+        }
+      }
+    });
+    delete this.params['dateSelector'];
+    this.getGoalsBySellers()
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -98,9 +148,10 @@ export class GoalsBySellersMonthComponent implements OnInit {
       .subscribe();
   }
 
+
   montarGrafico(item: any) {
     var percentage;
-    if(item.value !== null && item.goal !== null) {
+    if(item.value !== 0 && item.goal !== 0) {
       percentage  = Math.round((item.value / item.goal) * 100);
       if (percentage.toString() == "Infinity") {
         percentage = 0
@@ -108,7 +159,6 @@ export class GoalsBySellersMonthComponent implements OnInit {
     } else {
       percentage = 0
     }
-
     return this.chartOptions = {
       series: [percentage],
       chart: {
@@ -163,85 +213,68 @@ export class GoalsBySellersMonthComponent implements OnInit {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
+  isInfinity(value: any) {
+    console.log((value.value / value.goal) * 100)
+  }
+
   getGoalsBySellers() {
     this.repository.call(this.params).subscribe({
-      next: resp => {
-        this.goals = resp;
-        if (!isEqual(this.SALVAR_RESPOSTA, this.goals)) {
-          takeUntil(this.destroy$)
-          this.SALVAR_RESPOSTA = resp;
-          this.graficos = [];
-          let somaValues = 0;
+        next: resp => {
+            this.goals = resp;
+            if (!isEqual(this.SALVAR_RESPOSTA, this.goals)) {
+                takeUntil(this.destroy$)
+                this.SALVAR_RESPOSTA = resp;
+                this.graficos = [];
+                let somaValues = 0;
 
-          for (const item of resp.items) {
-              if (typeof item.value === 'number' && !isNaN(item.value)) {
-                  somaValues += item.value;
-              }
-          }
-          
-          const somaArredondada = Math.round(somaValues * 100) / 100;
-          this.somaArredondada = somaArredondada
+                for (const item of resp.items) {
+                    // Verifica se item.value e item.goal são nulos e, se forem, atribui 0 a eles
+                    if (item.value === null || item.value === undefined) {
+                        item.value = 0;
+                    }
+                    if (item.goal === null || item.goal === undefined) {
+                        item.goal = 0;
+                    }
 
-          this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
+                    if (typeof item.value === 'number' && !isNaN(item.value)) {
+                        somaValues += item.value;
+                    }
+                }
 
-          const sellerData = {
-            sellerId: -999,
-            sellerName: "META MENSAL",
-            value: somaArredondada,
-            qty: 1,
-            qtyItems: 1,
-            goal: this.metaTotalGeral
-          };
+                const somaArredondada = Math.round(somaValues * 100) / 100;
+                this.somaArredondada = somaArredondada
 
-          this.goals.items.unshift(sellerData)
+                this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
 
-          for (const item of this.goals.items) {
-            this.graficos.push(this.montarGrafico(item));
+                const sellerData = {
+                    sellerId: -999,
+                    sellerName: "META DIÁRIA",
+                    value: somaArredondada,
+                    qty: 1,
+                    qtyItems: 1,
+                    goal: this.metaTotalGeral
+                };
+
+                this.goals.items.unshift(sellerData);
+
+                for (const item of this.goals.items) {
+                    this.graficos.push(this.montarGrafico(item));
+                }
+            }
+        },
+        error: error => {
+            console.log(error);
         }
-
-        }
-      },
-      error: error => {
-        console.log(error);
-      }
     });
-  }
+}
+
 
   toggleValorVisibility() {
     this.isValorVisible = !this.isValorVisible; // Alternar a visibilidade do valor
   }
 
-  toggleValorVisibilityGeral() {
-    this.isValorVisibleGeral = !this.isValorVisibleGeral; // Alternar a visibilidade do valor
-  }
-  abreviarNome(nome: string): string {
-    if (!nome || nome.trim().length === 0) {
-        return "SEM NOME"; // Retorna "SEM NOME" se o nome estiver em branco ou for nulo
-    }
 
-    if (nome.includes('.')) {
-        return nome; // Retornar o nome original se contiver ponto
-    }
 
-    if (nome.trim().length === 4) {
-        return nome; // Retornar o nome original se tiver apenas 4 letras
-    }
 
-    const partesNome = nome.split(' ');
-
-    if (partesNome.length > 2) {
-        // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
-        if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
-            // Se o segundo nome tiver apenas 2 letras, retornar o terceiro nome
-            return partesNome[0] + ' ' + partesNome[2];
-        } else {
-            // Caso contrário, manter apenas a primeira e a segunda parte
-            return partesNome[0] + ' ' + partesNome[1];
-        }
-    } else {
-        // Se houver duas partes no nome, retorne o nome original
-        return nome;
-    }
-}
 
 }

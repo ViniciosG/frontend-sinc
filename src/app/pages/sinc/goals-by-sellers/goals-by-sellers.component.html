@@ -4,8 +4,8 @@
 	</mat-card-header>
 	<mat-card-content>
 	  <div class="row m-t-24">
-		<div class="col-7" (click)="toggleValorVisibilityGeral()" style="cursor: pointer;">
-			<h4 class="mat-headline-5" *ngIf="isValorVisibleGeral">{{ formatarParaReais(somaArredondada) }}</h4>
+		<div class="col-7" style="cursor: pointer;" *ngIf="isValorVisible">
+			<h4 class="mat-headline-5" >{{ formatarParaReais(somaArredondada) }}</h4>
 		  <div class="d-flex align-items-center m-t-16">
 			<i-tabler name="target-arrow" class="text-primary icon-16 mr-2" style="display: flex; align-items: center;" ></i-tabler>
 			<div class="mat-body-1 f-w-600 m-l-12">{{ formatarParaReais(metaTotalGeral) }}</div>
@@ -18,7 +18,7 @@
 <div class="row justify-content-center">
 	<div *ngFor="let cardimg of goals.items; let i = index"
 		class="col-sm-5 col-lg-2">
-		<div class="cardWithShadow card2 position-relative card-hover" [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}">
+		<div class="cardWithShadow card2 position-relative card-hover fixed-height-card" [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}">
 
 			<mat-card-header class="d-flex align-items-start justify-content-between">
 				<mat-card-title style="font-size: 16px;"
@@ -60,28 +60,15 @@
 					</b>
 				</span>
 			</div>
-
-			<div id="{{ graficoIds[i] }}"
-				class="col-12 d-flex flex-column align-items-center"
-				style="margin-bottom: 8px;">
-				<apx-chart [series]="graficos[i].series"
-					[chart]="graficos[i].chart"
-					[plotOptions]="graficos[i].plotOptions"
-					[labels]="graficos[i].labels"
-					[fill]="graficos[i].fill"></apx-chart>
-			</div>
-
-			<div class="f-s-12 f-w-600 m-y-8 m-r-8 d-flex align-items-center justify-content-center" [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}">
-				<i-tabler name="target-arrow" class="text-primary icon-16 mr-2" style="display: flex; align-items: center;" ></i-tabler>
+			<div class="f-s-12 f-w-600 m-y-8 m-r-8 d-flex align-items-center justify-content-center" style="margin-bottom: 0;" [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}">
+				<i-tabler name="target-arrow" class="text-primary icon-16 mr-2" style="display: flex; align-items: center;"></i-tabler>
 				<span [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}" *ngIf="isValorVisible">
 					{{ formatarParaReais(cardimg.goal) }}
 				</span>
-				<span [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}" *ngIf="!isValorVisible">
-					--
-				</span>
+			</div>	
+			<div id="{{ graficoIds[i] }}" class="col-12 d-flex flex-column align-items-center">
+				<apx-chart [series]="graficos[i].series" [chart]="graficos[i].chart" [plotOptions]="graficos[i].plotOptions" [labels]="graficos[i].labels" [fill]="graficos[i].fill"></apx-chart>
 			</div>
-			
-					
 		</div>
 	</div>
 </div>

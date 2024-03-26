@@ -116,10 +116,6 @@ export class GoalsBySellersComponent implements OnInit {
     }
 }
 
-toggleValorVisibilityGeral() {
-  this.isValorVisibleGeral = !this.isValorVisibleGeral; // Alternar a visibilidade do valor
-}
-
 
   receberFiltros(event: any) {
     this.camposFiltro.forEach((campo: any) => {
