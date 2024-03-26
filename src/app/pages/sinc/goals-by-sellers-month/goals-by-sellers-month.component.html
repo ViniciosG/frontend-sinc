@@ -1,6 +1,6 @@
 <mat-card class="cardWithShadow">
 	<mat-card-header>
-	  <mat-card-title>Toal do mês</mat-card-title>
+	  <mat-card-title>Total do mês</mat-card-title>
 	</mat-card-header>
 	<mat-card-content>
 	  <div class="row m-t-24">
@@ -23,7 +23,7 @@
 			<mat-card-header class="d-flex align-items-start justify-content-between">
 				<mat-card-title style="font-size: 16px;"
 					class="mb-0">
-					{{ abreviarNome(cardimg.sellerName) }}
+					{{abreviarNome(cardimg.sellerName)}}
 				</mat-card-title>
 				<div class="align-self-start">
 					<img *ngIf="(cardimg.value / cardimg.goal) * 100 <= 99 && (cardimg.value / cardimg.goal) * 100 >= 50 && cardimg.goal !=0"
@@ -73,8 +73,11 @@
 
 			<div class="f-s-12 f-w-600 m-y-8 m-r-8 d-flex align-items-center justify-content-center" [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}">
 				<i-tabler name="target-arrow" class="text-primary icon-16 mr-2" style="display: flex; align-items: center;" ></i-tabler>
-				<span [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}">
+				<span [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}" *ngIf="isValorVisible">
 					{{ formatarParaReais(cardimg.goal) }}
+				</span>
+				<span [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}" *ngIf="!isValorVisible">
+					--
 				</span>
 			</div>
 			

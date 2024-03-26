@@ -112,12 +112,15 @@ export class SalesByStatesComponent implements OnInit {
 
         this.states = resp;
 
-        const data = this.states.items.map(item => ({
-          name: stateMap[item.uf] || item.uf,
-          value: item.value
-        }));
+        const allStatesData = Object.keys(stateMap).map(uf => {
+          const stateData = this.states.items.find(item => item.uf === uf);
+          return {
+            name: stateMap[uf],
+            value: stateData ? stateData.value : 0 // Se não houver dados, definir como null
+          };
+        });
   
-        this.executarMapa(data);
+        this.executarMapa(allStatesData);
       },
       error: error => {
         console.log(error);
@@ -138,16 +141,11 @@ export class SalesByStatesComponent implements OnInit {
     receberFiltros(event: any) {
     console.log(event)
     this.camposFiltro.forEach((campo: any) => {
-      // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
-        // Verificar se o campo é do tipo "date"
         if (campo.type === 'date') {
-          // Formatando a data usando o date-fns
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-          // Atualizar o valor correspondente no objeto params com base no id do campo
           this.params[campo.id] = dataFormatada;
         } else {
-          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
           this.params[campo.id] = campo.value;
         }
       }
@@ -159,7 +157,7 @@ export class SalesByStatesComponent implements OnInit {
   
 
   executarMapa(data: any): void {
-    const primeiroElemento = data[0];
+    const maxValor = Math.max(...data.map((item:any) => item.value));
     this.chartInstance = echarts.init(document.getElementById('map'));
 
     this.chartInstance.showLoading();
@@ -171,7 +169,6 @@ export class SalesByStatesComponent implements OnInit {
         
 
         echarts.registerMap('Brasil', brasilJson);
-console.log('Dados de ' + this.params.registerInitial + ' até ' + this.params.registerFinal,)
         const option: EChartsOption = {
           title: {
             text: 'Vendas por Estado do Brasil',
@@ -183,12 +180,12 @@ console.log('Dados de ' + this.params.registerInitial + ' até ' + this.params.r
             //formatter: '{b}: {c}'
           },
           visualMap: {
-            max: primeiroElemento.value,
+            max: maxValor,
             text: ['Alta', 'Baixa'],
             realtime: false,
             calculable: true,
             inRange: {
-              color: ["#ff9c32","#f9f452", '#ffff00', '#23d600'] // De verde claro (#e6fffa) para amarelo (#ffff00) para vermelho escuro (#ff0000)
+              color: ["#ff9c32","#f9f452", '#ffff00', '#23d600'] 
             }
           },
           toolbox: {
@@ -219,7 +216,7 @@ console.log('Dados de ' + this.params.registerInitial + ' até ' + this.params.r
                     return `{b|${params.name}}\n{c|${params.value}}`; // Utilizando o valor original se não for possível converter para número
                   }
                 },
-                rich: { // Definindo estilos personalizados
+                rich: {
                   c: {
                     fontWeight: 'bold', // Negrito para o valor
                     fontSize: this.fontSize // Tamanho da fonte do valor (em pixels)

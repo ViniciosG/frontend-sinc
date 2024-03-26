@@ -173,9 +173,8 @@ export class SalesByDayOfWeekComponent implements OnInit {
             show: true,
             position: 'top',
             formatter: (params: any) => {
-              console.log(params.value.value)
               const valueFormatted = params.value.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-              return `{a|${valueFormatted}} 💰`; // Usando formatação de texto enriquecido
+              return `{a|${valueFormatted}} 💰`; 
             },
             rich: {
               a: {

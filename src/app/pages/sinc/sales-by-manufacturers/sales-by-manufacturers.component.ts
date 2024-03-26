@@ -37,7 +37,7 @@ export class SalesByManufacturersComponent implements OnInit {
   quantidadeItems:string;
   params: any;
   camposFiltro:any
-  altura: any = 600;
+  altura: any = 4000;
 
   constructor(private repository: SalesByManufacturersRepository) {
     const dataAtual = new Date();
@@ -57,14 +57,12 @@ export class SalesByManufacturersComponent implements OnInit {
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
-      _limit: 5,
       _offset: 0
     }
 
     this.camposFiltro = [
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
-      { label: 'Ranking', placeholder: 'Ranking', type: 'select',value: '5', visivel: true, options: ['5', '10', '20','30'], id: "_limit" },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
       { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value:'thisMonth', options: [
