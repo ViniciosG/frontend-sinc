@@ -4,9 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format, startOfDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { isEqual } from 'lodash';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, NgApexchartsModule } from 'ng-apexcharts';
-import { Subject, interval, switchMap, takeUntil } from 'rxjs';
+import { Subject, interval, switchMap } from 'rxjs';
 import { yearlyChart } from 'src/app/components/dashboard1/yearly-breakup/yearly-breakup.component';
 import { MaterialModule } from 'src/app/material.module';
 import { GoalsBySellersModel } from 'src/app/models/goals-by-sellers.model';
@@ -218,10 +217,10 @@ export class GoalsBySellersComponent implements OnInit {
   getGoalsBySellers() {
     this.repository.call(this.params).subscribe({
         next: resp => {
-            this.goals = resp;
-            if (!isEqual(this.SALVAR_RESPOSTA, this.goals)) {
-                takeUntil(this.destroy$)
-                this.SALVAR_RESPOSTA = resp;
+            const respString = JSON.stringify(resp); // Convertendo a resposta atual para uma string JSON
+            if (respString !== this.SALVAR_RESPOSTA) { // Comparando com a string JSON da resposta anterior
+                this.SALVAR_RESPOSTA = respString; // Atualizando a string JSON da resposta anterior
+                this.goals = resp;
                 this.graficos = [];
                 let somaValues = 0;
 
@@ -265,6 +264,8 @@ export class GoalsBySellersComponent implements OnInit {
         }
     });
 }
+
+
 
 
   toggleValorVisibility() {
