@@ -152,7 +152,7 @@ export class AppEmployeeSalaryComponent {
       plotOptions: {
         bar: {
           borderRadius: 4,
-          columnWidth: '45%',
+          columnWidth: '30%',
           distributed: true,
           endingShape: 'rounded',
         },

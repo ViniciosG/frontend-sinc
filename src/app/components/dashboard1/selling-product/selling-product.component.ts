@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
@@ -11,7 +12,7 @@ import { yearlyChart } from '../yearly-breakup/yearly-breakup.component';
 @Component({
   selector: 'app-selling-product',
   standalone: true,
-  imports: [MaterialModule, NgApexchartsModule, TablerIconsModule],
+  imports: [MaterialModule,CommonModule, NgApexchartsModule, TablerIconsModule],
 
   templateUrl: './selling-product.component.html',
 })

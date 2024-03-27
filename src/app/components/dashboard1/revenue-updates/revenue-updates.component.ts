@@ -2,7 +2,7 @@ import { NgForOf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
-import { format, startOfWeek, subDays } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -64,9 +64,15 @@ export class AppRevenueUpdatesComponent {
 
   constructor(private repository: SalesByDayOfWeekRepository) {
     const dataAtual = new Date();
-    const primeiroDiaSemana = startOfWeek(dataAtual, { weekStartsOn: 0 }); // 0 para domingo, 1 para segunda, e assim por diante
-  
-    this.startDate = subDays(dataAtual, 6); // Subtrai 6 dias da data atual para obter os últimos 7 dias
+
+    // Subtrai 6 dias da data atual para obter a data de 7 dias atrás
+    const startDate = subDays(dataAtual, 6);
+    
+    // Define as horas, minutos, segundos e milissegundos para 0
+    startDate.setHours(0, 0, 0, 0);
+    
+    // Agora startDate contém a data de 7 dias atrás com as horas zeradas
+    this.startDate = startDate;
     this.endDate = dataAtual;
   
     this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -116,7 +122,7 @@ export class AppRevenueUpdatesComponent {
     this.revenueChart = {
       series: [
         {
-          name: 'Total',
+          name: '',
           data: sourceData.map((data:any) => data.value), // Usar os valores do sourceData para os dados da série
           color: '#5D87FF',
         },
