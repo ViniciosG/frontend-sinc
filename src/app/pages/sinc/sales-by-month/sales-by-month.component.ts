@@ -224,7 +224,6 @@ export class SalesByMonthComponent implements OnInit {
             show: true,
             position: 'top',
             formatter: (params: any) => {
-              console.log(params.value.value)
               const valueFormatted = params.value.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
               return `{a|${valueFormatted}} 💰`; // Usando formatação de texto enriquecido
             },
@@ -316,7 +315,6 @@ export class SalesByMonthComponent implements OnInit {
 }
 
 numeroParaMes(numero: number): string {
-  console.log(numero)
   const data = parse(`${numero}/2024`, 'MM/yyyy', new Date());
   return format(data, 'MMMM', { locale: ptBR });
 }

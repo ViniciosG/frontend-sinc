@@ -1,8 +1,8 @@
-import { Component, OnInit, Inject, Optional } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import {
+  MAT_DIALOG_DATA,
   MatDialog,
   MatDialogRef,
-  MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
 import { Contact } from './contact';
 import { ContactService } from './contact.service';
@@ -105,7 +105,6 @@ export class AppContactDialogContentComponent {
     // @Optional() is used to prevent error if no data is passed
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ContactData
   ) {
-    // console.log(data);
     this.local_data = { ...data };
     this.action = this.local_data.action;
   }

@@ -1,17 +1,17 @@
+import { NgFor } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import {
-  ApexChart,
-  ChartComponent,
-  ApexTooltip,
   ApexAxisChartSeries,
-  ApexPlotOptions,
+  ApexChart,
   ApexFill,
+  ApexPlotOptions,
   ApexStroke,
+  ApexTooltip,
+  ChartComponent,
   NgApexchartsModule,
 } from 'ng-apexcharts';
 import { MaterialModule } from '../../../material.module';
-import { TablerIconsModule } from 'angular-tabler-icons';
-import { NgFor } from '@angular/common';
 
 export interface weeklyCart {
   series: ApexAxisChartSeries;

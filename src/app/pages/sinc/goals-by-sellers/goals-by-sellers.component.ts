@@ -219,7 +219,7 @@ export class GoalsBySellersComponent implements OnInit {
         next: resp => {
             const respString = JSON.stringify(resp); // Convertendo a resposta atual para uma string JSON
             if (respString !== this.SALVAR_RESPOSTA) { // Comparando com a string JSON da resposta anterior
-                this.SALVAR_RESPOSTA = respString; // Atualizando a string JSON da resposta anterior
+                this.SALVAR_RESPOSTA = respString;
                 this.goals = resp;
                 this.graficos = [];
                 let somaValues = 0;

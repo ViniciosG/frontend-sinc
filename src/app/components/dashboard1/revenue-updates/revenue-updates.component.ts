@@ -2,7 +2,7 @@ import { NgForOf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
-import { format, startOfWeek } from 'date-fns';
+import { format, startOfWeek, subDays } from 'date-fns';
 import {
   ApexAxisChartSeries,
   ApexChart,
@@ -62,28 +62,22 @@ export class AppRevenueUpdatesComponent {
 
   public revenueChart!: Partial<revenueChart> | any;
 
-  months: month[] = [
-    { value: 'mar', viewValue: 'March 2023' },
-    { value: 'apr', viewValue: 'April 2023' },
-    { value: 'june', viewValue: 'June 2023' },
-  ];
-
   constructor(private repository: SalesByDayOfWeekRepository) {
     const dataAtual = new Date();
     const primeiroDiaSemana = startOfWeek(dataAtual, { weekStartsOn: 0 }); // 0 para domingo, 1 para segunda, e assim por diante
-    
-    this.startDate = primeiroDiaSemana;
-    this.endDate = new Date();
-    
+  
+    this.startDate = subDays(dataAtual, 6); // Subtrai 6 dias da data atual para obter os últimos 7 dias
+    this.endDate = dataAtual;
+  
     this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
-
+  
     this.params = {
       registerInitial: this.date_inital,
-      registerFinal:  this.date_final,
+      registerFinal: this.date_final,
     };
-
-    this.obterDadosERenderizarGrafico()
+  
+    this.obterDadosERenderizarGrafico();
   }
 
   obterDadosERenderizarGrafico() {
@@ -122,7 +116,7 @@ export class AppRevenueUpdatesComponent {
     this.revenueChart = {
       series: [
         {
-          name: 'Earnings this month',
+          name: 'Total',
           data: sourceData.map((data:any) => data.value), // Usar os valores do sourceData para os dados da série
           color: '#5D87FF',
         },

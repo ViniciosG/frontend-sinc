@@ -6,15 +6,19 @@
         <mat-card-subtitle class="mat-body-1"
           >semana atual</mat-card-subtitle
         >
-        
-      </div>
-      <div class="m-l-auto">
+        <div class="col-sm-4">
+          <div class="d-flex align-items-center m-t-24">         
+            <div class="m-l-12">
+              <h5 class="mat-headline-5 m-b-4">{{totalValue}}</h5>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </mat-card-header>
   <mat-card-content>
     <div class="row">
-      <div class="col-sm-8">
+      <div class="col-sm-10">
         <apx-chart
           [series]="revenueChart.series"
           [dataLabels]="revenueChart.dataLabels"
@@ -27,22 +31,6 @@
           [tooltip]="revenueChart.tooltip"
           [plotOptions]="revenueChart.plotOptions"
         ></apx-chart>
-      </div>
-      <div class="col-sm-4">
-        <div class="d-flex align-items-center m-t-24">
-          <span class="text-primary bg-light-primary rounded icon-40 d-flex align-items-center justify-content-center">
-            <i-tabler name="grid-dots" class="icon-20 d-flex"></i-tabler>
-          </span>
-         
-          <div class="m-l-12">
-            <h5 class="mat-headline-5 m-b-4">{{totalValue}}</h5>
-            <span class="mat-subtitle-2">Valor total</span>
-          </div>
-        </div>
-
-        <button mat-flat-button color="primary" class="d-block w-100 m-t-32" [routerLink]="['/sellers/salesByDayOfWeek']">
-          Visualizar Detalhes
-        </button>
       </div>
     </div>
   </mat-card-content>

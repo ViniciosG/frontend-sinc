@@ -115,7 +115,6 @@ export class AppMonthlyEarningsComponent {
 
 executarGrafico(item:any) {
   const values = item.map((data: any) => data.value);
-  console.log(values)
   this.monthlyChart = {
     series: [
       {

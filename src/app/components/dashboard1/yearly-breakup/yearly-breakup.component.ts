@@ -37,6 +37,7 @@ export interface yearlyChart {
 export class AppYearlyBreakupComponent {
 
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
+
   public yearlyChart!: Partial<yearlyChart> | any;
   goals: GoalsBySellersModel;
   params: any;
@@ -47,6 +48,7 @@ export class AppYearlyBreakupComponent {
   date_inital: string;
   date_final: string;
   percentage: any;
+
   constructor(private repository: GoalsBySellersRepository) {
     const dataAtual = new Date();
 
@@ -66,7 +68,7 @@ export class AppYearlyBreakupComponent {
   }
 
   executarGrafico(percentage:any) {
-const value = 100 - percentage;
+    const value = 100 - percentage;
     this.yearlyChart = {
       series: [percentage,value],
 

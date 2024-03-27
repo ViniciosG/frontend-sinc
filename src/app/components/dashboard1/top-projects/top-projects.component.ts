@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
-import { MaterialModule } from '../../../material.module';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { format } from 'date-fns';
+import { SalesByCustumersModel } from 'src/app/models/sales-by-custumers.model';
+import { SalesByCustomersRepository } from 'src/app/repositories/sales-by-customers.repository';
+import { MaterialModule } from '../../../material.module';
 
 
 export interface productsData {
@@ -13,50 +16,6 @@ export interface productsData {
   priority: string;
 }
 
-const ELEMENT_DATA: productsData[] = [
-  {
-    id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
-    uname: 'Sunil Joshi',
-    position: 'Web Designer',
-    productName: 'Elite Admin',
-    budget: 3.9,
-    priority: 'low'
-  },
-  {
-    id: 2,
-    imagePath: 'assets/images/profile/user-2.jpg',
-    uname: 'Andrew McDownland',
-    position: 'Project Manager',
-    productName: 'Real Homes Theme',
-    budget: 24.5,
-    priority: 'medium'
-  },
-  {
-    id: 3,
-    imagePath: 'assets/images/profile/user-3.jpg',
-    uname: 'Christopher Jamil',
-    position: 'Project Manager',
-    productName: 'MedicalPro Theme',
-    budget: 12.8,
-    priority: 'high'
-  },
-  {
-    id: 4,
-    imagePath: 'assets/images/profile/user-4.jpg',
-    uname: 'Nirav Joshi',
-    position: 'Frontend Engineer',
-    productName: 'Hosting Press HTML',
-    budget: 2.4,
-    priority: 'critical'
-  },
-];
-
-interface month {
-  value: string;
-  viewValue: string;
-}
-
 @Component({
   selector: 'app-top-projects',
   standalone: true,
@@ -66,11 +25,82 @@ interface month {
 export class AppTopProjectsComponent {
 
   displayedColumns: string[] = ['assigned', 'name', 'priority', 'budget'];
-  dataSource = ELEMENT_DATA;
+  dataSource: any;
 
-  months: month[] = [
-    { value: 'mar', viewValue: 'March 2023' },
-    { value: 'apr', viewValue: 'April 2023' },
-    { value: 'june', viewValue: 'June 2023' },
-  ];
+  params: any;
+  startDate: Date = new Date();
+  endDate: Date = new Date();
+  customers: SalesByCustumersModel;
+  date_inital: string;
+  date_final: string;
+  totalValue: string;
+  
+  constructor(private repository: SalesByCustomersRepository) {
+    const dataAtual = new Date();
+
+    dataAtual.setDate(1);
+    dataAtual.setHours(0, 0, 0, 0);
+
+    this.startDate = dataAtual;
+
+    this.endDate = new Date();
+
+    this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
+    this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
+
+    this.params = {
+      registerInitial: this.date_inital,
+      registerFinal:  this.date_final,
+      _direction: 'DESC',
+      _sort: 'value',
+      _limit:'5'
+    }
+
+
+    this.obterDadosERenderizar()
+  }
+
+  obterDadosERenderizar() {
+    this.repository.call(this.params).subscribe({
+      next: resp => {
+        const itemsComNovosCampos = resp.items.map((item: any, index: any) => ({
+          ...item,
+          index: index + 1,
+          color: this.calcularCorGradient(index, resp.items.length)
+        }));
+        // Atualizar o objeto 'resp' com o novo array de items
+        resp.items = itemsComNovosCampos;
+        this.customers = resp;
+        this.dataSource = this.customers.items
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
+  }
+
+    
+  calcularCorGradient(index: number, total: number): string {
+    const verde = [144, 238, 144]; // Verde pastel
+    const vermelho = [255, 99, 71]; // Vermelho pastel
+  
+    const r = Math.round((vermelho[0] - verde[0]) * (index / total) + verde[0]);
+    const g = Math.round((vermelho[1] - verde[1]) * (index / total) + verde[1]);
+    const b = Math.round((vermelho[2] - verde[2]) * (index / total) + verde[2]);
+  
+    return '#' + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+  }
+  
+  componentToHex(c: number): string {
+    const hex = c.toString(16);
+    return hex.length == 1 ? '0' + hex : hex;
+  }
+
+  formatarParaReais(valor: number): string {
+    return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  formatarParaValor(valor: number): string {
+    return valor.toLocaleString();
+  }
 }

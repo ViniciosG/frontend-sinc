@@ -69,8 +69,6 @@ export class MarginBySubGroupsComponent implements OnInit {
   }
 
   receberFiltros(event: any) {
-    console.log('Filtros recebidos:', event);
-  
     this.camposFiltro.forEach(campo => {
 
       if (campo.id && campo.value !== undefined) {
@@ -85,8 +83,6 @@ export class MarginBySubGroupsComponent implements OnInit {
         }
       }
     });
-  
-    console.log('Params atualizado:', this.params);
   }
 
   obterDadosERenderizarGrafico() {
