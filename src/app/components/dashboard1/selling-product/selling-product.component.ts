@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { SubGroupSoldModel } from 'src/app/models/sub-group-sold.model';
 import { SubGroupSoldRepository } from 'src/app/repositories/sub-group-sold.repository';
@@ -46,13 +45,10 @@ export class AppSellingProductComponent {
     this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
 
-    this.inititalContext = format(this.startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-    this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
-      _limit: 3,
+      _limit: 5,
       _direction: 'DESC',
       _sort: 'qtyItems',
     }

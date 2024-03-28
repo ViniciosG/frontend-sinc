@@ -53,7 +53,7 @@ export class AppTopProjectsComponent {
       registerFinal:  this.date_final,
       _direction: 'DESC',
       _sort: 'value',
-      _limit:'5'
+      _limit:'10'
     }
 
 
