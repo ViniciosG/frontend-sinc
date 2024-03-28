@@ -28,7 +28,7 @@
 
 
 <mat-card-content class="b-t-1">
-    <apx-chart [series]="areaChartOptions.series" [chart]="areaChartOptions.chart" [xaxis]="areaChartOptions.xaxis"
+  <apx-chart *ngIf="areaChartOptions?.series" [series]="areaChartOptions.series" [chart]="areaChartOptions.chart" [xaxis]="areaChartOptions.xaxis"
       [yaxis]="areaChartOptions.yaxis" [grid]="areaChartOptions.grid" [stroke]="areaChartOptions.stroke"
       [tooltip]="areaChartOptions.tooltip" [dataLabels]="areaChartOptions.dataLabels" [legend]="areaChartOptions.legend"
       [colors]="areaChartOptions.colors" [markers]="areaChartOptions.markers">

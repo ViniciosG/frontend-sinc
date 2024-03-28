@@ -3,8 +3,8 @@
     <mat-card-title>Faturamento Anual</mat-card-title>
   </mat-card-header>
   <mat-card-content class="p-b-32">
-    <apx-chart
-      [series]="employeeChart.series"
+    <apx-chart *ngIf="employeeChart?.series"
+    [series]="employeeChart.series"
       [plotOptions]="employeeChart.plotOptions"
       [dataLabels]="employeeChart.dataLabels"
       [chart]="employeeChart.chart"

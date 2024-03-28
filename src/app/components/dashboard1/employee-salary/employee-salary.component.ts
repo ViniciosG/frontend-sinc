@@ -1,3 +1,4 @@
+import { CommonModule, NgIf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format, parse } from 'date-fns';
@@ -34,7 +35,7 @@ export interface employeeChart {
 @Component({
   selector: 'app-employee-salary',
   standalone: true,
-  imports: [NgApexchartsModule, MaterialModule, TablerIconsModule],
+  imports: [NgApexchartsModule, MaterialModule, TablerIconsModule,CommonModule,NgIf],
   templateUrl: './employee-salary.component.html',
 })
 export class AppEmployeeSalaryComponent {

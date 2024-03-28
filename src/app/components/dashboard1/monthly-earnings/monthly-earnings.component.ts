@@ -69,7 +69,9 @@ export class AppMonthlyEarningsComponent {
       _direction: 'DESC',
       _sort: 'goal',
     }
+  }
 
+  ngOnInit(): void {
     this.getGoalsBySellers();
   }
 

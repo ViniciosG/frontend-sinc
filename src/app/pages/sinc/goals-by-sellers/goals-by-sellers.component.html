@@ -15,7 +15,7 @@
 	</mat-card-content>
   </mat-card>
   
-<div class="row justify-content-center">
+<div class="row justify-content-center"  *ngIf="goals?.items">
 	<div *ngFor="let cardimg of goals.items; let i = index"
 		class="col-sm-5 col-lg-2">
 		<div class="cardWithShadow card2 position-relative card-hover fixed-height-card" [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}">

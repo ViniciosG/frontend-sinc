@@ -18,15 +18,15 @@
       <div class="mat-body-1 m-l-4">referente útimo mês</div>
     </div>
   </mat-card-content>
-  <apx-chart
-    [series]="customerChart.series"
-    [dataLabels]="customerChart.dataLabels"
-    [chart]="customerChart.chart"
-    [legend]="customerChart.legend"
-    [colors]="customerChart.colors"
-    [stroke]="customerChart.stroke"
-    [tooltip]="customerChart.tooltip"
-    [plotOptions]="customerChart.plotOptions"
-    [responsive]="customerChart.responsive"
-  ></apx-chart>
+  <apx-chart *ngIf="customerChart?.series"
+  [series]="customerChart.series"
+  [dataLabels]="customerChart.dataLabels"
+  [chart]="customerChart.chart"
+  [legend]="customerChart.legend"
+  [colors]="customerChart.colors"
+  [stroke]="customerChart.stroke"
+  [tooltip]="customerChart.tooltip"
+  [plotOptions]="customerChart.plotOptions"
+  [responsive]="customerChart.responsive">
+</apx-chart>
 </mat-card>

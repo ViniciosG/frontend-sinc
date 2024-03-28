@@ -1,4 +1,4 @@
-import { NgForOf } from '@angular/common';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
@@ -46,7 +46,7 @@ export interface revenueChart {
 @Component({
   selector: 'app-revenue-updates',
   standalone: true,
-  imports: [NgApexchartsModule, MaterialModule, TablerIconsModule, NgForOf,RouterModule,],
+  imports: [NgApexchartsModule, MaterialModule, TablerIconsModule, NgForOf,RouterModule,CommonModule,NgIf],
   templateUrl: './revenue-updates.component.html',
 })
 export class AppRevenueUpdatesComponent {

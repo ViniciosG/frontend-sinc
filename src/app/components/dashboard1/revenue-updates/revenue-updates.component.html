@@ -19,7 +19,7 @@
   <mat-card-content>
     <div class="row">
       <div class="col-sm-10">
-        <apx-chart
+        <apx-chart *ngIf="revenueChart?.series"
           [series]="revenueChart.series"
           [dataLabels]="revenueChart.dataLabels"
           [chart]="revenueChart.chart"

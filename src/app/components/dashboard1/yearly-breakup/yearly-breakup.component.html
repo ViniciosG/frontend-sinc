@@ -28,7 +28,7 @@
         </div>
       </div>
       <div class="col-5 d-flex align-items-start">
-        <apx-chart
+        <apx-chart *ngIf="yearlyChart?.series"
           [series]="yearlyChart.series"
           [dataLabels]="yearlyChart.dataLabels"
           [chart]="yearlyChart.chart"

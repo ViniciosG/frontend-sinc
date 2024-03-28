@@ -57,8 +57,12 @@ export class AppSellingProductComponent {
       _sort: 'qtyItems',
     }
 
+  }
+
+  ngOnInit(): void {
     this.obterDadosERenderizarGrafico()
   }
+  
 
   obterDadosERenderizarGrafico() {
     this.repository.call(this.params).subscribe({

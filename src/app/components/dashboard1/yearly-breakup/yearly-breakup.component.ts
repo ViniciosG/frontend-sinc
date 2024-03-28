@@ -1,3 +1,4 @@
+import { CommonModule, NgIf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format, startOfDay } from 'date-fns';
@@ -31,7 +32,7 @@ export interface yearlyChart {
 @Component({
   selector: 'app-yearly-breakup',
   standalone: true,
-  imports: [MaterialModule, NgApexchartsModule, TablerIconsModule],
+  imports: [MaterialModule, NgApexchartsModule, TablerIconsModule,CommonModule,NgIf],
   templateUrl: './yearly-breakup.component.html',
 })
 export class AppYearlyBreakupComponent {
@@ -64,7 +65,10 @@ export class AppYearlyBreakupComponent {
       _sort: 'goal',
     }
 
-    this.getGoalsBySellers()
+  }
+
+  ngOnInit(): void {
+    this.getGoalsBySellers();
   }
 
   executarGrafico(percentage:any) {

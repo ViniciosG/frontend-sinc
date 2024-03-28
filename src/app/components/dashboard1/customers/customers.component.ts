@@ -65,8 +65,12 @@ export class AppCustomersComponent {
       registerFinal:  this.date_final,
     }
 
-    this.obterDadosERenderizarGrafico()
+    
 
+  }
+
+  ngOnInit(): void {
+    this.obterDadosERenderizarGrafico();
   }
 
   obterDadosERenderizarGrafico() {
@@ -75,10 +79,8 @@ export class AppCustomersComponent {
         this.customers = resp;
           const sortedItems = this.customers.items.sort((a, b) => a.month.localeCompare(b.month));
           const ultimoItem = sortedItems[sortedItems.length - 1];
-
-          // Calcular a quantidade total de clientes apenas para o último elemento
           this.quantidadeClientes = ultimoItem.qty.toLocaleString('pt-BR');
-
+          
           this.executar(sortedItems);
       },
       error: error => {

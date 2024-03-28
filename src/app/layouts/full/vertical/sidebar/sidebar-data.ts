@@ -2,6 +2,15 @@ import { NavItem } from './nav-item/nav-item';
 
 export const navItems: NavItem[] = [
   {
+    navCap: 'Dashboards ' + new Date().getFullYear(),
+  },
+  {
+    displayName: 'Dashboard',
+    iconName: 'chart-histogram',
+    route: '/',
+  },
+
+  {
     navCap: 'Metas ' + new Date().getFullYear(),
   },
   {

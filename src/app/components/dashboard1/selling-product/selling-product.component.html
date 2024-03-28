@@ -3,7 +3,7 @@
     <mat-card-title class="text-white">Top Categorias</mat-card-title>
     <mat-card-subtitle class="text-white">mais vendidos no mês</mat-card-subtitle>
   </mat-card-content>
-  <mat-card class="shadow-none m-12">
+  <mat-card class="shadow-none bg-primary" *ngIf="subGroups?.items">
     <mat-card-content class="p-24" >
       <div class="d-flex align-items-center m-b-8" *ngFor="let cardimg of subGroups.items; let i = index">
         <div class="m-r-auto">

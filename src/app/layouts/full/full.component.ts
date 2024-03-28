@@ -1,5 +1,5 @@
 import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
@@ -51,6 +51,8 @@ interface quicklinks {
     NgScrollbarModule,
     TablerIconsModule,
     HeaderComponent,
+    NgIf,
+    NgForOf,
     AppHorizontalHeaderComponent,
     AppHorizontalSidebarComponent,
     AppBreadcrumbComponent,
