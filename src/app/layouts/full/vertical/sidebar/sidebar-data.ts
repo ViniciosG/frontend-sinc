@@ -2,7 +2,7 @@ import { NavItem } from './nav-item/nav-item';
 
 export const navItems: NavItem[] = [
   {
-    navCap: 'Dashboards ' + new Date().getFullYear(),
+    navCap: 'Principal'
   },
   {
     displayName: 'Dashboard',
@@ -11,7 +11,7 @@ export const navItems: NavItem[] = [
   },
 
   {
-    navCap: 'Metas ' + new Date().getFullYear(),
+    navCap: 'Metas',
   },
   {
     displayName: 'Diário',
@@ -57,7 +57,7 @@ export const navItems: NavItem[] = [
     route: '/sellers/productsSold',
   },
   {
-    navCap: 'Gerencimaento ',
+    navCap: 'Gestão',
   },
   {
     displayName: 'Clientes / Vendedor',

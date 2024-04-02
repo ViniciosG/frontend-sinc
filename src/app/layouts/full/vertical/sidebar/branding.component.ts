@@ -9,22 +9,8 @@ import { CoreService } from 'src/app/services/core.service';
   template: `
     <div class="branding">
       <a href="/" *ngIf="options.theme === 'light'">
-        <img
-          src="./assets/images/logos/engendra-logo.png"
-          class="align-middle m-2"
-          width="200px"
-          height="65px"
-          alt="logo"
-        />
       </a>
       <a href="/" *ngIf="options.theme === 'dark'">
-      <img
-          src="./assets/images/logos/engendra-logo.png"
-          class="align-middle m-2"
-          width="200px"
-          height="65px"
-          alt="logo"
-        />
       </a>
     </div>
   `,
