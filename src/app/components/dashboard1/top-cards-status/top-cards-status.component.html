@@ -1,0 +1,19 @@
+<h3 class="p-t-20 f-s-18">Vendas / Status</h3>
+<div class="row" *ngIf="sales?.items">
+  <div class="col" *ngFor="let sales of sales.items; let i = index">
+    <mat-card class="shadow-none text-center bg-light-primary shadow-none">
+      <mat-card-content class="p-32">
+        <h4 class="mat-subtitle-2 f-w-600 text-primary m-t-8 smaller-text">
+          {{sales.status}}
+        </h4>
+
+        <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-primary m-t-8">
+          {{ sales.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) }}
+        </h6>
+        <p>Quantidade: {{sales.qty}}</p>
+        <p>Itens: {{sales.qtyItems}}</p>
+
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

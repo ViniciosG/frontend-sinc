@@ -1,9 +1,10 @@
+<h3 class="p-t-20 f-s-18">Clientes</h3>
 <div class="row">
   <div class="col-lg-2 col-sm-4 col-6">
     <mat-card class="shadow-none text-center bg-light-success shadow-none">
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-success m-t-8">
-          Clientes Ativos
+           Ativos
         </h4>
         <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-success m-t-8">
           {{ clientesAtivos }}
@@ -15,7 +16,7 @@
     <mat-card class="shadow-none text-center bg-light-error shadow-none">
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-error m-t-8">
-          Clientes Inativos
+           Inativos
         </h4>
         <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-error m-t-8">
           {{ clientesInativos }}
@@ -35,4 +36,49 @@
       </mat-card-content>
     </mat-card>
   </div>
+<!-- ATACADO -->
+
+  <div class="col-lg-2 col-sm-4 col-6">
+    <h6 style="margin-top: -40px; text-align: right;">Atacado</h6>
+    <mat-card class="shadow-none text-center bg-light-success shadow-none">
+      <mat-card-content class="p-32">
+        <h4 class="mat-subtitle-2 f-w-600 text-success m-t-8">
+           Ativos
+        </h4>
+        <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-success m-t-8">
+          {{ clientesAtivosAtacado }}
+        </h6>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="col-lg-2 col-sm-4 col-6">
+    <h6 style="margin-top: -40px; text-align: right;">Atacado</h6>
+    <mat-card class="shadow-none text-center bg-light-error shadow-none">
+      <mat-card-content class="p-32">
+        <h4 class="mat-subtitle-2 f-w-600 text-error m-t-8">
+          Inativos
+        </h4>
+        <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-error m-t-8">
+          {{ clientesInativosAtacado }}
+        </h6>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="col-lg-2 col-sm-4 col-6">
+    <h6 style="margin-top: -40px; text-align: right;">Atacado</h6>
+    <mat-card class="shadow-none text-center bg-light-warning shadow-none">
+      <mat-card-content class="p-32">
+        <h4 class="mat-subtitle-2 f-w-600 text-warning m-t-8">
+          Inativos C/ Orçamento
+        </h4>
+        <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-warning m-t-8">
+          {{ clientesInativosComOrcamentoAtacado }}
+        </h6>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
+
+

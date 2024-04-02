@@ -23,12 +23,17 @@ export class AppTopCardsComponent {
   startDate: Date = new Date();
   endDate: Date = new Date();
   customers: SellersByCustomersModel;
+  customersAtacado: SellersByCustomersModel;  
   date_inital: string;
   date_final: string;
   params: any
+  paramsAtacado: any
   clientesAtivos:any
   clientesInativos:any
   clientesInativosComOrcamento:any
+  clientesAtivosAtacado:any
+  clientesInativosAtacado:any
+  clientesInativosComOrcamentoAtacado:any
   topcards: topcards[] = [
     {
       id: 1,
@@ -89,13 +94,19 @@ export class AppTopCardsComponent {
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
-      _offset: 0
     }
+
+    this.paramsAtacado = {
+      registerInitial: this.date_inital,
+      registerFinal:  this.date_final,
+      sellerType: 'ATACADO'
+    }
+
     this.obterDados();
+    this.obterDadosAtacado();
   }
 
   obterDados() {
-
     this.repository.call(this.params).subscribe({
       next: resp => {
         this.customers = resp;
@@ -107,6 +118,26 @@ export class AppTopCardsComponent {
         this.clientesAtivos = valueAtivos.toLocaleString();
         this.clientesInativos = valueInativos.toLocaleString();
         this.clientesInativosComOrcamento = valueInativosCOrcamento.toLocaleString();
+
+      },
+      error: error => {
+        console.log(error);
+      }
+    });
+  }
+
+  obterDadosAtacado() {
+    this.repository.call(this.paramsAtacado).subscribe({
+      next: resp => {
+        this.customers = resp;
+
+        const valueAtivosAtacado = this.customers.items.reduce((total, item) => total + item.active, 0);
+        const valueInativosAtacado = this.customers.items.reduce((total, item) => total + item.inactive, 0);
+        const valueInativosCOrcamentoAtacado = this.customers.items.reduce((total, item) => total + item.inactiveWithBudget, 0);
+
+        this.clientesAtivosAtacado = valueAtivosAtacado.toLocaleString();
+        this.clientesInativosAtacado = valueInativosAtacado.toLocaleString();
+        this.clientesInativosComOrcamentoAtacado = valueInativosCOrcamentoAtacado.toLocaleString();
 
       },
       error: error => {

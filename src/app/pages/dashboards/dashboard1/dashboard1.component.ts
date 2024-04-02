@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 
 // components
+import { TopCardsStatusComponent } from 'src/app/components/dashboard1/top-cards-status/top-cards-status.component';
 import { AppCustomersComponent } from '../../../components/dashboard1/customers/customers.component';
 import { AppEmployeeSalaryComponent } from '../../../components/dashboard1/employee-salary/employee-salary.component';
 import { AppMonthlyEarningsComponent } from '../../../components/dashboard1/monthly-earnings/monthly-earnings.component';
@@ -20,6 +21,7 @@ import { AppProductsComponent } from '../../../components/dashboard2/products/pr
   imports: [
     TablerIconsModule,
     AppTopCardsComponent,
+    TopCardsStatusComponent,
     AppRevenueUpdatesComponent,
     AppYearlyBreakupComponent,
     AppMonthlyEarningsComponent,
