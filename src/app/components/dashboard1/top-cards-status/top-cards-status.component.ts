@@ -47,6 +47,7 @@ export class TopCardsStatusComponent implements OnInit {
     this.repository.call(this.params).subscribe({
       next: resp => {
         const sortedItems = [...resp.items].sort((a, b) => a.status.localeCompare(b.status)); // Case-insensitive sorting
+        sortedItems.pop(); // Remove last element from the array
         this.sales = { ...resp, items: sortedItems }; // Assign sorted data to 'this.sales'
       },
       error: error => {
