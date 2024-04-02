@@ -134,12 +134,9 @@ export class SalesByManufacturersComponent implements OnInit {
       },
       grid: {
         containLabel: true,
-        width: '80%', // Define a largura do gráfico como 80% do container
-        height: '80%', // Define a altura do gráfico como 80% do container
       },
       xAxis: [{
         name: 'Valor',
-        //type: 'value', 
         axisLabel: {
       formatter: (value: number) => {
           return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });

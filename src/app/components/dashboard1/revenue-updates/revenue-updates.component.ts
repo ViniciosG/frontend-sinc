@@ -106,18 +106,47 @@ export class AppRevenueUpdatesComponent {
     return diasDaSemana[numero - 1]; // Subtrai 1 porque os dias da semana normalmente começam em 0 (Domingo)
   }
   executarGrafico(item: any) {
-    // Ordenar os dados por dia da semana
-    item.sort((a: any, b: any) => parseInt(a.dayOfWeek) - parseInt(b.dayOfWeek));
-  
-    // Mapear os dados para o formato esperado pelo gráfico
-    const sourceData = item.map((data: any) => {
-      return {
+// Obtém o índice do dia da semana atual (0 para domingo, 1 para segunda-feira, ..., 6 para sábado)
+const todayIndex = new Date().getDay();
+
+// Ordenar os dados por dia da semana, considerando a lógica circular
+item.sort((a: any, b: any) => {
+    const dayA = parseInt(a.dayOfWeek) - 1; // Ajusta o índice do dia da semana para começar em 0
+    const dayB = parseInt(b.dayOfWeek) - 1; // Ajusta o índice do dia da semana para começar em 0
+
+    // Função auxiliar para calcular a diferença circular entre dois dias da semana
+    const circularDiff = (dayA: number, dayB: number, totalDays: number) => {
+        const diff = dayA - dayB;
+        return (diff + totalDays) % totalDays;
+    };
+
+    const totalDays = 7;
+
+    const diffA = circularDiff(dayA, todayIndex, totalDays); // Calcula a diferença circular do dia A para o dia de hoje
+    const diffB = circularDiff(dayB, todayIndex, totalDays); // Calcula a diferença circular do dia B para o dia de hoje
+
+    // Ordena de forma que o dia atual seja sempre o último
+    if (diffA === 0) {
+        return 1;
+    }
+    if (diffB === 0) {
+        return -1;
+    }
+
+    return diffA - diffB; // Caso nenhum dos dias seja o dia atual, ordena pela diferença circular
+});
+
+// Mapear os dados para o formato esperado pelo gráfico
+const sourceData = item.map((data: any) => {
+    return {
         dayOfWeek: this.numeroParaDiaDaSemana(parseInt(data.dayOfWeek)),
         value: data.value,
         qty: data.qty,
         qtyItems: data.qtyItems
-      };
-    });
+    };
+});
+
+console.log(sourceData);
   
     this.revenueChart = {
       series: [

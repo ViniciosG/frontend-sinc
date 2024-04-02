@@ -9,13 +9,13 @@ export const DashboardsRoutes: Routes = [
     path: '',
     children: [
       {
-        path: 'dashboard1',
+        path: 'dashboard',
         component: AppDashboard1Component,
         data: {
-          title: 'Analytical',
+          title: 'Dashboard',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Analytical' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Dashboard' },
           ],
         },
       },

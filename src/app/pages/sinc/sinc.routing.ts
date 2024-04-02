@@ -24,8 +24,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Metas',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Metas' },
           ],
         },
       },
@@ -35,8 +35,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Metas / Mês',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Metas / Mês' },
           ],
         },
       },
@@ -46,8 +46,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Produtos mais vendidos',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Produtos mais vendidos' },
           ],
         },
       },
@@ -57,8 +57,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Novos Clientes / Vendedor',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Novos Clientes / Vendedor' },
           ],
         },
       },
@@ -68,8 +68,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Novos Clientes / Mês',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Novos Clientes / Mês' },
           ],
         },
       },
@@ -79,8 +79,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Vendas / Produtos',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Vendas / Produtos' },
           ],
         },
       },
@@ -90,8 +90,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Vendas / Dia da Semana',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Vendas / Dia da Semana' },
           ],
         },
       },
@@ -101,8 +101,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Vendas / Mês',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Vendas / Mês' },
           ],
         },
       },
@@ -112,8 +112,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Vendas / Estado',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Vendas / Estado' },
           ],
         },
       },
@@ -123,8 +123,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Vendas / Sub Grupos',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Vendas / Sub Grupos' },
           ],
         },
       },
@@ -134,8 +134,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Margem / Produtos',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Margem / Produtos' },
           ],
         },
       },
@@ -145,8 +145,8 @@ export const SincRoutes: Routes = [
         data: {
           title: 'Margem / Sub Grupos',
           urls: [
-            { title: 'Dashboard', url: '/dashboards/dashboard1' },
-            { title: 'Sales' },
+            { title: 'Dashboard', url: '/dashboards/dashboard' },
+            { title: 'Margem / Sub Grupos' },
           ],
         },
       },

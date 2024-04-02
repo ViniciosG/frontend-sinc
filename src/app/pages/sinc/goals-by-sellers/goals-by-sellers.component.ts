@@ -5,7 +5,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import { format, startOfDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, NgApexchartsModule } from 'ng-apexcharts';
-import { Subject, interval, switchMap } from 'rxjs';
+import { Subject, interval, switchMap, takeUntil } from 'rxjs';
 import { yearlyChart } from 'src/app/components/dashboard1/yearly-breakup/yearly-breakup.component';
 import { MaterialModule } from 'src/app/material.module';
 import { GoalsBySellersModel } from 'src/app/models/goals-by-sellers.model';
@@ -138,9 +138,11 @@ export class GoalsBySellersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getGoalsBySellers();
+
     interval(30000)
       .pipe(
-        switchMap(async () => { this.getGoalsBySellers() })
+        switchMap(() => this.repository.call(this.params)),
+        takeUntil(this.destroy$)
       )
       .subscribe();
   }
@@ -264,7 +266,6 @@ export class GoalsBySellersComponent implements OnInit {
         }
     });
 }
-
 
 
 

@@ -10,9 +10,9 @@ export const navItems: NavItem[] = [
     route: 'dashboards',
     children: [
       {
-        displayName: 'Analytical',
+        displayName: 'Dashboard',
         iconName: 'point',
-        route: 'dashboards/dashboard1',
+        route: 'dashboards/dashboard',
       },
       {
         displayName: 'eCommerce',
