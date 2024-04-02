@@ -107,9 +107,7 @@ export class AuthService {
   }
 
   removeAccessTokenFromCookie(): void {
-    this.limparTodosOsCookies();
-    this.cookieService.delete(nameCookieAccessToken);
-}
+    this.limparTodosOsCookies();}
 
 limparTodosOsCookies() {
     const cookies = this.cookieService.getAll();
