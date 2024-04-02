@@ -63,11 +63,6 @@ export class NewCustomersPerMonthComponent implements OnInit {
     const listaAnos = Array.from({ length: anoAtual - 2008 + 1 }, (_, index) => (2008 + index).toString());
 
     this.camposFiltro = [
-      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
-      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
-      { label: 'Ranking', placeholder: 'Ranking', type: 'select',value: '12', visivel: false, options: ['5', '10', '20','30'], id: "_limit" },
-      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
-      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
       { 
         label: 'Ano', 
         placeholder: 'Ano', 
@@ -77,6 +72,12 @@ export class NewCustomersPerMonthComponent implements OnInit {
         options: listaAnos.map(ano => ({ label: ano, value: ano })) 
         , id: 'yearSelecetor' 
       },
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+      { label: 'Ranking', placeholder: 'Ranking', type: 'select',value: '12', visivel: false, options: ['5', '10', '20','30'], id: "_limit" },
+      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
+      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
+
       
     ];
   }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { format, startOfMonth, subMonths } from 'date-fns';
+import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
 import { isEqual } from 'lodash';
@@ -35,33 +35,42 @@ export class MarginBySubGroupsComponent implements OnInit {
   totalValue: string;
   selectValue: number = 5;
   params: any;
-
-  camposFiltro = [
-    { label: 'Quantidade', placeholder: 'Quantidade', type: 'text', visivel: true, value: 5, id: "qty" },
-    { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: new Date(), id: "registerInitial" },
-    { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: new Date(), id: "registerFinal" },
-  ];
+  camposFiltro:any
 
   constructor(private repository: MarginBySubGroupsRepository) {
     const dataAtual = new Date();
-    const primeiroDiaMesPassado = startOfMonth(subMonths(dataAtual, 1));
-  
-    this.startDate = primeiroDiaMesPassado;
+
+    dataAtual.setDate(1);
+    dataAtual.setHours(0, 0, 0, 0);
+
+    this.startDate = dataAtual;
     this.endDate = new Date();
-  
-    this.date_inital = format(primeiroDiaMesPassado, "yyyy-MM-dd'T'HH:mm:ssXXX");
+
+    this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
-  
-    this.inititalContext = format(primeiroDiaMesPassado, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+
+    this.inititalContext = format(this.startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   
     this.params = {
       registerInitial: this.date_inital,
-      _sort: "margin",
+      _sort: "value",
       _direction: "DESC",
       registerFinal:  this.date_final,
       _limit: 10
     };
+
+    this.camposFiltro = [
+      { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value:'thisMonth', options: [
+        { label: 'Hoje', value: 'today' },
+        { label: 'Semana', value: 'lastWeek' },
+        { label: 'Mês', value: 'thisMonth' }
+      ], id: 'dateSelector' },
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
+      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
+    ];
   }
 
   ngOnInit(): void {
@@ -69,7 +78,8 @@ export class MarginBySubGroupsComponent implements OnInit {
   }
 
   receberFiltros(event: any) {
-    this.camposFiltro.forEach(campo => {
+  
+    this.camposFiltro.forEach((campo:any) => {
 
       if (campo.id && campo.value !== undefined) {
 
@@ -83,8 +93,9 @@ export class MarginBySubGroupsComponent implements OnInit {
         }
       }
     });
+    delete this.params['dateSelector'];
+    this.obterDadosERenderizarGrafico();
   }
-
   obterDadosERenderizarGrafico() {
     this.repository.call(this.params).subscribe({
       next: resp => {

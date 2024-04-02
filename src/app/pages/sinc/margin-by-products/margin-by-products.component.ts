@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { format, startOfMonth, subMonths } from 'date-fns';
+import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
 import { isEqual } from 'lodash';
@@ -34,33 +34,43 @@ export class MarginByProductsComponent implements OnInit {
   totalValue: string;
   selectValue: number = 5;
   params: any;
-
-  camposFiltro = [
-    { label: 'Quantidade', placeholder: 'Quantidade', type: 'text', visivel: true, value: 5, id: "qty" },
-    { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: new Date(), id: "registerInitial" },
-    { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: new Date(), id: "registerFinal" },
-  ];
+  camposFiltro:any
 
   constructor(private repository: MarginByProductsRepository) {
     const dataAtual = new Date();
-    const primeiroDiaMesPassado = startOfMonth(subMonths(dataAtual, 1));
-  
-    this.startDate = primeiroDiaMesPassado;
+
+    dataAtual.setDate(1);
+    dataAtual.setHours(0, 0, 0, 0);
+
+    this.startDate = dataAtual;
     this.endDate = new Date();
-  
-    this.date_inital = format(primeiroDiaMesPassado, "yyyy-MM-dd'T'HH:mm:ssXXX");
+
+    this.date_inital = format(this.startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(this.endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
-  
-    this.inititalContext = format(primeiroDiaMesPassado, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+
+    this.inititalContext = format(this.startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
   
     this.params = {
       registerInitial: this.date_inital,
-      _sort: "margin",
+      _sort: "value",
       _direction: "DESC",
       registerFinal:  this.date_final,
       _limit: 10
     };
+
+    this.camposFiltro = [
+      { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value:'thisMonth', options: [
+        { label: 'Hoje', value: 'today' },
+        { label: 'Semana', value: 'lastWeek' },
+        { label: 'Mês', value: 'thisMonth' }
+      ], id: 'dateSelector' },
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
+      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
+    ];
+
   }
 
   ngOnInit(): void {
@@ -68,9 +78,8 @@ export class MarginByProductsComponent implements OnInit {
   }
 
   receberFiltros(event: any) {
-    console.log('Filtros recebidos:', event);
   
-    this.camposFiltro.forEach(campo => {
+    this.camposFiltro.forEach((campo:any) => {
 
       if (campo.id && campo.value !== undefined) {
 
@@ -84,8 +93,8 @@ export class MarginByProductsComponent implements OnInit {
         }
       }
     });
-  
-    console.log('Params atualizado:', this.params);
+    delete this.params['dateSelector'];
+    this.obterDadosERenderizarGrafico();
   }
 
   obterDadosERenderizarGrafico() {
@@ -113,7 +122,6 @@ export class MarginByProductsComponent implements OnInit {
 
 
   executar(items: any) {
-    //items.sort((a: any, b: any) => a.value - b.value);
 
     const primeiroElemento = items[0];
     const ultimoElemento = items[items.length - 1];
@@ -160,18 +168,6 @@ export class MarginByProductsComponent implements OnInit {
         type: 'category', 
         data: items.map((item: any) => ({ value: item.productName, textStyle: { fontWeight: 'bold' } })),
         inverse: true
-      },
-      visualMap: {
-        orient: 'horizontal',
-        left: 'center',
-        min: primeiroElemento.margin,
-        max: ultimoElemento.margin,
-        text: ['Baixo valor','Alto valor'],
-        dimension: 0,
-        inverse: false,
-        inRange: {
-          color: ['#FD665F',, '#FFCE34', '#65B581'] // Troquei a ordem das cores
-        }
       },
       series: [
         {

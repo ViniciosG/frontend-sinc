@@ -162,7 +162,7 @@ export class SalesByStatesComponent implements OnInit {
 
     this.chartInstance.showLoading();
 
-    fetch('../../../../assets/BR.json')
+    fetch('assets/BR.json')
       .then(response => response.json())
       .then(brasilJson => {
         this.chartInstance.hideLoading();
