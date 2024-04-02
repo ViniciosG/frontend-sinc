@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject, throwError } from 'rxjs';
 import { LoginRepository } from 'src/app/repositories/login.repository';
-import { cookieOptions, nameCookieAccessToken } from 'src/environments/environment';
+import { nameCookieAccessToken } from 'src/environments/environment';
 import { UsersModel } from '../model/users.model';
 
 @Injectable({
@@ -28,7 +28,7 @@ export class AuthService {
   signIn(user: UsersModel) {
     this.authService.post(user).subscribe({
       next: (res: any) => {
-        this.cookieService.set(nameCookieAccessToken, res.authorization, cookieOptions);
+        this.cookieService.set(nameCookieAccessToken, res.authorization);
         this.router.navigate(['/']);
       },
       error: () => {
