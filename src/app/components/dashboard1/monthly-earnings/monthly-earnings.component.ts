@@ -1,3 +1,4 @@
+import { CommonModule, NgIf } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
@@ -15,6 +16,7 @@ import {
 } from 'ng-apexcharts';
 import { GoalsBySellersModel } from 'src/app/models/goals-by-sellers.model';
 import { MaterialModule } from '../../../material.module';
+import { yearlyChart } from '../yearly-breakup/yearly-breakup.component';
 import { GoalsBySellersByMonthRepository } from './../../../repositories/goals-by-sellers-by-month.repository';
 
 export interface monthlyChart {
@@ -31,23 +33,26 @@ export interface monthlyChart {
 @Component({
   selector: 'app-monthly-earnings',
   standalone: true,
-  imports:[NgApexchartsModule, MaterialModule, TablerIconsModule],
+  imports:[NgApexchartsModule, MaterialModule, TablerIconsModule, CommonModule,NgIf],
   templateUrl: './monthly-earnings.component.html',
 })
 export class AppMonthlyEarningsComponent {
+ 
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
-  public monthlyChart!: Partial<monthlyChart> | any;
-  startDate: Date = new Date();
-  endDate: Date = new Date();
+
+  public yearlyChart!: Partial<yearlyChart> | any;
   goals: GoalsBySellersModel;
-  date_inital: string;
-  date_final: string;
   params: any;
   valorTotalGeral: number;
   metaTotalGeral: string;
   somaArredondada:any;
   metaGeral:any;
+  date_inital: string;
+  date_final: string;
   percentage: any;
+  startDate:any
+  endDate:any
+
   constructor(private repository: GoalsBySellersByMonthRepository) {
 
 
@@ -66,8 +71,6 @@ export class AppMonthlyEarningsComponent {
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
-      _direction: 'DESC',
-      _sort: 'goal',
     }
   }
 
@@ -75,11 +78,60 @@ export class AppMonthlyEarningsComponent {
     this.getGoalsBySellers();
   }
 
+  executarGrafico(percentage:any) {
+    const value = 100 - percentage;
+    this.yearlyChart = {
+      series: [percentage,value],
+
+      chart: {
+        type: 'donut',
+        fontFamily: "'Plus Jakarta Sans', sans-serif;",
+        foreColor: '#adb0bb',
+        toolbar: {
+          show: false,
+        },
+        height: 130,
+      },
+      colors: ['#5D87FF', '#ECF2FF', '#F9F9FD'],
+      plotOptions: {
+        pie: {
+          startAngle: 0,
+          endAngle: 360,
+          donut: {
+            size: '75%',
+            background: 'transparent',
+          },
+        },
+      },
+      stroke: {
+        show: false,
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
+      responsive: [
+        {
+          breakpoint: 991,
+          options: {
+            chart: {
+              width: 120,
+            },
+          },
+        },
+      ],
+      tooltip: {
+        enabled: false,
+      },
+    };
+  }
+
   getGoalsBySellers() {
     this.repository.call(this.params).subscribe({
         next: resp => {
             this.goals = resp;
-            
                 let somaValues = 0;
 
                 for (const item of resp.items) {
@@ -107,56 +159,11 @@ export class AppMonthlyEarningsComponent {
                     this.percentage = 0
                   }
                 
-                this.executarGrafico(this.goals.items)
+                this.executarGrafico(this.percentage)
         },
         error: error => {
             console.log(error);
         }
     });
-}
-
-executarGrafico(item:any) {
-  const values = item.map((data: any) => data.value);
-  this.monthlyChart = {
-    series: [
-      {
-        name: '',
-        color: '#49BEFF',
-        data: [values],
-      },
-    ],
-
-    chart: {
-      type: 'area',
-      fontFamily: "'Plus Jakarta Sans', sans-serif;",
-      foreColor: '#adb0bb',
-      toolbar: {
-        show: false,
-      },
-      height: 60,
-      sparkline: {
-        enabled: true,
-      },
-      group: 'sparklines',
-    },
-    stroke: {
-      curve: 'smooth',
-      width: 2,
-    },
-    fill: {
-      colors: ['#E8F7FF'],
-      type: 'solid',
-      opacity: 0.05,
-    },
-    markers: {
-      size: 0,
-    },
-    tooltip: {
-      theme: 'dark',
-      x: {
-        show: false,
-      },
-    },
-  };
 }
 }

@@ -31,3 +31,9 @@
   margin-bottom: 3%;
 }
 
+@media (max-width: 768px) {
+  .rounded-circle {
+      display: inline-block !important;
+  }
+}
+

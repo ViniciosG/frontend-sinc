@@ -135,12 +135,15 @@ export class SalesByDayOfWeekComponent implements OnInit {
     const option: echarts.EChartsOption = {
       title: {
         text: 'Vendas por Dia da Semana', // Título do gráfico
-        left: 'center' // Alinhamento do título
-      },
+        left: '50%', // Centraliza o título horizontalmente
+        textAlign: 'center', // Alinha o texto ao centro
+    },
       legend: {
-        data: ['Valor', 'Qtd. Vendas', 'Qtd. Itens'], // Texto da legenda
-        top: 30 // Posição da legenda
-      },
+        data: ['Valor', 'Qtd. Vendas', 'Qtd. Itens'],
+        top: 'auto',
+        bottom: 0,
+        height: 'auto'
+    },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -166,6 +169,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
       grid: {
         containLabel: true // Ajustar automaticamente para incluir rótulos
       },
+      responsive: true,
       series: [
         { 
           name: 'Valor', 
@@ -181,7 +185,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
             rich: {
               a: {
                 fontWeight: 'bold',
-                color: 'black' // Alterando a cor da fonte
+                color: 'black'
               }
             }  
           } 

@@ -53,10 +53,10 @@ export class MarginByProductsComponent implements OnInit {
   
     this.params = {
       registerInitial: this.date_inital,
+      registerFinal:  this.date_final,
       _sort: "value",
       _direction: "DESC",
-      registerFinal:  this.date_final,
-      _limit: 10
+
     };
 
     this.camposFiltro = [
@@ -65,10 +65,11 @@ export class MarginByProductsComponent implements OnInit {
         { label: 'Semana', value: 'lastWeek' },
         { label: 'Mês', value: 'thisMonth' }
       ], id: 'dateSelector' },
-      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
-      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+
     ];
 
   }
@@ -122,15 +123,15 @@ export class MarginByProductsComponent implements OnInit {
 
 
   executar(items: any) {
+    items.sort((a: any, b: any) => a.margin - b.margin);
 
-    const primeiroElemento = items[0];
-    const ultimoElemento = items[items.length - 1];
+
     const opcoes: echarts.EChartsOption = {
       dataset: {
         source: items
       },
       title: {
-        text: 'Margem por Produtos'
+        text: 'Margem por Sub Grupos'
       },
       tooltip: {
         trigger: 'axis',
@@ -139,13 +140,6 @@ export class MarginByProductsComponent implements OnInit {
         }
       },
       legend: {},
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
-
       xAxis: [{
         name: 'Porcentagem',
         type: 'value', 
@@ -167,18 +161,22 @@ export class MarginByProductsComponent implements OnInit {
       yAxis: { 
         type: 'category', 
         data: items.map((item: any) => ({ value: item.productName, textStyle: { fontWeight: 'bold' } })),
-        inverse: true
       },
       series: [
         {
           type: 'bar',
-          barWidth: 0, 
+          barWidth: 0,
           encode: {
-            x: 'margin', 
-            y: 'productName' 
+            x: 'margin',
+            y: 'productName'
           },
-          
-          label: {  // Adicionando label para inserir o valor do eixo x dentro da barra
+          itemStyle: { // Adicionando estilo das barras
+            color: (params: any) => {
+              const valorMargem = params.value.margin;
+              return valorMargem < 0 ? '#FD665F' : '#65B581'; // Verifica se o valor da margem é negativo
+            }
+          },
+          label: { // Adicionando label para inserir o valor do eixo x dentro da barra
             show: true,
             position: 'insideRight', // Posição do valor dentro da barra
             formatter: (params: any) => {
@@ -190,7 +188,7 @@ export class MarginByProductsComponent implements OnInit {
                 fontWeight: 'bold',
                 color: 'white' // Alterando a cor da fonte
               }
-            }          
+            }
           }
         }
       ],

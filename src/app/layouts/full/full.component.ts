@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
+import { CookieService } from 'ngx-cookie-service';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -193,6 +194,7 @@ export class FullComponent implements OnInit {
     private settings: CoreService,
     private mediaMatcher: MediaMatcher,
     private authService: AuthService,
+    protected cookieService: CookieService,
     private router: Router,
     private breakpointObserver: BreakpointObserver
   ) {
@@ -233,8 +235,20 @@ export class FullComponent implements OnInit {
   }
 
   doLogout() {
-    this.authService.doLogout();
-  }
+    this.cookieService.deleteAll();
+
+    // Define uma função de callback a ser chamada após a página ser recarregada
+    const reloadCallback = () => {
+        // Chama o método doLogout do authService
+        this.authService.doLogout();
+    };
+
+    // Adiciona o evento 'load' ao window com a função de callback
+    window.onload = reloadCallback;
+
+    // Recarrega a página
+    window.location.reload();
+}
 
   resetCollapsedState(timer = 400) {
     setTimeout(() => this.settings.setOptions(this.options), timer);

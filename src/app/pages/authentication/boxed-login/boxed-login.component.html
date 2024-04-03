@@ -4,21 +4,11 @@
 			<mat-card class="cardWithShadow boxed-auth">
 				<mat-card-content class="p-32">
 					<div class="text-center">
-						<a [routerLink]="['/dashboards/dashboard1']">
+						<a>
 							<img src="./assets/images/logos/engendra-logo.png"
 								class="align-middle m-2 img-login"
 								alt="logo">
 						</a>
-						<!-- <a
-              [routerLink]="['/dashboards/dashboard1']"
-              *ngIf="options.theme === 'dark'"
-            >
-              <img
-                src="./assets/images/logos/engendra-logo.svg"
-                class="align-middle m-2"
-                alt="logo"
-              />
-            </a> -->
 					</div>
 
 					<form [formGroup]="form"
@@ -35,21 +25,14 @@
 									class="text-error">
 									E-mail é requerido.
 								</div>
-                <div *ngIf="f['auth'].errors && f['auth'].errors['email']"
-                class="text-error">
-                E-mail inválido.
-           </div>
-
-								<!-- <div
-                    class="text-error"
-                    *ngIf="f['uname'].errors && f['uname'].errors['minlength']"
-                  >
-                    Name should be 6 character.
-                  </div> -->
+								<div *ngIf="f['auth'].errors && f['auth'].errors['email']"
+									class="text-error">
+									E-mail inválido.
+								</div>
 							</mat-hint>
 						</mat-form-field>
-						<!-- password -->
 						<mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">Senha</mat-label>
+
 						<mat-form-field appearance="outline"
 							class="w-100"
 							color="primary">
@@ -58,41 +41,37 @@
 								formControlName="password">
 							<mat-hint *ngIf="f['password'].touched && f['password'].invalid"
 								class="m-b-16 error-msg">
-								<div *ngIf="
-                      f['password'].errors && f['password'].errors['required']
-                    "
+								<div *ngIf="f['password'].errors && f['password'].errors['required']"
 									class="text-error">
 									Senha é requerida.
 								</div>
 							</mat-hint>
 						</mat-form-field>
-
+						<div *ngIf="authValid"
+						class="text-error">
+						Informações do usuário incorretos. Por favor, verifique e tente novamente.
+					</div>
 						<div class="d-flex align-items-center m-b-12">
 							<div class="d-flex align-items-center m-b-12">
-								<mat-checkbox color="primary" formControlName="rememberMe" (change)="toggleRememberMe()">Lembrar-me
-								  neste dispositivo</mat-checkbox>
-							  </div>
+								<mat-checkbox (change)="toggleRememberMe()"
+									color="primary"
+									formControlName="rememberMe">
+									Lembrar-me
+								  neste dispositivo
+								</mat-checkbox>
+							</div>
 						</div>
+
 						<button [class.spinner]="loading"
 							[disabled]="loading"
 							[disabled]="!form.valid"
+							(click)="authenticationUser()"
 							mat-flat-button
 							color="primary"
-							class="w-100"
-							(click)="authenticationUser()">
+							class="w-100">
 							Entrar
 						</button>
-						<!-- input -->
 					</form>
-					<!-- <span class="d-block f-w-500 text-center m-t-24"
-            >New to Modernize?
-            <a
-              [routerLink]="['/authentication/boxed-register']"
-              class="text-decoration-none text-primary f-w-500 f-s-14"
-            >
-              Create an account</a
-            >
-          </span> -->
 				</mat-card-content>
 			</mat-card>
 		</div>

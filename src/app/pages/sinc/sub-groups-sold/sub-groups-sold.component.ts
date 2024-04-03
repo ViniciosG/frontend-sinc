@@ -39,9 +39,9 @@ export class SubGroupsSoldComponent implements OnInit {
   camposFiltro:any
   carregandoDados: boolean = false;
   altura: any = 20000;
-  loading: boolean = false;
   quantidadeVendas: string;
   quantidadeItems:string;
+  
 
   constructor(private repository: SubGroupSoldRepository) {
     const dataAtual = new Date();
@@ -71,10 +71,11 @@ export class SubGroupsSoldComponent implements OnInit {
         { label: 'Semana', value: 'lastWeek' },
         { label: 'Mês', value: 'thisMonth' }
       ], id: 'dateSelector' },
-      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
-      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+
 
       
     ];
@@ -89,16 +90,11 @@ export class SubGroupsSoldComponent implements OnInit {
 
   receberFiltros(event: any) {
     this.camposFiltro.forEach((campo: any) => {
-      // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
-        // Verificar se o campo é do tipo "date"
         if (campo.type === 'date') {
-          // Formatando a data usando o date-fns
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-          // Atualizar o valor correspondente no objeto params com base no id do campo
           this.params[campo.id] = dataFormatada;
         } else {
-          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
           this.params[campo.id] = campo.value;
         }
       }
@@ -110,13 +106,9 @@ export class SubGroupsSoldComponent implements OnInit {
   obterDadosERenderizarGrafico() {
     this.carregandoDados = false;
 
-    if (this.loading) return;
-    this.loading = true;
-
     this.repository.call(this.params).subscribe({
       next: resp => {
         this.subGroups = resp;
-        this.loading = false;
         if (!isEqual(this.SALVAR_RESPOSTA, this.subGroups)) {
           takeUntil(this.destroy$)
           this.SALVAR_RESPOSTA = resp;
@@ -131,7 +123,6 @@ export class SubGroupsSoldComponent implements OnInit {
         }
       },
       error: error => {
-        this.loading = false;
         console.log(error);
       }
     });
@@ -146,12 +137,10 @@ export class SubGroupsSoldComponent implements OnInit {
       },
       grid: {
         containLabel: true,
-        width: '80%', // Define a largura do gráfico como 80% do container
-        height: '80%', // Define a altura do gráfico como 80% do container
       },
+      responsive: true,
       xAxis: [{
         name: 'Valor',
-        //type: 'value', 
         axisLabel: {
       formatter: (value: number) => {
           return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -172,20 +161,19 @@ export class SubGroupsSoldComponent implements OnInit {
         type: 'category',
         data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold',color:'black' } })),
         axisLabel: {
-          // interval: 0, // Exibir todos os rótulos do eixo y
-          // margin: 10 // Margem entre os rótulos e o eixo
         }
       },
       series: [{
         type: 'bar',
-        barWidth: 0,
+        barWidth: 'auto',
+        barGap: '30%',
         encode: {
           x: 'value',
           y: 'subGroupName'
         },
         label: {
           show: true,
-          position: 'right', // Colocar os rótulos à direita das barras
+          position: 'right',
           formatter: (params: any) => {
             const value = params.value.value;
             const quantidade = params.value.qty;
@@ -217,7 +205,6 @@ export class SubGroupsSoldComponent implements OnInit {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.setOption(opcoes);
     }
-    this.loading = false
   }
   
   
@@ -258,14 +245,13 @@ export class SubGroupsSoldComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
+    const container = document.querySelector('.container');
     this.atualizarGrafico();
   }
 
-
-
   atualizarGrafico() {
     const elementoGrafico = document.getElementById('grafico-echarts');    
-    if (elementoGrafico) {
+    if (elementoGrafico != null) {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.resize();
     }

@@ -95,11 +95,6 @@ export class SalesByMonthComponent implements OnInit {
     const listaAnos = Array.from({ length: anoAtual - 2008 + 1 }, (_, index) => (2008 + index).toString());
     
     this.camposFiltro = [
-      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
-      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
-      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
-      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
-
       { 
         label: 'Ano', 
         placeholder: 'Ano', 
@@ -109,6 +104,11 @@ export class SalesByMonthComponent implements OnInit {
         options: listaAnos.map(ano => ({ label: ano, value: ano })) 
         , id: 'yearSelecetor' 
       },
+      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
+      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+
     ];
 
     this.params = {
@@ -124,16 +124,11 @@ export class SalesByMonthComponent implements OnInit {
   receberFiltros(event: any) {
     console.log(event)
     this.camposFiltro.forEach((campo: any) => {
-      // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
-        // Verificar se o campo é do tipo "date"
         if (campo.type === 'date') {
-          // Formatando a data usando o date-fns
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-          // Atualizar o valor correspondente no objeto params com base no id do campo
           this.params[campo.id] = dataFormatada;
         } else {
-          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
           this.params[campo.id] = campo.value;
         }
       }
@@ -168,7 +163,6 @@ export class SalesByMonthComponent implements OnInit {
   }
 
   executarGraficoBarras(item: any): echarts.EChartsOption {
-    // Ordena os dados pelo dia da semana de forma ascendente
     item.sort((a: any, b: any) => parseInt(a.month) - parseInt(b.month));
   
     const sourceData = item.map((data:any) => {
@@ -182,13 +176,15 @@ export class SalesByMonthComponent implements OnInit {
   
     const option: echarts.EChartsOption = {
       title: {
-        text: 'Vendas por Mês', // Título do gráfico
-        left: 'center' // Alinhamento do título
+        text: 'Vendas por Mês', 
+        left: 'center' 
       },
       legend: {
-        data: ['Valor', 'Qtd. Vendas', 'Qtd. Itens'], // Texto da legenda
-        top: 30 // Posição da legenda
-      },
+        data: ['Valor', 'Qtd. Vendas', 'Qtd. Itens'],
+        top: 'auto',
+        bottom: 0,
+        height: 'auto'
+    },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -215,6 +211,7 @@ export class SalesByMonthComponent implements OnInit {
       grid: {
         containLabel: true // Ajustar automaticamente para incluir rótulos
       },
+      responsive: true,
       series: [
         { 
           name: 'Valor', 
@@ -369,28 +366,45 @@ montarGrafico(months: any) {
     chart: {
       fontFamily: 'inherit',
       foreColor: '#a1aab2',
-      height: 300,
+      height: 350,
       type: 'area',
+      responsive: true,
       toolbar: {
-        show: true,
+        show: false,
       },
+      dropShadow: {
+        enabled: true,
+        enabledSeries: [0],
+        top: -2,
+        left: 2,
+        blur: 5,
+        opacity: 0.06
+      }
     },
     dataLabels: {
       enabled: false,
     },
     markers: {
-      size: 3,
+      size: 0,
+      strokeColor: "#fff",
+      strokeWidth: 3,
+      strokeOpacity: 1,
+      fillOpacity: 1,
+      hover: {
+        size: 6
+      }
     },
     stroke: {
-      curve: 'smooth',
-      width: '2',
+      curve: "smooth",
+      width: 3
     },
     colors: ['#398bf7', '#06d79c'],
 
     legend: {
       show: true,
-      position: 'top', // Posição da legenda (pode ser 'top', 'bottom', 'left', 'right', 'inset', etc.)
-      fontSize: '14px', // Tamanho da fonte da legenda
+      position: 'bottom',
+      horizontalAlign: 'left',
+      //fontSize: '14px', // Tamanho da fonte da legenda
       labels: {
         colors: ['#398bf7', '#06d79c'], // Cores dos rótulos da legenda
       },
@@ -453,9 +467,6 @@ montarGrafico(months: any) {
         },
       },
     ],
-    tooltip: {
-      theme: 'dark',
-    },
   };
 }
 
@@ -474,5 +485,7 @@ getLabelsForMonths() {
 
   return labels;
 }
+
+
 
 }

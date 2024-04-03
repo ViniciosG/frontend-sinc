@@ -219,15 +219,14 @@ export class GoalsBySellersComponent implements OnInit {
   getGoalsBySellers() {
     this.repository.call(this.params).subscribe({
         next: resp => {
-            const respString = JSON.stringify(resp); // Convertendo a resposta atual para uma string JSON
-            if (respString !== this.SALVAR_RESPOSTA) { // Comparando com a string JSON da resposta anterior
+            const respString = JSON.stringify(resp); 
+            if (respString !== this.SALVAR_RESPOSTA) { 
                 this.SALVAR_RESPOSTA = respString;
                 this.goals = resp;
                 this.graficos = [];
                 let somaValues = 0;
 
                 for (const item of resp.items) {
-                    // Verifica se item.value e item.goal são nulos e, se forem, atribui 0 a eles
                     if (item.value === null || item.value === undefined) {
                         item.value = 0;
                     }
@@ -245,7 +244,8 @@ export class GoalsBySellersComponent implements OnInit {
 
                 this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
 
-                const sellerData = {
+                if(this.goals.items.length > 1) {
+                  const sellerData = {
                     sellerId: -999,
                     sellerName: "META DIÁRIA",
                     value: somaArredondada,
@@ -253,8 +253,9 @@ export class GoalsBySellersComponent implements OnInit {
                     qtyItems: 1,
                     goal: this.metaTotalGeral
                 };
-
                 this.goals.items.unshift(sellerData);
+                }
+
 
                 for (const item of this.goals.items) {
                     this.graficos.push(this.montarGrafico(item));

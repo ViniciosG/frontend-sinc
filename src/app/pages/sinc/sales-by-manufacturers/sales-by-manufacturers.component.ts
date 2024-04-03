@@ -57,7 +57,6 @@ export class SalesByManufacturersComponent implements OnInit {
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
-      _offset: 0
     }
 
     this.camposFiltro = [
@@ -66,10 +65,11 @@ export class SalesByManufacturersComponent implements OnInit {
         { label: 'Semana', value: 'lastWeek' },
         { label: 'Mês', value: 'thisMonth' }
       ], id: 'dateSelector' },
-      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
-      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+
 
       
     ];
@@ -82,16 +82,11 @@ export class SalesByManufacturersComponent implements OnInit {
   
   receberFiltros(event: any) {
     this.camposFiltro.forEach((campo: any) => {
-      // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
-        // Verificar se o campo é do tipo "date"
         if (campo.type === 'date') {
-          // Formatando a data usando o date-fns
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-          // Atualizar o valor correspondente no objeto params com base no id do campo
           this.params[campo.id] = dataFormatada;
         } else {
-          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
           this.params[campo.id] = campo.value;
         }
       }
@@ -158,8 +153,6 @@ export class SalesByManufacturersComponent implements OnInit {
         type: 'category',
         data: items.map((item: any) => ({ value: item.manufacturerName, textStyle: { fontWeight: 'bold', color:'black' } })),
         axisLabel: {
-          // interval: 0, // Exibir todos os rótulos do eixo y
-          // margin: 10 // Margem entre os rótulos e o eixo
         }
       },
       series: [{

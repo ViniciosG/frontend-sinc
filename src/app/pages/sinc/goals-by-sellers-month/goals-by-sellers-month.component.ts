@@ -247,16 +247,17 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
                 this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
 
-                const sellerData = {
+                if(this.goals.items.length > 1) {
+                  const sellerData = {
                     sellerId: -999,
-                    sellerName: "META MENSAL",
+                    sellerName: "META DIÁRIA",
                     value: somaArredondada,
                     qty: 1,
                     qtyItems: 1,
                     goal: this.metaTotalGeral
                 };
-
                 this.goals.items.unshift(sellerData);
+                }
 
                 for (const item of this.goals.items) {
                     this.graficos.push(this.montarGrafico(item));

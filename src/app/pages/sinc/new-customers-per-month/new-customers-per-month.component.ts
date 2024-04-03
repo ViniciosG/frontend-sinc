@@ -72,13 +72,12 @@ export class NewCustomersPerMonthComponent implements OnInit {
         options: listaAnos.map(ano => ({ label: ano, value: ano })) 
         , id: 'yearSelecetor' 
       },
+      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
+      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
       { label: 'Ranking', placeholder: 'Ranking', type: 'select',value: '12', visivel: false, options: ['5', '10', '20','30'], id: "_limit" },
-      { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
-      { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
 
-      
     ];
   }
 
@@ -108,16 +107,11 @@ export class NewCustomersPerMonthComponent implements OnInit {
 
   receberFiltros(event: any) {
     this.camposFiltro.forEach((campo: any) => {
-      // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
-        // Verificar se o campo é do tipo "date"
         if (campo.type === 'date') {
-          // Formatando a data usando o date-fns
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-          // Atualizar o valor correspondente no objeto params com base no id do campo
           this.params[campo.id] = dataFormatada;
         } else {
-          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
           this.params[campo.id] = campo.value;
         }
       }
@@ -157,30 +151,30 @@ export class NewCustomersPerMonthComponent implements OnInit {
         },
         xAxis: {
             type: 'category',
-            data: months // Usar os meses como dados do eixo X
+            data: months 
         },
         yAxis: {
             type: 'value',
             axisLabel: {
-                formatter: '{value}' // Não precisa de formatação específica para a quantidade
+                formatter: '{value}' 
             }
         },
         series: [
             {
                 name: 'Clientes',
-                type: 'bar', // Tipo de gráfico: barras
-                data: quantities, // Usar as quantidades como dados da série
+                type: 'bar', 
+                data: quantities,
                 label: {
-                    show: true, // Mostrar rótulos
+                    show: true, 
                     position: 'top',     
                     formatter: (params: any) => {
                         const valueFormatted = params.value.toLocaleString();
-                        return `{a|${valueFormatted}} 👥`; // Usando formatação de texto enriquecido
+                        return `{a|${valueFormatted}} 👥`; 
                     },
                     rich: {
                         a: {
                             fontWeight: 'bold',
-                            color: 'black' // Alterando a cor da fonte
+                            color: 'black'
                         }
                     }  
                 }
@@ -189,7 +183,7 @@ export class NewCustomersPerMonthComponent implements OnInit {
         darkMode: true
     };
   
-    // Renderizar o gráfico com as opções configuradas
+
     const elementoGrafico = document.getElementById('grafico-echarts');
     if (elementoGrafico) {
       const meuGrafico = echarts.init(elementoGrafico);

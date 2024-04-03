@@ -19,6 +19,7 @@ export class AppBoxedLoginComponent {
   form: FormGroup;
   authValid: boolean;
   rememberMe: any;
+  errorMessage: string = '';
 
   constructor(private settings: CoreService,
     private router: Router,

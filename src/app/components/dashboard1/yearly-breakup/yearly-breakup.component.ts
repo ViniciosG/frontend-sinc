@@ -58,11 +58,10 @@ export class AppYearlyBreakupComponent {
   
     this.date_inital = format(startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
+
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
-      _direction: 'DESC',
-      _sort: 'goal',
     }
 
   }

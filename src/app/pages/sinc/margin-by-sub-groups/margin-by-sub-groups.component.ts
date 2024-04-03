@@ -57,7 +57,6 @@ export class MarginBySubGroupsComponent implements OnInit {
       _sort: "value",
       _direction: "DESC",
       registerFinal:  this.date_final,
-      _limit: 10
     };
 
     this.camposFiltro = [
@@ -66,10 +65,11 @@ export class MarginBySubGroupsComponent implements OnInit {
         { label: 'Semana', value: 'lastWeek' },
         { label: 'Mês', value: 'thisMonth' }
       ], id: 'dateSelector' },
-      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
-      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
+      { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
+      { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
+
     ];
   }
 
@@ -96,6 +96,8 @@ export class MarginBySubGroupsComponent implements OnInit {
     delete this.params['dateSelector'];
     this.obterDadosERenderizarGrafico();
   }
+
+
   obterDadosERenderizarGrafico() {
     this.repository.call(this.params).subscribe({
       next: resp => {
@@ -121,7 +123,6 @@ export class MarginBySubGroupsComponent implements OnInit {
 
 
   executar(items: any) {
-    
     items.sort((a: any, b: any) => a.margin - b.margin);
 
 
@@ -168,17 +169,6 @@ export class MarginBySubGroupsComponent implements OnInit {
         type: 'category', 
         data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold' } })),
       },
-      // visualMap: {
-      //   orient: 'horizontal',
-      //   left: 'center',
-      //   //min: primeiroElemento.margin,
-      //   max: ultimoElemento.margin,
-      //   text: ['Baixo valor','Alto valor'],
-      //   dimension: 2,
-      //   inRange: {
-      //     color: ['#FD665F',, '#FFCE34', '#65B581'] // Troquei a ordem das cores
-      //   }
-      // },
       series: [
         {
           type: 'bar',

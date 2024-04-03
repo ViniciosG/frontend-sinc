@@ -24,13 +24,10 @@
       </mat-card-content>
   </mat-card>
   <br>
-<div id="grafico-echarts" style="width: 100%; height: 600px;"></div>
-
-
-<mat-card-content class="b-t-1">
-  <apx-chart *ngIf="areaChartOptions?.series" [series]="areaChartOptions.series" [chart]="areaChartOptions.chart" [xaxis]="areaChartOptions.xaxis"
-      [yaxis]="areaChartOptions.yaxis" [grid]="areaChartOptions.grid" [stroke]="areaChartOptions.stroke"
-      [tooltip]="areaChartOptions.tooltip" [dataLabels]="areaChartOptions.dataLabels" [legend]="areaChartOptions.legend"
-      [colors]="areaChartOptions.colors" [markers]="areaChartOptions.markers">
-    </apx-chart>
-  </mat-card-content>
+    <div class="grafico-echarts" id="grafico-echarts" style="width: 100%; height: 450px;"></div>
+<br>
+    <apx-chart *ngIf="areaChartOptions?.series" [series]="areaChartOptions.series" [chart]="areaChartOptions.chart" [xaxis]="areaChartOptions.xaxis"
+    [yaxis]="areaChartOptions.yaxis" [grid]="areaChartOptions.grid" [stroke]="areaChartOptions.stroke"
+    [tooltip]="areaChartOptions.tooltip" [dataLabels]="areaChartOptions.dataLabels" [legend]="areaChartOptions.legend"
+    [colors]="areaChartOptions.colors" [markers]="areaChartOptions.markers">
+  </apx-chart>
