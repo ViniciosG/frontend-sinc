@@ -1,5 +1,6 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
+import { MatChipsModule } from '@angular/material/chips';
 import { format } from 'date-fns';
 import { SellersByCustomersModel } from 'src/app/models/sellers-br-customers.model';
 import { SellersByCustomersRepository } from 'src/app/repositories/sellers-by-customers.repository';
@@ -16,7 +17,7 @@ interface topcards {
 @Component({
   selector: 'app-top-cards',
   standalone: true,
-  imports: [MaterialModule, NgFor],
+  imports: [MaterialModule, NgFor,MatChipsModule],
   templateUrl: './top-cards.component.html',
 })
 export class AppTopCardsComponent {

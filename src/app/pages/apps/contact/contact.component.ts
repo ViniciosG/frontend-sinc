@@ -41,7 +41,6 @@ export class AppContactComponent implements OnInit {
     private contactService: ContactService
   ) {
     this.contacts = this.contactService.getContacts();
-    //console.log(this.contacts);
   }
 
   openDialog(action: string, obj: any): void {

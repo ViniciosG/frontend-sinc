@@ -1,9 +1,10 @@
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { Subject, throwError } from 'rxjs';
 import { LoginRepository } from 'src/app/repositories/login.repository';
+import { GetCompanyService } from 'src/app/services/get-company.service';
 import { nameCookieAccessToken } from 'src/environments/environment';
 import { UsersModel } from '../model/users.model';
 
@@ -17,10 +18,12 @@ export class AuthService {
   currentUser = {};
   private _isError = false;
   private _isErrorSubject = new Subject<boolean>();
+  onSaveSuccess: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
     public router: Router,
     private authService: LoginRepository,
+    private companyService: GetCompanyService,
     protected cookieService: CookieService) { }
 
 
@@ -28,6 +31,8 @@ export class AuthService {
   signIn(user: UsersModel) {
     this.authService.post(user).subscribe({
       next: (res: any) => {
+        this.companyService.setCompany(res);
+        this.onSaveSuccess.emit();
         this.cookieService.set(nameCookieAccessToken, res.authorization);
         this.router.navigate(['/']);
       },

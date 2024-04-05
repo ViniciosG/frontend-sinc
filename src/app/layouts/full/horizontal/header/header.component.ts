@@ -11,7 +11,8 @@ import { RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
-import { CoreService } from 'src/app/services/core.service';
+import { AuthService } from 'src/app/pages/authentication/service/auth.service';
+import { GetCompanyService } from 'src/app/services/get-company.service';
 import { BrandingComponent } from '../../vertical/sidebar/branding.component';
 import { navItems } from '../../vertical/sidebar/sidebar-data';
 
@@ -57,7 +58,7 @@ export class AppHorizontalHeaderComponent {
   @Output() toggleMobileNav = new EventEmitter<void>();
   @Output() toggleMobileFilterNav = new EventEmitter<void>();
   @Output() toggleCollapsed = new EventEmitter<void>();
-
+  company:any;
   showFiller = false;
 
   public selectedLanguage: any = {
@@ -92,13 +93,24 @@ export class AppHorizontalHeaderComponent {
   ];
 
   constructor(
-    private vsidenav: CoreService,
     public dialog: MatDialog,
+    private companyService: GetCompanyService,
+    private auth: AuthService,
     private translate: TranslateService
   ) {
-    translate.setDefaultLang('en');
+    this.auth.onSaveSuccess.subscribe(() => {
+      this.company = this.companyService.getCompany();
+    });
   }
 
+  ngOnInit(): void {
+    this.company = this.companyService.getCompany();
+    
+  }
+
+  executeEvent() {
+    this.company = this.companyService.getCompany();
+  }
   openDialog() {
     const dialogRef = this.dialog.open(AppHorizontalSearchDialogComponent);
 

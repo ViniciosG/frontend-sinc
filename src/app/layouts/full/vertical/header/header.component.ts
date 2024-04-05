@@ -13,7 +13,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MaterialModule } from 'src/app/material.module';
+import { AuthService } from 'src/app/pages/authentication/service/auth.service';
 import { CoreService } from 'src/app/services/core.service';
+import { GetCompanyService } from 'src/app/services/get-company.service';
 import { navItems } from '../sidebar/sidebar-data';
 
 
@@ -61,7 +63,7 @@ export class HeaderComponent {
   @Output() toggleMobileFilterNav = new EventEmitter<void>();
   @Output() toggleCollapsed = new EventEmitter<void>();
   @Output() doLogout = new EventEmitter<void>();
-  
+  company: any;
   showFiller = false;
 
   public selectedLanguage: any = {
@@ -98,10 +100,18 @@ export class HeaderComponent {
   constructor(
     private vsidenav: CoreService,
     public dialog: MatDialog,
+    private companyService: GetCompanyService,
+    private auth: AuthService,
     private translate: TranslateService
   ) {
-    translate.setDefaultLang('en');
+    this.auth.onSaveSuccess.subscribe(() => {
+      this.company = this.companyService.getCompany();
+    });
   }
+ngOnInit(): void {
+  this.company = this.companyService.getCompany();
+  
+}
 
   openDialog() {
     const dialogRef = this.dialog.open(AppSearchDialogComponent);

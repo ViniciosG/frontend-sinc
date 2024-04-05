@@ -15,8 +15,7 @@
     mat-icon-button
     (click)="toggleMobileNav.emit()"
     *ngIf="!showToggle"
-    class="d-flex justify-content-center"
-  >
+    class="d-flex justify-content-center">
     <i-tabler name="menu-2" class="icon-20 d-flex"></i-tabler>
   </button>
   <!-- --------------------------------------------------------------- -->
@@ -33,18 +32,7 @@
   </button>
 
   <div class="d-none d-lg-flex">
-    <!-- --------------------------------------------------------------- -->
-    <!--  Links -->
-    <!-- --------------------------------------------------------------- -->
-    <!-- <button
-      mat-button
-      [matMenuTriggerFor]="appsmenu"
-      aria-label="Notifications"
-    >
-      <div class="d-flex align-items-center">
-        Apps <i-tabler name="chevron-down" class="icon-16 m-l-4"></i-tabler>
-      </div>
-    </button> -->
+
     <mat-menu #appsmenu="matMenu" class="apps-dd cardWithShadow">
       <div class="row">
         <div class="col-sm-8 b-r-1 p-r-0">
@@ -121,8 +109,7 @@
   <button
     mat-icon-button
     (click)="toggleMobileFilterNav.emit()"
-    class="d-flex d-lg-none justify-content-center"
-  >
+    class="d-flex d-lg-none justify-content-center">
     <i-tabler name="grid-dots" class="icon-20 d-flex"></i-tabler>
   </button>
 
@@ -216,7 +203,7 @@
       style="height: 250px"
     >
       <div class="p-x-32 p-y-16">
-        <h6 class="f-s-16 f-w-600 m-0">User Profile</h6>
+        <h6 class="f-s-16 f-w-600 m-0">{{company?.name}}</h6>
 
         <!-- <div class="d-flex align-items-center p-b-24 b-b-1 m-t-16">
           <img
@@ -252,7 +239,7 @@
               <h5
                 class="f-s-14 f-w-600 m-0 textprimary mat-subtitle-1 hover-text"
               >
-                {{ profile.title }}
+                {{ company.name }}
               </h5>
               <span class="mat-body-1">{{ profile.subtitle }}</span>
             </div>

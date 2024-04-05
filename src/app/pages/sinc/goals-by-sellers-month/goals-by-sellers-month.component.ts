@@ -214,10 +214,6 @@ export class GoalsBySellersMonthComponent implements OnInit {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
   }
 
-  isInfinity(value: any) {
-    console.log((value.value / value.goal) * 100)
-  }
-
   getGoalsBySellers() {
     this.repository.call(this.params).subscribe({
         next: resp => {
@@ -250,7 +246,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
                 if(this.goals.items.length > 1) {
                   const sellerData = {
                     sellerId: -999,
-                    sellerName: "META DIÁRIA",
+                    sellerName: "META MENSAL",
                     value: somaArredondada,
                     qty: 1,
                     qtyItems: 1,

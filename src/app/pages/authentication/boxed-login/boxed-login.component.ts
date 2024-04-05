@@ -1,7 +1,6 @@
 import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
 import { CoreService } from 'src/app/services/core.service';
 import { MaterialModule } from '../../../material.module';
@@ -25,7 +24,6 @@ export class AppBoxedLoginComponent {
     private router: Router,
     private fb: FormBuilder,
     public authService: AuthService,
-    private _snackBar: MatSnackBar
       ) {  this.form = this.fb.group({
         auth: ['', Validators.required],
         password: ['', [Validators.required]],

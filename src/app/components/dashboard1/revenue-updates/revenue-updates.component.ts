@@ -145,8 +145,6 @@ const sourceData = item.map((data: any) => {
         qtyItems: data.qtyItems
     };
 });
-
-console.log(sourceData);
   
     this.revenueChart = {
       series: [
