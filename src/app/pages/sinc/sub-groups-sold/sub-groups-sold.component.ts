@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
-import { isEqual } from 'lodash';
-import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { SubGroupSoldModel } from 'src/app/models/sub-group-sold.model';
 import { SubGroupSoldRepository } from 'src/app/repositories/sub-group-sold.repository';
@@ -15,13 +13,12 @@ import { FiltersComponent } from '../components/filters/filters.component';
 @Component({
   selector: 'app-sub-groups-sold',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent,TablerIconsModule],
+  imports: [MaterialModule, CommonModule, FormsModule, FiltersComponent, TablerIconsModule],
   templateUrl: './sub-groups-sold.component.html',
   styleUrls: ['./sub-groups-sold.component.css']
 })
-export class SubGroupsSoldComponent implements OnInit {
+export class SubGroupsSoldComponent implements AfterViewInit {
 
-  private destroy$: Subject<void> = new Subject<void>();
   @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
 
   startDate: Date = new Date();
@@ -31,19 +28,16 @@ export class SubGroupsSoldComponent implements OnInit {
   date_final: string;
   inititalContext: string;
   endContext: string;
-  SALVAR_RESPOSTA: any;
-  option: any;
+  SALVAR_RESPOSTA: SubGroupSoldModel;
   totalValue: string;
-  selectValue: number = 5;
   params: any;
-  camposFiltro:any
+  camposFiltro: any
   carregandoDados: boolean = false;
-  altura: any = 20000;
   quantidadeVendas: string;
-  quantidadeItems:string;
-  
+  quantidadeItems: string;
+  grafico: any;
 
-  constructor(private repository: SubGroupSoldRepository) {
+  constructor(private repository: SubGroupSoldRepository, private readonly elementRef: ElementRef) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -60,33 +54,25 @@ export class SubGroupsSoldComponent implements OnInit {
 
     this.params = {
       registerInitial: this.date_inital,
-      registerFinal:  this.date_final,
+      registerFinal: this.date_final,
       _limit: 300,
-      _offset: 0
     }
 
     this.camposFiltro = [
-      { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value:'thisMonth', options: [
-        { label: 'Hoje', value: 'today' },
-        { label: 'Semana', value: 'lastWeek' },
-        { label: 'Mês', value: 'thisMonth' }
-      ], id: 'dateSelector' },
+      {
+        label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value: 'thisMonth', options: [
+          { label: 'Hoje', value: 'today' },
+          { label: 'Semana', value: 'lastWeek' },
+          { label: 'Mês', value: 'thisMonth' }
+        ], id: 'dateSelector'
+      },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
-
-
-      
     ];
   }
 
-
-
-
-  ngOnInit(): void {
-    this.obterDadosERenderizarGrafico();
-  }
 
   receberFiltros(event: any) {
     this.camposFiltro.forEach((campo: any) => {
@@ -103,24 +89,27 @@ export class SubGroupsSoldComponent implements OnInit {
     this.obterDadosERenderizarGrafico();
   }
 
+  ngAfterViewInit(): void {
+    this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
+    this.grafico.style.minHeight = '1px';
+    this.obterDadosERenderizarGrafico();
+  }
+
   obterDadosERenderizarGrafico() {
-    this.carregandoDados = false;
 
     this.repository.call(this.params).subscribe({
       next: resp => {
-        this.subGroups = resp;
-        if (!isEqual(this.SALVAR_RESPOSTA, this.subGroups)) {
-          takeUntil(this.destroy$)
-          this.SALVAR_RESPOSTA = resp;
-          const value = this.subGroups.items.reduce((total, item) => total + item.value, 0);
+        this.SALVAR_RESPOSTA = resp;
+        this.subGroups = { ...resp, items: [...resp.items] };
+        this.subGroups.items = this.subGroups.items.slice(0, 20);
 
-          this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-          this.quantidadeVendas = this.subGroups.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
-          this.quantidadeItems = this.subGroups.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
-  
-          this.executar(this.subGroups.items);
+        const value = this.subGroups.items.reduce((total, item) => total + item.value, 0);
+        this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        this.quantidadeVendas = this.subGroups.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
+        this.quantidadeItems = this.subGroups.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
 
-        }
+        this.subGroups.items = this.subGroups.items.slice(0, 20);
+        this.executar(this.subGroups.items, this.grafico);
       },
       error: error => {
         console.log(error);
@@ -128,23 +117,29 @@ export class SubGroupsSoldComponent implements OnInit {
     });
   }
 
-  executar(items: any) {
+  executar(items: any, graficoEcharts: HTMLElement): void {
+
     items.sort((a: any, b: any) => a.value - b.value);
-    
+
+    const tamanho = items.length * 75;
+    graficoEcharts.style.minHeight = tamanho + 'px'
+
     const opcoes: echarts.EChartsOption = {
       dataset: {
         source: items
       },
       grid: {
         containLabel: true,
+        left: 0, 
       },
       responsive: true,
       xAxis: [{
         name: 'Valor',
         axisLabel: {
-      formatter: (value: number) => {
-          return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }        },
+          formatter: (value: number) => {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          }
+        },
         axisLine: {
           lineStyle: {
             color: '#333'
@@ -159,14 +154,13 @@ export class SubGroupsSoldComponent implements OnInit {
       }],
       yAxis: {
         type: 'category',
-        data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold',color:'black' } })),
+        data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold', color: 'black' } })),
         axisLabel: {
         }
       },
       series: [{
         type: 'bar',
-        barWidth: 'auto',
-        barGap: '30%',
+        barWidth: '50px',
         encode: {
           x: 'value',
           y: 'subGroupName'
@@ -197,19 +191,15 @@ export class SubGroupsSoldComponent implements OnInit {
           }
         }
       }],
-      darkMode: true
     };
-  
-    const elementoGrafico = document.getElementById('grafico-echarts');
-    if (elementoGrafico) {
-      const meuGrafico = echarts.init(elementoGrafico);
-      meuGrafico.setOption(opcoes);
-    }
+    const meuGrafico = echarts.init(graficoEcharts);
+    meuGrafico.resize();
+    meuGrafico.setOption(opcoes);
   }
-  
-  
 
-  
+
+
+
 
   onSelectChange(event: number) {
     this.obterDadosERenderizarGrafico();
@@ -245,16 +235,32 @@ export class SubGroupsSoldComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
-    const container = document.querySelector('.container');
     this.atualizarGrafico();
   }
 
   atualizarGrafico() {
-    const elementoGrafico = document.getElementById('grafico-echarts');    
+    const elementoGrafico = document.getElementById('grafico-echarts');
     if (elementoGrafico != null) {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.resize();
     }
+
+  }
+
+  loadMoreItems(): void {
+    const lastItemIndex = this.subGroups.items.length - 1;
+    const nextItemsStartIndex = lastItemIndex + 1;
+
+    const nextItems = this.SALVAR_RESPOSTA.items.slice(nextItemsStartIndex, nextItemsStartIndex + 10);
+    this.subGroups.items.push(...nextItems);
+    if (this.grafico) {
+      echarts.dispose(this.grafico);
+    }
+
+    const tamanho = this.subGroups.items.length * 75;
+    this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
+    this.grafico.style.minHeight = tamanho + 'px';
+    this.executar(this.subGroups.items, this.grafico);
   }
 
 }

@@ -24,4 +24,5 @@
     </mat-card-content>
 </mat-card>
 <br>
-<div id="grafico-echarts" [style.height.px]="altura"></div>
+<div #graficoEcharts id="grafico-echarts"></div>
+<button mat-stroked-button (click)="loadMoreItems()" color="primary" class="full-width-button">Carregar Mais</button>

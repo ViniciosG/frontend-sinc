@@ -1,12 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
-import { isEqual } from 'lodash';
-import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { SalesByManufacturersModel } from 'src/app/models/sales-by-manufacturers.model';
 import { SalesByManufacturersRepository } from 'src/app/repositories/sales-by-manufacturers.repsository';
@@ -19,9 +17,7 @@ import { FiltersComponent } from '../components/filters/filters.component';
   templateUrl: './sales-by-manufacturers.component.html',
   styleUrls: ['./sales-by-manufacturers.component.css']
 })
-export class SalesByManufacturersComponent implements OnInit {
-
-  private destroy$: Subject<void> = new Subject<void>();
+export class SalesByManufacturersComponent implements AfterViewInit {
 
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -38,8 +34,9 @@ export class SalesByManufacturersComponent implements OnInit {
   params: any;
   camposFiltro:any
   altura: any = 4000;
+  grafico: any;
 
-  constructor(private repository: SalesByManufacturersRepository) {
+  constructor(private repository: SalesByManufacturersRepository, private readonly elementRef: ElementRef) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -57,6 +54,7 @@ export class SalesByManufacturersComponent implements OnInit {
     this.params = {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
+      _limit: 300,
     }
 
     this.camposFiltro = [
@@ -75,7 +73,9 @@ export class SalesByManufacturersComponent implements OnInit {
     ];
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
+    this.grafico.style.minHeight = '1px';
     this.obterDadosERenderizarGrafico();
   }
 
@@ -99,21 +99,19 @@ export class SalesByManufacturersComponent implements OnInit {
 
     this.repository.call(this.params).subscribe({
       next: resp => {
-        this.manufacturers = resp;
-        this.altura = this.altura + this.manufacturers.returnedTotal * 31 + 200;
-        this.atualizarGrafico();
-        if (!isEqual(this.SALVAR_RESPOSTA, this.manufacturers)) {
-          takeUntil(this.destroy$)
-          this.SALVAR_RESPOSTA = resp;
-          const value = this.manufacturers.items.reduce((total, item) => total + item.value, 0);
 
-                    this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        this.SALVAR_RESPOSTA = resp;
+        this.manufacturers = { ...resp, items: [...resp.items] };
+        this.manufacturers.items = this.manufacturers.items.slice(0, 20);
+
+        this.atualizarGrafico();
+          const value = this.manufacturers.items.reduce((total, item) => total + item.value, 0);
+          this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
           this.quantidadeVendas = this.manufacturers.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
           this.quantidadeItems = this.manufacturers.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
   
-          this.executar(this.manufacturers.items);
+          this.executar(this.manufacturers.items, this.grafico);
 
-        }
       },
       error: error => {
         console.log(error);
@@ -121,8 +119,11 @@ export class SalesByManufacturersComponent implements OnInit {
     });
   }
 
-  executar(items: any) {
+  executar(items: any, graficoEcharts: HTMLElement): void {
     items.sort((a: any, b: any) => a.value - b.value);
+
+    const tamanho = items.length * 75;
+    graficoEcharts.style.minHeight = tamanho + 'px'
     
     const opcoes: echarts.EChartsOption = {
       dataset: {
@@ -130,6 +131,7 @@ export class SalesByManufacturersComponent implements OnInit {
       },
       grid: {
         containLabel: true,
+        left: 0, 
       },
       xAxis: [{
         name: 'Valor',
@@ -157,7 +159,7 @@ export class SalesByManufacturersComponent implements OnInit {
       },
       series: [{
         type: 'bar',
-        barWidth: 0,
+        barWidth: '50px',
         encode: {
           x: 'value',
           y: 'manufacturerName'
@@ -190,12 +192,9 @@ export class SalesByManufacturersComponent implements OnInit {
       }],
       darkMode: true
     };
-  
-    const elementoGrafico = document.getElementById('grafico-echarts');
-    if (elementoGrafico) {
-      const meuGrafico = echarts.init(elementoGrafico);
-      meuGrafico.setOption(opcoes);
-    }
+    const meuGrafico = echarts.init(graficoEcharts);
+    meuGrafico.resize();
+    meuGrafico.setOption(opcoes);
   }
   
 
@@ -246,6 +245,22 @@ export class SalesByManufacturersComponent implements OnInit {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.resize();
     }
+  }
+
+  loadMoreItems(): void {
+    const lastItemIndex = this.manufacturers.items.length - 1;
+    const nextItemsStartIndex = lastItemIndex + 1;
+
+    const nextItems = this.SALVAR_RESPOSTA.items.slice(nextItemsStartIndex, nextItemsStartIndex + 10);
+    this.manufacturers.items.push(...nextItems);
+    if (this.grafico) {
+      echarts.dispose(this.grafico);
+    }
+
+    const tamanho = this.manufacturers.items.length * 75;
+    this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
+    this.grafico.style.minHeight = tamanho + 'px';
+    this.executar(this.manufacturers.items, this.grafico);
   }
 
 }

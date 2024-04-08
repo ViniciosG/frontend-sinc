@@ -27,7 +27,6 @@ export class AppSellingProductComponent {
   date_final: string;
   inititalContext: string;
   endContext: string;
-  SALVAR_RESPOSTA: any;
   option: any;
   totalValue: string;
   selectValue: number = 5;

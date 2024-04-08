@@ -170,23 +170,23 @@ export class MarginByProductsComponent implements OnInit {
             x: 'margin',
             y: 'productName'
           },
-          itemStyle: { // Adicionando estilo das barras
+          itemStyle: {
             color: (params: any) => {
               const valorMargem = params.value.margin;
-              return valorMargem < 0 ? '#FD665F' : '#65B581'; // Verifica se o valor da margem é negativo
+              return valorMargem < 0 ? '#FD665F' : '#65B581'; 
             }
           },
-          label: { // Adicionando label para inserir o valor do eixo x dentro da barra
+          label: { 
             show: true,
-            position: 'insideRight', // Posição do valor dentro da barra
+            position: 'insideRight', 
             formatter: (params: any) => {
               const value = params.value.margin;
-              return `{a|${value}%}`; // Usando formatação de texto enriquecido
+              return `{a|${value}%}`; 
             },
             rich: {
               a: {
                 fontWeight: 'bold',
-                color: 'white' // Alterando a cor da fonte
+                color: 'white' 
               }
             }
           }
