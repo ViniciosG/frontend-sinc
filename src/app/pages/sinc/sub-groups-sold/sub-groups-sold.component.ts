@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
@@ -36,9 +36,11 @@ export class SubGroupsSoldComponent implements AfterViewInit {
   quantidadeVendas: string;
   quantidadeItems: string;
   grafico: any;
-  loading: boolean;
+  loading: boolean = false;
 
-  constructor(private repository: SubGroupSoldRepository, private readonly elementRef: ElementRef,) {
+  constructor(private repository: SubGroupSoldRepository, private readonly elementRef: ElementRef,
+    private cdref: ChangeDetectorRef
+  ) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -94,6 +96,7 @@ export class SubGroupsSoldComponent implements AfterViewInit {
     this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
     this.grafico.style.minHeight = '1px';
     this.obterDadosERenderizarGrafico();
+    this.cdref.detectChanges()
   }
 
   obterDadosERenderizarGrafico() {
@@ -132,7 +135,7 @@ export class SubGroupsSoldComponent implements AfterViewInit {
       grid: {
         containLabel: true,
         left: 0,
-        right: 100 
+        right: 100
       },
       responsive: true,
       animation: false,

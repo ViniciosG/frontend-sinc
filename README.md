@@ -1,2 +1,1 @@
-# Modernize-Angular-pro
-Modernize Angular Admin Dashboard
+ng build --configuration production --base-href /sinc/web/ --output-hashing=all

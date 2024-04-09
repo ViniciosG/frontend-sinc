@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, HostListener } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
@@ -36,7 +36,9 @@ export class ProductsSoldComponent implements AfterViewInit {
   grafico: any
   loading: boolean;
 
-  constructor(private repository: ProductsSoldsRepository, private readonly elementRef: ElementRef) {
+  constructor(private repository: ProductsSoldsRepository, private readonly elementRef: ElementRef,
+    private cdref: ChangeDetectorRef
+  ) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -76,6 +78,7 @@ export class ProductsSoldComponent implements AfterViewInit {
     this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
     this.grafico.style.minHeight = '1px';
     this.obterDadosERenderizarGrafico();
+    this.cdref.detectChanges()
   }
 
 
@@ -100,7 +103,7 @@ export class ProductsSoldComponent implements AfterViewInit {
       next: resp => {
         this.SALVAR_RESPOSTA = resp;
         this.productsSolds = { ...resp, items: [...resp.items] };
-        
+
         const value = this.productsSolds.items.reduce((total, item) => total + item.value, 0);
         this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         this.quantidadeVendas = this.productsSolds.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
@@ -111,9 +114,7 @@ export class ProductsSoldComponent implements AfterViewInit {
 
       },
       error: error => {
-        this.loading = false;
-        console.log(error);
-      }
+        this.loading = false;      }
     });
   }
 
@@ -155,13 +156,20 @@ export class ProductsSoldComponent implements AfterViewInit {
       }],
       yAxis: {
         type: 'category',
-        data: items.map((item: any) => ({ value: item.productName, textStyle: { fontWeight: 'bold', color: 'black',  } })),
+        data: items.map((item: any) => ({ value: item.productName, textStyle: { fontWeight: 'bold', color: 'black', } })),
         axisLabel: {
           formatter: function (value: string) {
-            const maxCharactersPerLine = 15;
+            const maxCharactersPerLine = 11;
             const lines = [];
-            for (let i = 0; i < value.length; i += maxCharactersPerLine) {
-              lines.push(value.substr(i, maxCharactersPerLine));
+            let index = 0;
+            for (let i = 0; i < value.length; i++) {
+              if (i > (maxCharactersPerLine * (lines.length + 1)) && value[i] === ' ') {
+                lines.push(value.substring(index, i));
+                index = i
+              }
+            }
+            if (value.length !== index +1){
+              lines.push(value.substring(index, value.length));
             }
             return lines.join('\n');
           },
@@ -254,5 +262,6 @@ export class ProductsSoldComponent implements AfterViewInit {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.resize();
     }
+    this.cdref.detectChanges()
   }
 }

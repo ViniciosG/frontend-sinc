@@ -37,21 +37,21 @@
 
                 <div class="align-self-start">
                     <img *ngIf="(cardimg.value / cardimg.goal) * 100 <= 99 && (cardimg.value / cardimg.goal) * 100 >= 50 && cardimg.goal !=0"
-                        src="./assets/images/profile/médio.png" class="rounded-circle" width="30"
+                        src="assets/images/profile/médio.png" class="rounded-circle" width="30"
                         style="margin-right: 5px;">
 
                     <img *ngIf="(cardimg.value / cardimg.goal) * 100 <= 50 && (cardimg.value / cardimg.goal) * 100 >= 0 && cardimg.goal !=0"
-                        src="./assets/images/profile/triste.png" class="rounded-circle" width="30"
+                        src="assets/images/profile/triste.png" class="rounded-circle" width="30"
                         style="margin-right: 5px;">
 
                     <img *ngIf="(cardimg.value / cardimg.goal) * 100 > 99 && cardimg.goal != 0"
-                        src="./assets/images/profile/feliz.png" class="rounded-circle" width="30"
+                        src="assets/images/profile/feliz.png" class="rounded-circle" width="30"
                         style="margin-right: 5px;">
 
 
 
 
-                    <img *ngIf="cardimg.goal ===0" src="./assets/images/profile/triste.png" class="rounded-circle"
+                    <img *ngIf="cardimg.goal ===0" src="assets/images/profile/triste.png" class="rounded-circle"
                         width="30" style="margin-right: 5px;">
                 </div>
             </mat-card-header>

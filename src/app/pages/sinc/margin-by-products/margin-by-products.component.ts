@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -13,7 +13,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 @Component({
   selector: 'app-margin-by-products',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent, TablerIconsModule],
+  imports: [MaterialModule, CommonModule, FormsModule, FiltersComponent, TablerIconsModule],
   templateUrl: './margin-by-products.component.html',
   styleUrls: ['./margin-by-products.component.css']
 })
@@ -39,7 +39,9 @@ export class MarginByProductsComponent implements AfterViewInit {
   grafico: any;
   loading: boolean;
 
-  constructor(private repository: MarginByProductsRepository,private readonly elementRef: ElementRef,) {
+  constructor(private repository: MarginByProductsRepository,
+    private readonly elementRef: ElementRef,
+    private cdref: ChangeDetectorRef) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -53,21 +55,23 @@ export class MarginByProductsComponent implements AfterViewInit {
 
     this.inititalContext = format(this.startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-  
+
     this.params = {
       registerInitial: this.date_inital,
       _sort: "value",
       _direction: "DESC",
-      registerFinal:  this.date_final,
+      registerFinal: this.date_final,
       _limit: 1000
     };
 
     this.camposFiltro = [
-      { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value:'thisMonth', options: [
-        { label: 'Hoje', value: 'today' },
-        { label: 'Semana', value: 'lastWeek' },
-        { label: 'Mês', value: 'thisMonth' }
-      ], id: 'dateSelector' },
+      {
+        label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value: 'thisMonth', options: [
+          { label: 'Hoje', value: 'today' },
+          { label: 'Semana', value: 'lastWeek' },
+          { label: 'Mês', value: 'thisMonth' }
+        ], id: 'dateSelector'
+      },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
@@ -96,6 +100,7 @@ export class MarginByProductsComponent implements AfterViewInit {
     this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
     this.grafico.style.minHeight = '1px';
     this.obterDadosERenderizarGrafico();
+    this.cdref.detectChanges()
   }
 
   obterDadosERenderizarGrafico() {
@@ -109,8 +114,8 @@ export class MarginByProductsComponent implements AfterViewInit {
         this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         this.quantidadeVendas = this.subGroups.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
         this.quantidadeItems = this.subGroups.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
-        const lucro = this.subGroups.items.reduce((total, item) => total + (item.value * item.margin/100), 0);
-        this.margem = parseFloat(((lucro/value) * 100).toFixed(2)).toLocaleString('pt-BR');
+        const lucro = this.subGroups.items.reduce((total, item) => total + (item.value * item.margin / 100), 0);
+        this.margem = parseFloat(((lucro / value) * 100).toFixed(2)).toLocaleString('pt-BR');
 
 
         this.executar(this.subGroups.items, this.grafico);
@@ -162,13 +167,20 @@ export class MarginByProductsComponent implements AfterViewInit {
       }],
       yAxis: {
         type: 'category',
-        data: items.map((item: any) => ({ value: item.productName, textStyle: { fontWeight: 'bold', color: 'black',  } })),
+        data: items.map((item: any) => ({ value: item.productName, textStyle: { fontWeight: 'bold', color: 'black', } })),
         axisLabel: {
           formatter: function (value: string) {
-            const maxCharactersPerLine = 15;
+            const maxCharactersPerLine = 11;
             const lines = [];
-            for (let i = 0; i < value.length; i += maxCharactersPerLine) {
-              lines.push(value.substr(i, maxCharactersPerLine));
+            let index = 0;
+            for (let i = 0; i < value.length; i++) {
+              if (i > (maxCharactersPerLine * (lines.length + 1)) && value[i] === ' ') {
+                lines.push(value.substring(index, i));
+                index = i
+              }
+            }
+            if (value.length !== index +1){
+              lines.push(value.substring(index, value.length));
             }
             return lines.join('\n');
           },
@@ -188,7 +200,7 @@ export class MarginByProductsComponent implements AfterViewInit {
             const value = params.value.value;
             const quantidade = params.value.qty;
             const formattedValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            return `{a|${params.value.margin + '%'}}\n{b|Valor: ${formattedValue}}\n{c|Vendas: ${quantidade}}`;
+            return `{a|${formattedValue}}\n{b|Margem: ${params.value.margin}}%\n{c|Vendas: ${quantidade}}`;
           },
           rich: {
             a: {

@@ -1,5 +1,5 @@
 const VERSION = 'v1'
-const HTTP ='http://'
+const HTTP ='https://'
 const SERVER = 'www2.engendra.com.br/sinc/api/'
 const PORT = ''
 const BASE_URL_APP = HTTP + SERVER + PORT + VERSION;

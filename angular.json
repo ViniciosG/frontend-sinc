@@ -19,7 +19,8 @@
           "options": {
             "allowedCommonJsDependencies": [
               "apexcharts",
-              "bezier-easing"
+              "bezier-easing",
+              "lodash"
             ],
             "outputPath": "dist/Modernize",
             "index": "src/index.html",

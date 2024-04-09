@@ -101,13 +101,8 @@
       </div>
     </div>
   </mat-sidenav>
-  <!-- ============================================================== -->
-  <!-- Main Content -->
-  <!-- ============================================================== -->
+
   <mat-sidenav-content class="contentWrapper" #content>
-    <!-- ============================================================== -->
-    <!-- VerticalHeader -->
-    <!-- ============================================================== -->
     <ng-container *ngIf="!options.horizontal; else horizontalheader">
       <app-header
         [showToggle]="!isOver"
@@ -133,26 +128,9 @@
       }"
     >
       <app-breadcrumb></app-breadcrumb>
-      <!-- ============================================================== -->
-      <!-- Outlet -->
-      <!-- ============================================================== -->
       <router-outlet></router-outlet>
-      <!-- <div class="customizerBtn">
-        <button mat-fab color="primary" (click)="customizerRight.toggle()">
-          <mat-icon>settings</mat-icon>
-        </button>
-      </div> -->
     </main>
   </mat-sidenav-content>
-
-  <!-- <mat-sidenav #customizerRight mode="over" position="end">
-    <app-customizer (optionsChange)="receiveOptions($event)"></app-customizer>
-  </mat-sidenav>
-</mat-sidenav-container> -->
-
-<!-- ------------------------------------------------------------------
-    Mobile Apps Sidebar
-    ------------------------------------------------------------------ -->
 <mat-drawer #filterNavRight mode="over" position="end" class="filter-sidebar" [hidden]=true>
   
 </mat-drawer>

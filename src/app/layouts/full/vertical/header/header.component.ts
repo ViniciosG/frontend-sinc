@@ -122,7 +122,7 @@ ngOnInit(): void {
   }
 
   makeLogout() {
-    this.doLogout.emit();
+    this.auth.doLogout()
   }
 
   changeLanguage(lang: any): void {

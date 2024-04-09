@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
@@ -13,11 +13,11 @@ import { FiltersComponent } from '../components/filters/filters.component';
 @Component({
   selector: 'app-margin-by-sub-groups',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent,TablerIconsModule],
+  imports: [MaterialModule, CommonModule, FormsModule, FiltersComponent, TablerIconsModule],
   templateUrl: './margin-by-sub-groups.component.html',
   styleUrls: ['./margin-by-sub-groups.component.css']
 })
-export class MarginBySubGroupsComponent implements AfterViewInit  {
+export class MarginBySubGroupsComponent implements AfterViewInit {
 
   @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
 
@@ -39,7 +39,10 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
   grafico: any;
   loading: boolean;
 
-  constructor(private repository: MarginBySubGroupsRepository,private readonly elementRef: ElementRef,) {
+  constructor(private repository: MarginBySubGroupsRepository,
+    private readonly elementRef: ElementRef,
+    private cdref: ChangeDetectorRef
+  ) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -53,21 +56,23 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
 
     this.inititalContext = format(this.startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     this.endContext = format(this.endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-  
+
     this.params = {
       registerInitial: this.date_inital,
       _sort: "value",
       _direction: "DESC",
-      registerFinal:  this.date_final,
+      registerFinal: this.date_final,
       _limit: 1000
     };
 
     this.camposFiltro = [
-      { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value:'thisMonth', options: [
-        { label: 'Hoje', value: 'today' },
-        { label: 'Semana', value: 'lastWeek' },
-        { label: 'Mês', value: 'thisMonth' }
-      ], id: 'dateSelector' },
+      {
+        label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value: 'thisMonth', options: [
+          { label: 'Hoje', value: 'today' },
+          { label: 'Semana', value: 'lastWeek' },
+          { label: 'Mês', value: 'thisMonth' }
+        ], id: 'dateSelector'
+      },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
@@ -96,6 +101,7 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
     this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
     this.grafico.style.minHeight = '1px';
     this.obterDadosERenderizarGrafico();
+    this.cdref.detectChanges()
   }
 
   obterDadosERenderizarGrafico() {
@@ -109,8 +115,8 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
         this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         this.quantidadeVendas = this.subGroups.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
         this.quantidadeItems = this.subGroups.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
-        const lucro = this.subGroups.items.reduce((total, item) => total + (item.value * item.margin/100), 0);
-        this.margem = parseFloat(((lucro/value) * 100).toFixed(2)).toLocaleString('pt-BR');
+        const lucro = this.subGroups.items.reduce((total, item) => total + (item.value * item.margin / 100), 0);
+        this.margem = parseFloat(((lucro / value) * 100).toFixed(2)).toLocaleString('pt-BR');
 
         this.executar(this.subGroups.items, this.grafico);
         this.loading = false;
@@ -120,6 +126,7 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
         console.log(error);
       }
     });
+
   }
 
   executar(items: any, graficoEcharts: HTMLElement): void {
