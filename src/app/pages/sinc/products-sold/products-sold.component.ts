@@ -100,9 +100,7 @@ export class ProductsSoldComponent implements AfterViewInit {
       next: resp => {
         this.SALVAR_RESPOSTA = resp;
         this.productsSolds = { ...resp, items: [...resp.items] };
-
-        this.atualizarGrafico();
-
+        
         const value = this.productsSolds.items.reduce((total, item) => total + item.value, 0);
         this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         this.quantidadeVendas = this.productsSolds.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
@@ -131,9 +129,10 @@ export class ProductsSoldComponent implements AfterViewInit {
       },
       grid: {
         containLabel: true,
-        left: 0, 
-        right: 100 
+        left: 0,
+        right: 140
       },
+      responsive: true,
       animation: false,
       xAxis: [{
         name: 'Valor',
@@ -156,9 +155,17 @@ export class ProductsSoldComponent implements AfterViewInit {
       }],
       yAxis: {
         type: 'category',
-        data: items.map((item: any) => ({ value: item.productName, textStyle: { fontWeight: 'bold', color: 'black' } })),
+        data: items.map((item: any) => ({ value: item.productName, textStyle: { fontWeight: 'bold', color: 'black',  } })),
         axisLabel: {
-        }
+          formatter: function (value: string) {
+            const maxCharactersPerLine = 15;
+            const lines = [];
+            for (let i = 0; i < value.length; i += maxCharactersPerLine) {
+              lines.push(value.substr(i, maxCharactersPerLine));
+            }
+            return lines.join('\n');
+          },
+        },
       },
       series: [{
         type: 'bar',

@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
-import { isEqual } from 'lodash';
-import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { MarginBySubGroupsModel } from 'src/app/models/margin-by-sub-groups.model';
 import { MarginBySubGroupsRepository } from 'src/app/repositories/margin-by-sub-groups.repository';
@@ -14,30 +13,32 @@ import { FiltersComponent } from '../components/filters/filters.component';
 @Component({
   selector: 'app-margin-by-sub-groups',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent],
+  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent,TablerIconsModule],
   templateUrl: './margin-by-sub-groups.component.html',
   styleUrls: ['./margin-by-sub-groups.component.css']
 })
-export class MarginBySubGroupsComponent implements OnInit {
+export class MarginBySubGroupsComponent implements AfterViewInit  {
 
-
-  private destroy$: Subject<void> = new Subject<void>();
+  @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
 
   startDate: Date = new Date();
   endDate: Date = new Date();
-  marginSubGroups: MarginBySubGroupsModel;
+  subGroups: MarginBySubGroupsModel;
   date_inital: string;
   date_final: string;
   inititalContext: string;
   endContext: string;
-  SALVAR_RESPOSTA: any;
-  option: any;
+  SALVAR_RESPOSTA: MarginBySubGroupsModel;
   totalValue: string;
-  selectValue: number = 5;
   params: any;
-  camposFiltro:any
+  camposFiltro: any
+  carregandoDados: boolean = false;
+  quantidadeVendas: string;
+  quantidadeItems: string;
+  grafico: any;
+  loading: boolean;
 
-  constructor(private repository: MarginBySubGroupsRepository) {
+  constructor(private repository: MarginBySubGroupsRepository,private readonly elementRef: ElementRef,) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -73,20 +74,12 @@ export class MarginBySubGroupsComponent implements OnInit {
     ];
   }
 
-  ngOnInit(): void {
-    this.obterDadosERenderizarGrafico();
-  }
 
   receberFiltros(event: any) {
-  
-    this.camposFiltro.forEach((campo:any) => {
-
+    this.camposFiltro.forEach((campo: any) => {
       if (campo.id && campo.value !== undefined) {
-
         if (campo.type === 'date') {
-
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-
           this.params[campo.id] = dataFormatada;
         } else {
           this.params[campo.id] = campo.value;
@@ -97,118 +90,118 @@ export class MarginBySubGroupsComponent implements OnInit {
     this.obterDadosERenderizarGrafico();
   }
 
+  ngAfterViewInit(): void {
+    this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
+    this.grafico.style.minHeight = '1px';
+    this.obterDadosERenderizarGrafico();
+  }
 
   obterDadosERenderizarGrafico() {
+    this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
-        this.marginSubGroups = resp;
-  
-        if (!isEqual(this.SALVAR_RESPOSTA, this.marginSubGroups)) {
-          takeUntil(this.destroy$)
-          this.SALVAR_RESPOSTA = resp;
-          const value = this.marginSubGroups.items.reduce((total, item) => total + item.value, 0);
+        this.SALVAR_RESPOSTA = resp;
+        this.subGroups = { ...resp, items: [...resp.items] };
 
-          this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  
-          this.executar(this.marginSubGroups.items);
+        const value = this.subGroups.items.reduce((total, item) => total + item.value, 0);
+        this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        this.quantidadeVendas = this.subGroups.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
+        this.quantidadeItems = this.subGroups.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
 
-        }
+        this.executar(this.subGroups.items, this.grafico);
+        this.loading = false;
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });
   }
 
+  executar(items: any, graficoEcharts: HTMLElement): void {
 
+    items.sort((a: any, b: any) => a.value - b.value);
 
-  executar(items: any) {
-    items.sort((a: any, b: any) => a.margin - b.margin);
-
+    const tamanho = items.length * 75;
+    graficoEcharts.style.minHeight = tamanho + 'px'
 
     const opcoes: echarts.EChartsOption = {
       dataset: {
         source: items
       },
-      title: {
-        text: 'Margem por Sub Grupos'
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        }
-      },
-      legend: {},
       grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
+        containLabel: true,
+        left: 0,
+        right: 140
       },
-
+      responsive: true,
+      animation: false,
       xAxis: [{
-        name: 'Porcentagem',
-        type: 'value', 
+        name: 'Valor',
         axisLabel: {
-          formatter: (value: number) => value.toFixed(2) 
+          formatter: (value: number) => {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          }
         },
         axisLine: {
           lineStyle: {
-            color: '#333' 
+            color: '#333'
           }
         },
         axisTick: {
-          show: false 
+          show: false
         },
         splitLine: {
-          show: false 
+          show: false
         },
       }],
-      yAxis: { 
-        type: 'category', 
-        data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold' } })),
+      yAxis: {
+        type: 'category',
+        data: items.map((item: any) => ({ value: item.subGroupName, textStyle: { fontWeight: 'bold', color: 'black' } })),
+        axisLabel: {
+        }
       },
-      series: [
-        {
-          type: 'bar',
-          barWidth: 0,
-          encode: {
-            x: 'margin',
-            y: 'subGroupName'
+      series: [{
+        type: 'bar',
+        barWidth: '50px',
+        encode: {
+          x: 'value',
+          y: 'subGroupName'
+        },
+        label: {
+          show: true,
+          position: 'right',
+          formatter: (params: any) => {
+            const value = params.value.value;
+            const quantidade = params.value.qty;
+            const formattedValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            return `{a|${params.value.margin + '%'}}\n{b|Vendas: ${formattedValue}}\n{c|Itens: ${quantidade}}`;
           },
-          itemStyle: { 
-            color: (params: any) => {
-              const valorMargem = params.value.margin;
-              return valorMargem < 0 ? '#FD665F' : '#65B581';
-            }
-          },
-          label: {
-            show: true,
-            position: 'insideRight', 
-            formatter: (params: any) => {
-              const value = params.value.margin;
-              return `{a|${value}%}`; 
+          rich: {
+            a: {
+              fontWeight: 'bold',
+              color: 'black'
             },
-            rich: {
-              a: {
-                fontWeight: 'bold',
-                color: 'white' 
-              }
+            b: {
+              color: '#999',
+              lineHeight: 20
+            },
+            c: {
+              color: '#999',
+              lineHeight: 20
             }
           }
         }
-      ],
+      }],
     };
-  
-    const elementoGrafico = document.getElementById('grafico-echarts');    
-    if (elementoGrafico) {
-      const meuGrafico = echarts.init(elementoGrafico);
-      meuGrafico.setOption(opcoes);
-    }
+    const meuGrafico = echarts.init(graficoEcharts);
+    meuGrafico.resize();
+    meuGrafico.setOption(opcoes);
   }
 
-  
+
+
+
 
   onSelectChange(event: number) {
     this.obterDadosERenderizarGrafico();
@@ -247,14 +240,13 @@ export class MarginBySubGroupsComponent implements OnInit {
     this.atualizarGrafico();
   }
 
-
-
   atualizarGrafico() {
-    const elementoGrafico = document.getElementById('grafico-echarts');    
-    if (elementoGrafico) {
+    const elementoGrafico = document.getElementById('grafico-echarts');
+    if (elementoGrafico != null) {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.resize();
     }
+
   }
 
 }
