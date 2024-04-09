@@ -8,11 +8,12 @@ import { MaterialModule } from 'src/app/material.module';
 import { MarginByProductsModel } from 'src/app/models/margin-by-products.model';
 import { MarginByProductsRepository } from 'src/app/repositories/margin-by-products.repository';
 import { FiltersComponent } from '../components/filters/filters.component';
+import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
   selector: 'app-margin-by-products',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent],
+  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent, TablerIconsModule],
   templateUrl: './margin-by-products.component.html',
   styleUrls: ['./margin-by-products.component.css']
 })
@@ -34,6 +35,7 @@ export class MarginByProductsComponent implements AfterViewInit {
   carregandoDados: boolean = false;
   quantidadeVendas: string;
   quantidadeItems: string;
+  margem: string;
   grafico: any;
   loading: boolean;
 
@@ -57,6 +59,7 @@ export class MarginByProductsComponent implements AfterViewInit {
       _sort: "value",
       _direction: "DESC",
       registerFinal:  this.date_final,
+      _limit: 1000
     };
 
     this.camposFiltro = [
@@ -106,6 +109,9 @@ export class MarginByProductsComponent implements AfterViewInit {
         this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         this.quantidadeVendas = this.subGroups.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
         this.quantidadeItems = this.subGroups.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
+        const lucro = this.subGroups.items.reduce((total, item) => total + (item.value * item.margin/100), 0);
+        this.margem = parseFloat(((lucro/value) * 100).toFixed(2)).toLocaleString('pt-BR');
+
 
         this.executar(this.subGroups.items, this.grafico);
         this.loading = false;
@@ -182,7 +188,7 @@ export class MarginByProductsComponent implements AfterViewInit {
             const value = params.value.value;
             const quantidade = params.value.qty;
             const formattedValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            return `{a|${params.value.margin + '%'}}\n{b|Vendas: ${formattedValue}}\n{c|Itens: ${quantidade}}`;
+            return `{a|${params.value.margin + '%'}}\n{b|Valor: ${formattedValue}}\n{c|Vendas: ${quantidade}}`;
           },
           rich: {
             a: {

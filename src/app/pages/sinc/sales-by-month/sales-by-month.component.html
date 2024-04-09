@@ -1,33 +1,38 @@
 <app-filters [camposFiltro]="camposFiltro" (filtrosEnviados)="receberFiltros($event)"></app-filters>
 <br>
 <mat-card class="cardWithShadow">
-    <mat-card-header class="d-flex align-items-center">
-      <mat-card-title>Dados do ano</mat-card-title>
-      <div class="m-l-auto">
-        <button mat-fab color="accent" class="shadow-none icon-48">
-          <i-tabler name="currency-dollar" class="text-white d-flex"></i-tabler>
-        </button>
+  <mat-card-header class="d-flex align-items-center">
+    <mat-card-title>Dados do ano</mat-card-title>
+    <div class="m-l-auto">
+      <button mat-fab color="accent" class="shadow-none icon-48">
+        <i-tabler name="currency-dollar" class="text-white d-flex"></i-tabler>
+      </button>
+    </div>
+  </mat-card-header>
+  <mat-card-content class="m-b-32">
+    <h4 class="mat-headline-5" style="color: green">{{totalValue}}</h4>
+    <div class="d-flex align-items-center m-t-16">
+      <div class="quantidade-container">
+        <div class="mat-body-1 m-l-12">Vendas</div>
+        <div class="mat-body-1 f-w-600 m-l-12">{{quantidadeVendas}}</div>
       </div>
-    </mat-card-header>
-    <mat-card-content class="m-b-32">
-        <h4 class="mat-headline-5" style="color: green">{{totalValue}}</h4>
-        <div class="d-flex align-items-center m-t-16">
-          <div class="quantidade-container">
-            <div class="mat-body-1 m-l-12">Vendas</div>
-            <div class="mat-body-1 f-w-600 m-l-12">{{quantidadeVendas}}</div>
-          </div>
-          <div class="quantidade-container">
-            <div class="mat-body-1 m-l-12">Items</div>
-            <div class="mat-body-1 f-w-600 m-l-12">{{quantidadeItems}}</div>
-          </div>
-        </div>
-      </mat-card-content>
-  </mat-card>
-  <br>
-    <div class="grafico-echarts" id="grafico-echarts" style="width: 100%; height: 450px;"></div>
+      <div class="quantidade-container">
+        <div class="mat-body-1 m-l-12">Itens</div>
+        <div class="mat-body-1 f-w-600 m-l-12">{{quantidadeItems}}</div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
 <br>
-    <apx-chart *ngIf="areaChartOptions?.series" [series]="areaChartOptions.series" [chart]="areaChartOptions.chart" [xaxis]="areaChartOptions.xaxis"
-    [yaxis]="areaChartOptions.yaxis" [grid]="areaChartOptions.grid" [stroke]="areaChartOptions.stroke"
-    [tooltip]="areaChartOptions.tooltip" [dataLabels]="areaChartOptions.dataLabels" [legend]="areaChartOptions.legend"
-    [colors]="areaChartOptions.colors" [markers]="areaChartOptions.markers">
-  </apx-chart>
+<div class="grafico-echarts" id="grafico-echarts" style="width: 100%; height: 450px;"></div>
+<br>
+
+<div *ngIf="loading" class="d-flex align-items-center justify-content-center loading">
+  <mat-spinner diameter="50"></mat-spinner>
+</div>
+
+<apx-chart *ngIf="areaChartOptions?.series" [series]="areaChartOptions.series" [chart]="areaChartOptions.chart"
+  [xaxis]="areaChartOptions.xaxis" [yaxis]="areaChartOptions.yaxis" [grid]="areaChartOptions.grid"
+  [stroke]="areaChartOptions.stroke" [tooltip]="areaChartOptions.tooltip" [dataLabels]="areaChartOptions.dataLabels"
+  [legend]="areaChartOptions.legend" [colors]="areaChartOptions.colors" [markers]="areaChartOptions.markers">
+</apx-chart>

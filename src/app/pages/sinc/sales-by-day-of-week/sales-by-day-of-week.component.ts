@@ -39,6 +39,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
   params: any;
   camposFiltro:any;
   legendStateInitialized = false;
+  loading: boolean = false;
 
 
   constructor(private repository: SalesByDayOfWeekRepository) {
@@ -96,8 +97,10 @@ export class SalesByDayOfWeekComponent implements OnInit {
 
 
   obterDadosERenderizarGrafico() {
+    this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+        this.loading = false;
         this.sales = resp;
   
         if (!isEqual(this.SALVAR_RESPOSTA, this.sales)) {
@@ -114,7 +117,7 @@ export class SalesByDayOfWeekComponent implements OnInit {
         }
       },
       error: error => {
-        console.log(error);
+        this.loading = false;
       }
     });
   }

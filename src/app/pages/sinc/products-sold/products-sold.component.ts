@@ -54,7 +54,7 @@ export class ProductsSoldComponent implements AfterViewInit {
     this.params = {
       registerInitial: this.date_inital,
       registerFinal: this.date_final,
-      _limit: 300,
+      _limit: 1000,
     }
 
     this.camposFiltro = [

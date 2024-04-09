@@ -39,6 +39,7 @@ export class NewCustomersPerMonthComponent implements OnInit {
   params: any;
   camposFiltro:any
   totalValue: string;
+  loading: boolean = false;
 
   constructor(private repository: NewCustomersPerMonthsRepository) {
     const dataAtual = new Date();
@@ -86,8 +87,10 @@ export class NewCustomersPerMonthComponent implements OnInit {
   }
 
   obterDadosERenderizarGrafico() {
+    this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+        this.loading = false;
         this.customers = resp;
 
         this.quantidadeClientes = this.customers.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
@@ -100,6 +103,7 @@ export class NewCustomersPerMonthComponent implements OnInit {
         }
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });

@@ -70,6 +70,7 @@ export class SalesByMonthComponent implements OnInit {
   quantidadeItems:string;
   params: any;
   camposFiltro:any;
+  loading: boolean = false;
 
   public areaChartOptions: Partial<ChartOptions> | any;
   public chartOptionsMixed: Partial<ChartOptions> | any;
@@ -137,8 +138,10 @@ export class SalesByMonthComponent implements OnInit {
   }
 
   obterDadosERenderizarGrafico() {
+    this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+        this.loading = false;
         this.sales = resp;
   
         if (!isEqual(this.SALVAR_RESPOSTA, this.sales)) {
@@ -157,7 +160,7 @@ export class SalesByMonthComponent implements OnInit {
         }
       },
       error: error => {
-        console.log(error);
+        this.loading = false;
       }
     });
   }

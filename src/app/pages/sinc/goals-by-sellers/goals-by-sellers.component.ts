@@ -43,12 +43,13 @@ export class GoalsBySellersComponent implements OnInit {
   graficoIds: string[] = [];
   SALVAR_RESPOSTA: any;
   params: any;
-  camposFiltro:any
+  camposFiltro: any
   quantidadeValor: string;
   valorTotalGeral: number;
   metaTotalGeral: number;
-  somaArredondada:any;
-  metaGeral:any;
+  somaArredondada: any;
+  loading: boolean = false;
+  metaGeral: any;
   public yearlyChart!: Partial<yearlyChart> | any;
   public chartOptions!: Partial<customerChart> | any;;
 
@@ -57,16 +58,16 @@ export class GoalsBySellersComponent implements OnInit {
 
     const startDate = startOfDay(dataAtual);
     const endDate = new Date();
-  
+
     this.date_inital = format(startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
-  
+
     this.inititalContext = format(startDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     this.endContext = format(endDate, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
-  
+
     this.params = {
       registerInitial: this.date_inital,
-      registerFinal:  this.date_final,
+      registerFinal: this.date_final,
       _direction: 'DESC',
       _sort: 'goal',
     }
@@ -74,46 +75,48 @@ export class GoalsBySellersComponent implements OnInit {
     this.camposFiltro = [
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: false, id: "sellerName" },
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: false, id: "sellerType" },
-      { label: 'Ranking', placeholder: 'Ranking', type: 'select', visivel: false, options: ['5', '10', '20','30'], id: "_limit" },
+      { label: 'Ranking', placeholder: 'Ranking', type: 'select', visivel: false, options: ['5', '10', '20', '30'], id: "_limit" },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: false, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: false, value: this.endDate, id: "registerFinal" },
-      { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: false, value:'thisMonth', options: [
-        { label: 'Hoje', value: 'today' },
-        { label: 'Semana', value: 'lastWeek' },
-        { label: 'Mês', value: 'thisMonth' }
-      ], id: 'dateSelector' },
+      {
+        label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: false, value: 'thisMonth', options: [
+          { label: 'Hoje', value: 'today' },
+          { label: 'Semana', value: 'lastWeek' },
+          { label: 'Mês', value: 'thisMonth' }
+        ], id: 'dateSelector'
+      },
     ];
   }
 
   abreviarNome(nome: string): string {
     if (!nome || nome.trim().length === 0) {
-        return "SEM NOME"; // Retorna "SEM NOME" se o nome estiver em branco ou for nulo
+      return "SEM NOME"; // Retorna "SEM NOME" se o nome estiver em branco ou for nulo
     }
 
     if (nome.includes('.')) {
-        return nome; // Retornar o nome original se contiver ponto
+      return nome; // Retornar o nome original se contiver ponto
     }
 
     if (nome.trim().length === 4) {
-        return nome; // Retornar o nome original se tiver apenas 4 letras
+      return nome; // Retornar o nome original se tiver apenas 4 letras
     }
 
     const partesNome = nome.split(' ');
 
     if (partesNome.length > 2) {
-        // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
-        if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
-            // Se o segundo nome tiver apenas 2 letras, retornar o terceiro nome
-            return partesNome[0] + ' ' + partesNome[2];
-        } else {
-            // Caso contrário, manter apenas a primeira e a segunda parte
-            return partesNome[0] + ' ' + partesNome[1];
-        }
+      // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
+      if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
+        // Se o segundo nome tiver apenas 2 letras, retornar o terceiro nome
+        return partesNome[0] + ' ' + partesNome[2];
+      } else {
+        // Caso contrário, manter apenas a primeira e a segunda parte
+        return partesNome[0] + ' ' + partesNome[1];
+      }
     } else {
-        // Se houver duas partes no nome, retorne o nome original
-        return nome;
+      // Se houver duas partes no nome, retorne o nome original
+      return nome;
     }
-}
+  }
 
 
   receberFiltros(event: any) {
@@ -150,8 +153,8 @@ export class GoalsBySellersComponent implements OnInit {
 
   montarGrafico(item: any) {
     var percentage;
-    if(item.value !== 0 && item.goal !== 0) {
-      percentage  = Math.round((item.value / item.goal) * 100);
+    if (item.value !== 0 && item.goal !== 0) {
+      percentage = Math.round((item.value / item.goal) * 100);
       if (percentage.toString() == "Infinity") {
         percentage = 0
       }
@@ -217,56 +220,58 @@ export class GoalsBySellersComponent implements OnInit {
   }
 
   getGoalsBySellers() {
+    this.loading = true;
     this.repository.call(this.params).subscribe({
-        next: resp => {
-            const respString = JSON.stringify(resp); 
-            if (respString !== this.SALVAR_RESPOSTA) { 
-                this.SALVAR_RESPOSTA = respString;
-                this.goals = resp;
-                this.graficos = [];
-                let somaValues = 0;
+      next: resp => {
+        this.loading = false;
+        const respString = JSON.stringify(resp);
+        if (respString !== this.SALVAR_RESPOSTA) {
+          this.SALVAR_RESPOSTA = respString;
+          this.goals = resp;
+          this.graficos = [];
+          let somaValues = 0;
 
-                for (const item of resp.items) {
-                    if (item.value === null || item.value === undefined) {
-                        item.value = 0;
-                    }
-                    if (item.goal === null || item.goal === undefined) {
-                        item.goal = 0;
-                    }
-
-                    if (typeof item.value === 'number' && !isNaN(item.value)) {
-                        somaValues += item.value;
-                    }
-                }
-
-                const somaArredondada = Math.round(somaValues * 100) / 100;
-                this.somaArredondada = somaArredondada
-
-                this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
-
-                if(this.goals.items.length > 1) {
-                  const sellerData = {
-                    sellerId: -999,
-                    sellerName: "META DIÁRIA",
-                    value: somaArredondada,
-                    qty: 1,
-                    qtyItems: 1,
-                    goal: this.metaTotalGeral
-                };
-                this.goals.items.unshift(sellerData);
-                }
-
-
-                for (const item of this.goals.items) {
-                    this.graficos.push(this.montarGrafico(item));
-                }
+          for (const item of resp.items) {
+            if (item.value === null || item.value === undefined) {
+              item.value = 0;
             }
-        },
-        error: error => {
-            console.log(error);
+            if (item.goal === null || item.goal === undefined) {
+              item.goal = 0;
+            }
+
+            if (typeof item.value === 'number' && !isNaN(item.value)) {
+              somaValues += item.value;
+            }
+          }
+
+          const somaArredondada = Math.round(somaValues * 100) / 100;
+          this.somaArredondada = somaArredondada
+
+          this.metaTotalGeral = this.goals.items.reduce((total, item) => total + item.goal, 0);
+
+          if (this.goals.items.length > 1) {
+            const sellerData = {
+              sellerId: -999,
+              sellerName: "META DIÁRIA",
+              value: somaArredondada,
+              qty: 1,
+              qtyItems: 1,
+              goal: this.metaTotalGeral
+            };
+            this.goals.items.unshift(sellerData);
+          }
+
+
+          for (const item of this.goals.items) {
+            this.graficos.push(this.montarGrafico(item));
+          }
         }
+      },
+      error: error => {
+        this.loading = false;
+      }
     });
-}
+  }
 
 
 

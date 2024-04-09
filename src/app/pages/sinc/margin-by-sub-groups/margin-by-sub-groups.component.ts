@@ -35,6 +35,7 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
   carregandoDados: boolean = false;
   quantidadeVendas: string;
   quantidadeItems: string;
+  margem: string;
   grafico: any;
   loading: boolean;
 
@@ -58,6 +59,7 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
       _sort: "value",
       _direction: "DESC",
       registerFinal:  this.date_final,
+      _limit: 1000
     };
 
     this.camposFiltro = [
@@ -107,6 +109,8 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
         this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         this.quantidadeVendas = this.subGroups.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
         this.quantidadeItems = this.subGroups.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
+        const lucro = this.subGroups.items.reduce((total, item) => total + (item.value * item.margin/100), 0);
+        this.margem = parseFloat(((lucro/value) * 100).toFixed(2)).toLocaleString('pt-BR');
 
         this.executar(this.subGroups.items, this.grafico);
         this.loading = false;
@@ -131,7 +135,7 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
       },
       grid: {
         containLabel: true,
-        left: 0,
+        left: 10,
         right: 140
       },
       responsive: true,
@@ -175,7 +179,7 @@ export class MarginBySubGroupsComponent implements AfterViewInit  {
             const value = params.value.value;
             const quantidade = params.value.qty;
             const formattedValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-            return `{a|${params.value.margin + '%'}}\n{b|Vendas: ${formattedValue}}\n{c|Itens: ${quantidade}}`;
+            return `{a|${formattedValue}}\n{b|Margem: ${params.value.margin}}%\n{c|Vendas: ${quantidade}}`;
           },
           rich: {
             a: {

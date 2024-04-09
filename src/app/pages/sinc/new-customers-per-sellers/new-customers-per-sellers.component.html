@@ -11,7 +11,7 @@
   </mat-card>
 <br>
 <mat-card class="cardWithShadow">
-  <mat-card-content class="p-y-30" *ngIf="!isLoading && !errorTrue; else loadingTemplate">
+  <mat-card-content class="p-y-30" *ngIf="!isLoading && !errorTrue;">
     <div class="d-flex align-items-center justify-content-between">
 
 	
@@ -49,11 +49,9 @@
     </button>
   </mat-card-content>
 
-  <ng-template #loadingTemplate>
-    <div class="d-flex align-items-center justify-content-center">
-      <mat-spinner diameter="50"></mat-spinner>
-    </div>
-  </ng-template>
-  
-  <div *ngIf="errorTrue">Nenhum item encontrado.</div>
+
+  <div *ngIf="isLoading" class="d-flex align-items-center justify-content-center loading">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
 </mat-card>
