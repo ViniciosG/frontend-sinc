@@ -13,7 +13,7 @@ import { FiltersComponent } from '../components/filters/filters.component';
 @Component({
   selector: 'app-sales-by-manufacturers',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule,FiltersComponent,TablerIconsModule],
+  imports: [MaterialModule, CommonModule, FormsModule, FiltersComponent, TablerIconsModule],
   templateUrl: './sales-by-manufacturers.component.html',
   styleUrls: ['./sales-by-manufacturers.component.css']
 })
@@ -30,11 +30,11 @@ export class SalesByManufacturersComponent implements AfterViewInit {
   option: any;
   totalValue: string;
   quantidadeVendas: string;
-  quantidadeItems:string;
+  quantidadeItems: string;
   params: any;
-  camposFiltro:any
-  altura: any = 4000;
+  camposFiltro: any
   grafico: any;
+  loading: boolean;
 
   constructor(private repository: SalesByManufacturersRepository, private readonly elementRef: ElementRef) {
     const dataAtual = new Date();
@@ -53,23 +53,25 @@ export class SalesByManufacturersComponent implements AfterViewInit {
 
     this.params = {
       registerInitial: this.date_inital,
-      registerFinal:  this.date_final,
+      registerFinal: this.date_final,
       _limit: 300,
     }
 
     this.camposFiltro = [
-      { label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value:'thisMonth', options: [
-        { label: 'Hoje', value: 'today' },
-        { label: 'Semana', value: 'lastWeek' },
-        { label: 'Mês', value: 'thisMonth' }
-      ], id: 'dateSelector' },
+      {
+        label: 'Filtrar', placeholder: 'Filtrar', type: 'select', visivel: true, value: 'thisMonth', options: [
+          { label: 'Hoje', value: 'today' },
+          { label: 'Semana', value: 'lastWeek' },
+          { label: 'Mês', value: 'thisMonth' }
+        ], id: 'dateSelector'
+      },
       { label: 'Data Início', placeholder: 'Data Início', type: 'date', visivel: true, value: this.startDate, id: "registerInitial" },
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
 
 
-      
+
     ];
   }
 
@@ -79,7 +81,7 @@ export class SalesByManufacturersComponent implements AfterViewInit {
     this.obterDadosERenderizarGrafico();
   }
 
-  
+
   receberFiltros(event: any) {
     this.camposFiltro.forEach((campo: any) => {
       if (campo.id && campo.value !== undefined) {
@@ -96,24 +98,24 @@ export class SalesByManufacturersComponent implements AfterViewInit {
   }
 
   obterDadosERenderizarGrafico() {
-
+    this.loading = true
     this.repository.call(this.params).subscribe({
       next: resp => {
 
         this.SALVAR_RESPOSTA = resp;
         this.manufacturers = { ...resp, items: [...resp.items] };
-        this.manufacturers.items = this.manufacturers.items.slice(0, 20);
 
         this.atualizarGrafico();
-          const value = this.manufacturers.items.reduce((total, item) => total + item.value, 0);
-          this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-          this.quantidadeVendas = this.manufacturers.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
-          this.quantidadeItems = this.manufacturers.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
-  
-          this.executar(this.manufacturers.items, this.grafico);
+        const value = this.manufacturers.items.reduce((total, item) => total + item.value, 0);
+        this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        this.quantidadeVendas = this.manufacturers.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
+        this.quantidadeItems = this.manufacturers.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
 
+        this.executar(this.manufacturers.items, this.grafico);
+        this.loading = false
       },
       error: error => {
+        this.loading = false
         console.log(error);
       }
     });
@@ -124,21 +126,24 @@ export class SalesByManufacturersComponent implements AfterViewInit {
 
     const tamanho = items.length * 75;
     graficoEcharts.style.minHeight = tamanho + 'px'
-    
+
     const opcoes: echarts.EChartsOption = {
       dataset: {
         source: items
       },
       grid: {
         containLabel: true,
-        left: 0, 
+        left: 0,
+        right: 100
       },
+      animation:false,
       xAxis: [{
         name: 'Valor',
         axisLabel: {
-      formatter: (value: number) => {
-          return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }        },
+          formatter: (value: number) => {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+          }
+        },
         axisLine: {
           lineStyle: {
             color: '#333'
@@ -153,7 +158,7 @@ export class SalesByManufacturersComponent implements AfterViewInit {
       }],
       yAxis: {
         type: 'category',
-        data: items.map((item: any) => ({ value: item.manufacturerName, textStyle: { fontWeight: 'bold', color:'black' } })),
+        data: items.map((item: any) => ({ value: item.manufacturerName, textStyle: { fontWeight: 'bold', color: 'black' } })),
         axisLabel: {
         }
       },
@@ -166,7 +171,7 @@ export class SalesByManufacturersComponent implements AfterViewInit {
         },
         label: {
           show: true,
-          position: 'right', // Colocar os rótulos à direita das barras
+          position: 'right',
           formatter: (params: any) => {
             const value = params.value.value;
             const quantidade = params.value.qty;
@@ -196,9 +201,9 @@ export class SalesByManufacturersComponent implements AfterViewInit {
     meuGrafico.resize();
     meuGrafico.setOption(opcoes);
   }
-  
 
-  
+
+
 
   onSelectChange(event: number) {
     this.obterDadosERenderizarGrafico();
@@ -240,27 +245,11 @@ export class SalesByManufacturersComponent implements AfterViewInit {
 
 
   atualizarGrafico() {
-    const elementoGrafico = document.getElementById('grafico-echarts');    
+    const elementoGrafico = document.getElementById('grafico-echarts');
     if (elementoGrafico) {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.resize();
     }
-  }
-
-  loadMoreItems(): void {
-    const lastItemIndex = this.manufacturers.items.length - 1;
-    const nextItemsStartIndex = lastItemIndex + 1;
-
-    const nextItems = this.SALVAR_RESPOSTA.items.slice(nextItemsStartIndex, nextItemsStartIndex + 10);
-    this.manufacturers.items.push(...nextItems);
-    if (this.grafico) {
-      echarts.dispose(this.grafico);
-    }
-
-    const tamanho = this.manufacturers.items.length * 75;
-    this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
-    this.grafico.style.minHeight = tamanho + 'px';
-    this.executar(this.manufacturers.items, this.grafico);
   }
 
 }

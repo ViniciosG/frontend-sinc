@@ -36,6 +36,7 @@ export class TopCardsStatusComponent implements OnInit {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
     }
+
     this.obterDados();
 
   }
@@ -46,15 +47,13 @@ export class TopCardsStatusComponent implements OnInit {
   obterDados() {
     this.repository.call(this.params).subscribe({
       next: resp => {
-        const sortedItems = [...resp.items].sort((a, b) => a.status.localeCompare(b.status)); // Case-insensitive sorting
-        sortedItems.pop(); // Remove last element from the array
-        this.sales = { ...resp, items: sortedItems }; // Assign sorted data to 'this.sales'
+        const sortedItems = [...resp.items].sort((a, b) => a.status.localeCompare(b.status));
+        sortedItems.pop();
+        this.sales = { ...resp, items: sortedItems }; 
       },
       error: error => {
         console.log(error);
       }
     });
   }
-  
-
 }

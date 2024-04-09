@@ -12,7 +12,7 @@
 					</div>
 
 					<form [formGroup]="form"
-						class="m-t-30" *ngIf="!authValid; else loadingTemplate">
+						class="m-t-30" *ngIf="!authService.isLoading; else loadingTemplate">
 						<mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">E-mail</mat-label>
 						<mat-form-field appearance="outline"
 							class="w-100"
@@ -62,7 +62,7 @@
 							</div>
 						</div>
 
-						<button [class.spinner]="loading"
+						<button
 							[disabled]="loading"
 							[disabled]="!form.valid"
 							(click)="authenticationUser()"

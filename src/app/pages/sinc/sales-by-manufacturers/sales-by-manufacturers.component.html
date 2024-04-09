@@ -24,5 +24,11 @@
     </mat-card-content>
 </mat-card>
 <br>
+<div *ngIf="!loading; else loadingTemplate">
+</div>
 <div #graficoEcharts id="grafico-echarts"></div>
-<button mat-stroked-button (click)="loadMoreItems()" color="primary" class="full-width-button">Carregar Mais</button>
+<ng-template #loadingTemplate>
+  <div class="d-flex align-items-center justify-content-center">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+</ng-template>

@@ -16,7 +16,7 @@ export class AppBoxedLoginComponent {
   options = this.settings.getOptions();
   loading: boolean = false;
   form: FormGroup;
-  authValid: boolean;
+  authValid: boolean = false;
   rememberMe: any;
   errorMessage: string = '';
 
@@ -28,6 +28,9 @@ export class AppBoxedLoginComponent {
         auth: ['', Validators.required],
         password: ['', [Validators.required]],
         rememberMe: [false]
+      });
+      this.authService.isErrorSubject.subscribe((isError) => {
+        this.authValid = isError;
       });}
       
 
@@ -43,16 +46,11 @@ export class AppBoxedLoginComponent {
       this.form.patchValue({ auth: rememberedUser, rememberMe: true });
     }
 
-    this.authService.isErrorSubject.subscribe((isError) => {
-      this.authValid = isError;
-    });
+
   }
 
   authenticationUser() {
-    this.authValid = this.authService.isLoading
     this.authService.signIn(this.form.value);
-    this.authValid = this.authService.isLoading
-
   }
 
   toggleRememberMe() {

@@ -5,7 +5,6 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
-import { Subject } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { ProductsSoldModel } from 'src/app/models/products-sold.model';
 import { ProductsSoldsRepository } from 'src/app/repositories/products-sold.repository';
@@ -19,8 +18,6 @@ import { FiltersComponent } from '../components/filters/filters.component';
   styleUrls: ['./products-sold.component.css']
 })
 export class ProductsSoldComponent implements AfterViewInit {
-
-  private destroy$: Subject<void> = new Subject<void>();
 
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -37,6 +34,7 @@ export class ProductsSoldComponent implements AfterViewInit {
   params: any;
   camposFiltro: any
   grafico: any
+  loading: boolean;
 
   constructor(private repository: ProductsSoldsRepository, private readonly elementRef: ElementRef) {
     const dataAtual = new Date();
@@ -97,24 +95,25 @@ export class ProductsSoldComponent implements AfterViewInit {
   }
 
   obterDadosERenderizarGrafico() {
-
+    this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
-
         this.SALVAR_RESPOSTA = resp;
         this.productsSolds = { ...resp, items: [...resp.items] };
-        this.productsSolds.items = this.productsSolds.items.slice(0, 20);
 
         this.atualizarGrafico();
+
         const value = this.productsSolds.items.reduce((total, item) => total + item.value, 0);
         this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         this.quantidadeVendas = this.productsSolds.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
         this.quantidadeItems = this.productsSolds.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
 
         this.executar(this.productsSolds.items, this.grafico);
+        this.loading = false;
 
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });
@@ -133,7 +132,9 @@ export class ProductsSoldComponent implements AfterViewInit {
       grid: {
         containLabel: true,
         left: 0, 
+        right: 100 
       },
+      animation: false,
       xAxis: [{
         name: 'Valor',
         axisLabel: {
@@ -246,21 +247,5 @@ export class ProductsSoldComponent implements AfterViewInit {
       const meuGrafico = echarts.init(elementoGrafico);
       meuGrafico.resize();
     }
-  }
-
-  loadMoreItems(): void {
-    const lastItemIndex = this.productsSolds.items.length - 1;
-    const nextItemsStartIndex = lastItemIndex + 1;
-
-    const nextItems = this.SALVAR_RESPOSTA.items.slice(nextItemsStartIndex, nextItemsStartIndex + 10);
-    this.productsSolds.items.push(...nextItems);
-    if (this.grafico) {
-      echarts.dispose(this.grafico);
-    }
-
-    const tamanho = this.productsSolds.items.length * 75;
-    this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
-    this.grafico.style.minHeight = tamanho + 'px';
-    this.executar(this.productsSolds.items, this.grafico);
   }
 }

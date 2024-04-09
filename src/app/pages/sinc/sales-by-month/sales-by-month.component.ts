@@ -355,7 +355,7 @@ montarGrafico(months: any) {
   return this.areaChartOptions = {
     series: [
       {
-        name: 'Itens vendidos (Quantidade)',
+        name: 'Quantidade Vendas',
         data: seriesData,
       },
       {

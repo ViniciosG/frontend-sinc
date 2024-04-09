@@ -113,43 +113,38 @@ export class AppEmployeeSalaryComponent {
 
   executar(items: any) {
     items.sort((a: any, b: any) => parseInt(a.month) - parseInt(b.month));
+    
 
     const sourceData = items.map((data: any) => {
       return {
         month: this.numeroParaMes(parseInt(data.month)),
-        value: parseFloat(data.value), // Convertendo para número
+        value: parseFloat(data.value),
         qty: data.qty,
         qtyItems: data.qtyItems
       };
     });
   
-    // Mapeie os valores de sourceData para um array separado
     const values = sourceData.map((item:any) => item.value);
-  
+
+    const colors = values.map((value: number, index: number) => index === values.length - 1 ? '#5D87FF' : '#ECF2FF');
+
     this.employeeChart = {
       series: [
         {
           name: '',
-          data: values, // Usando os valores mapeados aqui
+          data: values, 
         },
       ],
       chart: {
         type: 'bar',
         fontFamily: "'Plus Jakarta Sans', sans-serif;",
-        foreColor: '#adb0bb',
+        foreColor: '#000',
         toolbar: {
           show: false,
         },
         height: 270,
       },
-      colors: [
-        '#ECF2FF',
-        '#ECF2FF',
-        '#5D87FF',
-        '#ECF2FF',
-        '#ECF2FF',
-        '#ECF2FF',
-      ],
+      colors: colors,
       plotOptions: {
         bar: {
           borderRadius: 4,
@@ -172,7 +167,7 @@ export class AppEmployeeSalaryComponent {
         },
       },
       xaxis: {
-        categories: sourceData.map((item:any) => item.month), // Usando os meses como categorias
+        categories: sourceData.map((item:any) => item.month), 
         axisBorder: {
           show: false,
         },
@@ -186,9 +181,8 @@ export class AppEmployeeSalaryComponent {
         }
     },
       tooltip: {
-        theme: 'dark',
         formatter: function (val: any) {
-          return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) // Usar o valor formatado como BRL
+          return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
         }
       },
     };

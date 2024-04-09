@@ -37,6 +37,7 @@ export class SubGroupsSoldComponent implements AfterViewInit {
   quantidadeVendas: string;
   quantidadeItems: string;
   grafico: any;
+  loading: boolean;
 
   constructor(private repository: SubGroupSoldRepository, private readonly elementRef: ElementRef,) {
     const dataAtual = new Date();
@@ -97,22 +98,22 @@ export class SubGroupsSoldComponent implements AfterViewInit {
   }
 
   obterDadosERenderizarGrafico() {
-
+    this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
         this.SALVAR_RESPOSTA = resp;
         this.subGroups = { ...resp, items: [...resp.items] };
-        this.subGroups.items = this.subGroups.items.slice(0, 20);
 
         const value = this.subGroups.items.reduce((total, item) => total + item.value, 0);
         this.totalValue = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         this.quantidadeVendas = this.subGroups.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
         this.quantidadeItems = this.subGroups.items.reduce((total, item) => total + item.qtyItems, 0).toLocaleString('pt-BR');
 
-        this.subGroups.items = this.subGroups.items.slice(0, 20);
         this.executar(this.subGroups.items, this.grafico);
+        this.loading = false;
       },
       error: error => {
+        this.loading = false;
         console.log(error);
       }
     });
@@ -131,9 +132,11 @@ export class SubGroupsSoldComponent implements AfterViewInit {
       },
       grid: {
         containLabel: true,
-        left: 0, 
+        left: 0,
+        right: 100 
       },
       responsive: true,
+      animation: false,
       xAxis: [{
         name: 'Valor',
         axisLabel: {
@@ -278,11 +281,5 @@ export class SubGroupsSoldComponent implements AfterViewInit {
   
     this.executar(this.subGroups.items, this.grafico);
   }
-
-  @HostListener('window:scroll', ['$event']) 
-  onScroll(event:any) {
-    console.log(event);
-    return true;
-}
 
 }

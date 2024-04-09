@@ -41,9 +41,10 @@ export class AuthService {
         this.isLoading = false;
       },
       error: () => {
+        this.isLoading = false;
+        this.router.navigate(['/authentication/login']);
         this.removeAccessTokenFromCookie();
         this.setError(true);
-        this.isLoading = false;
       },
     });
   }
