@@ -32,7 +32,7 @@
                 </mat-card-title>
 
                 <mat-card-title *ngIf="cardimg.sellerId !== -999" style="font-size: 16px;" class="mb-0">
-                    {{i}}° - {{  abreviarNome(cardimg.sellerName) }}
+                    <span *ngIf="goals.items.length > 1">{{i}}°</span> {{  abreviarNome(cardimg.sellerName) }}
                 </mat-card-title>
 
                 <div class="align-self-start">

@@ -18,7 +18,6 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     const authToken = this.authService.getAccessTokenFromCookie();
-
     if (authToken) {
       const isTokenExpired = this.authService.isTokenExpired(authToken);
 
@@ -35,7 +34,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
+        if (error.status === 401 || error.status === 403) {
           this.authService.doLogout();
         }
 

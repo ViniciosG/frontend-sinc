@@ -222,7 +222,8 @@ export class FullComponent implements OnInit {
       });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   ngOnDestroy() {
     this.layoutChangesSubscription.unsubscribe();
@@ -235,12 +236,7 @@ export class FullComponent implements OnInit {
   }
 
   doLogout() {
-    this.cookieService.deleteAll();
-
-    const reloadCallback = () => {
-        this.authService.doLogout();
-    };
-    window.onload = reloadCallback;
+    this.authService.doLogout();
     window.location.reload();
 }
 

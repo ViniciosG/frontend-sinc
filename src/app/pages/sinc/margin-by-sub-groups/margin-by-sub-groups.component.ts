@@ -23,12 +23,12 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
 
   startDate: Date = new Date();
   endDate: Date = new Date();
-  subGroups: MarginBySubGroupsModel;
+  subGroups: MarginBySubGroupsModel = new MarginBySubGroupsModel();
   date_inital: string;
   date_final: string;
   inititalContext: string;
   endContext: string;
-  SALVAR_RESPOSTA: MarginBySubGroupsModel;
+  SALVAR_RESPOSTA: MarginBySubGroupsModel = new MarginBySubGroupsModel();
   totalValue: string;
   params: any;
   camposFiltro: any
@@ -108,6 +108,12 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+        this.SALVAR_RESPOSTA.items = []
+        this.subGroups.items = []
+        if (resp?.items){
+          this.SALVAR_RESPOSTA.items = []
+          this.subGroups.items = []
+        }
         this.SALVAR_RESPOSTA = resp;
         this.subGroups = { ...resp, items: [...resp.items] };
 

@@ -1,5 +1,5 @@
 export class MarginBySubGroupsModel {
-    items: MarginBySubGroupsItems[]
+    items: MarginBySubGroupsItems[] = []
     returnedTotal: number
     total: number
   }

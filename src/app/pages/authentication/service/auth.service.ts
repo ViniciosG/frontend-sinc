@@ -64,12 +64,8 @@ export class AuthService {
 
 
   doLogout() {
-    let removeToken = this.removeAccessTokenFromCookie();
-    if (removeToken === undefined) {
-      this.router.navigate(['/authentication/login']);
-    } else {
-      window.location.reload();
-    }
+    this.removeAccessTokenFromCookie();
+    window.location.reload();
   }
 
 
@@ -118,6 +114,6 @@ export class AuthService {
   }
 
   removeAccessTokenFromCookie(): void {
-    this.cookieService.deleteAll();
+    this.cookieService.deleteAll('/');
   }
 }
