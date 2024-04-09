@@ -54,7 +54,7 @@ export class ProductsSoldComponent implements AfterViewInit {
     this.params = {
       registerInitial: this.date_inital,
       registerFinal: this.date_final,
-      _limit: 1000,
+      _limit: 300,
     }
 
     this.camposFiltro = [
@@ -130,7 +130,7 @@ export class ProductsSoldComponent implements AfterViewInit {
       grid: {
         containLabel: true,
         left: 0,
-        right: 140
+        right: '25%' 
       },
       responsive: true,
       animation: false,

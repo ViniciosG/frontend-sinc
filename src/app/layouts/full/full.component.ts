@@ -237,20 +237,14 @@ export class FullComponent implements OnInit {
   doLogout() {
     this.cookieService.deleteAll();
 
-    // Define uma função de callback a ser chamada após a página ser recarregada
     const reloadCallback = () => {
-        // Chama o método doLogout do authService
         this.authService.doLogout();
     };
-
-    // Adiciona o evento 'load' ao window com a função de callback
     window.onload = reloadCallback;
-
-    // Recarrega a página
     window.location.reload();
 }
 
-  resetCollapsedState(timer = 400) {
+  resetCollapsedState(timer = 0) {
     setTimeout(() => this.settings.setOptions(this.options), timer);
   }
 
