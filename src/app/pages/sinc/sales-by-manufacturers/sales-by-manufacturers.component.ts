@@ -134,7 +134,7 @@ export class SalesByManufacturersComponent implements AfterViewInit {
       grid: {
         containLabel: true,
         left: 0,
-        right: 100
+        right: '25%' 
       },
       animation:false,
       xAxis: [{

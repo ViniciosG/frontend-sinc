@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
@@ -18,9 +18,6 @@ import { FiltersComponent } from '../components/filters/filters.component';
   styleUrls: ['./sub-groups-sold.component.css']
 })
 export class SubGroupsSoldComponent implements AfterViewInit {
-
-  @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
-
   startDate: Date = new Date();
   endDate: Date = new Date();
   subGroups: SubGroupSoldModel;
@@ -122,7 +119,6 @@ export class SubGroupsSoldComponent implements AfterViewInit {
   }
 
   executar(items: any, graficoEcharts: HTMLElement): void {
-
     items.sort((a: any, b: any) => a.value - b.value);
 
     const tamanho = items.length * 75;
@@ -135,10 +131,9 @@ export class SubGroupsSoldComponent implements AfterViewInit {
       grid: {
         containLabel: true,
         left: 0,
-        right: 100
+        right: 100 
       },
-      responsive: true,
-      animation: false,
+      animation:false,
       xAxis: [{
         name: 'Valor',
         axisLabel: {
@@ -197,6 +192,7 @@ export class SubGroupsSoldComponent implements AfterViewInit {
           }
         }
       }],
+      darkMode: true
     };
     const meuGrafico = echarts.init(graficoEcharts);
     meuGrafico.resize();

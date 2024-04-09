@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import * as echarts from 'echarts';
@@ -8,7 +9,6 @@ import { MaterialModule } from 'src/app/material.module';
 import { MarginByProductsModel } from 'src/app/models/margin-by-products.model';
 import { MarginByProductsRepository } from 'src/app/repositories/margin-by-products.repository';
 import { FiltersComponent } from '../components/filters/filters.component';
-import { TablerIconsModule } from 'angular-tabler-icons';
 
 @Component({
   selector: 'app-margin-by-products',
@@ -142,7 +142,7 @@ export class MarginByProductsComponent implements AfterViewInit {
       grid: {
         containLabel: true,
         left: 0,
-        right: 140
+        right: '25%' 
       },
       responsive: true,
       animation: false,

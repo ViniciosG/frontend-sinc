@@ -143,7 +143,7 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
       grid: {
         containLabel: true,
         left: 10,
-        right: 140
+        right: '25%' 
       },
       responsive: true,
       animation: false,
