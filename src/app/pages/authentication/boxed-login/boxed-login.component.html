@@ -12,7 +12,7 @@
 					</div>
 
 					<form [formGroup]="form"
-						class="m-t-30">
+						class="m-t-30" *ngIf="!authValid; else loadingTemplate">
 						<mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">E-mail</mat-label>
 						<mat-form-field appearance="outline"
 							class="w-100"
@@ -77,3 +77,9 @@
 		</div>
 	</div>
 </div>
+
+<ng-template #loadingTemplate>
+    <div class="d-flex align-items-center justify-content-center">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  </ng-template>

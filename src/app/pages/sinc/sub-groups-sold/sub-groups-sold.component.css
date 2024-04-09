@@ -1,26 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-  }
-  #grafico-echarts {
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-
-  @media only screen and (max-width: 768px) {
-    /* Estilos para dispositivos móveis com largura máxima de 768 pixels */
-    #grafico-echarts {
-      overflow-x: auto!important; /* Adiciona scroll horizontal */
-      white-space: nowrap; /* Impede que os elementos quebrem em várias linhas */
-      -webkit-overflow-scrolling: touch; /* Adiciona scroll suave para dispositivos iOS */
-    }
-  }
-
-  .full-width-button {
-    width: 100%;
+.search-results {
+  height: 100%;
+  overflow-y: auto;
 }

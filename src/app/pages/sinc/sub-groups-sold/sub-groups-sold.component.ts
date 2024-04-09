@@ -20,6 +20,7 @@ import { FiltersComponent } from '../components/filters/filters.component';
 export class SubGroupsSoldComponent implements AfterViewInit {
 
   @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
+  @ViewChild('loadMoreButton') loadMoreButton: ElementRef;
 
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -37,7 +38,7 @@ export class SubGroupsSoldComponent implements AfterViewInit {
   quantidadeItems: string;
   grafico: any;
 
-  constructor(private repository: SubGroupSoldRepository, private readonly elementRef: ElementRef) {
+  constructor(private repository: SubGroupSoldRepository, private readonly elementRef: ElementRef,) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -247,20 +248,41 @@ export class SubGroupsSoldComponent implements AfterViewInit {
 
   }
 
-  loadMoreItems(): void {
-    const lastItemIndex = this.subGroups.items.length - 1;
-    const nextItemsStartIndex = lastItemIndex + 1;
+  @HostListener('window:scroll', ['$event'])
+  checkScroll() {
+    console.log("AAAA")
+    const componentPosition = this.graficoEcharts.nativeElement.offsetTop;
+    const scrollPosition = window.pageYOffset + window.innerHeight;
+    if (scrollPosition >= componentPosition) {
+      console.log("AAAA")
+    }
+  }
 
-    const nextItems = this.SALVAR_RESPOSTA.items.slice(nextItemsStartIndex, nextItemsStartIndex + 10);
+  loadMoreItems(): void {
+    if (this.subGroups.items.length === this.SALVAR_RESPOSTA.items.length) {
+      return; 
+    }
+  
+    const nextItemsStartIndex = this.subGroups.items.length;
+    const nextItems = this.SALVAR_RESPOSTA.items.slice(nextItemsStartIndex);
+  
     this.subGroups.items.push(...nextItems);
+  
     if (this.grafico) {
       echarts.dispose(this.grafico);
     }
-
+  
     const tamanho = this.subGroups.items.length * 75;
     this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
     this.grafico.style.minHeight = tamanho + 'px';
+  
     this.executar(this.subGroups.items, this.grafico);
   }
+
+  @HostListener('window:scroll', ['$event']) 
+  onScroll(event:any) {
+    console.log(event);
+    return true;
+}
 
 }

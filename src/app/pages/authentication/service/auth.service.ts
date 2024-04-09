@@ -18,6 +18,8 @@ export class AuthService {
   currentUser = {};
   private _isError = false;
   private _isErrorSubject = new Subject<boolean>();
+  isLoading: boolean = false;
+
   onSaveSuccess: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(
@@ -29,16 +31,19 @@ export class AuthService {
 
 
   signIn(user: UsersModel) {
+    this.isLoading = true;
     this.authService.post(user).subscribe({
       next: (res: any) => {
         this.companyService.setCompany(res);
         this.onSaveSuccess.emit();
         this.cookieService.set(nameCookieAccessToken, res.authorization);
         this.router.navigate(['/']);
+        this.isLoading = false;
       },
       error: () => {
         this.removeAccessTokenFromCookie();
         this.setError(true);
+        this.isLoading = false;
       },
     });
   }

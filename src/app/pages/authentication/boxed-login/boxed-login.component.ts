@@ -49,7 +49,10 @@ export class AppBoxedLoginComponent {
   }
 
   authenticationUser() {
+    this.authValid = this.authService.isLoading
     this.authService.signIn(this.form.value);
+    this.authValid = this.authService.isLoading
+
   }
 
   toggleRememberMe() {
