@@ -71,15 +71,21 @@ export const navItems: NavItem[] = [
   },
   {
     navCap: 'Margens',
+    accesss: 886,
+    context: 361
   },
   {
     displayName: 'Produtos',
     iconName: 'chart-histogram',
     route: 'sellers/marginByProducts',
+    accesss: 886,
+    context: 361
   },
   {
     displayName: 'Sub Grupos',
     iconName: 'chart-histogram',
     route: 'sellers/marginBySubGroups',
+    accesss: 886,
+    context: 361
   },
 ];

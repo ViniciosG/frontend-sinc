@@ -12,4 +12,6 @@ export interface NavItem {
     route?: string;
     children?: NavItem[];
     ddType?: string;
+    accesss?: number;
+    context?: number;
 }

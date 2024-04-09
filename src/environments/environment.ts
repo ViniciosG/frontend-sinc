@@ -21,3 +21,7 @@ export const cookieOptions: any = {
 }
 
 export const nameCookieAccessToken = "sessionTokenCookie";
+
+export const nameCookieAccesss = "permissions";
+
+export const nameCookieIsAdm = "isAdm";

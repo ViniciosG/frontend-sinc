@@ -5,7 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Subject, throwError } from 'rxjs';
 import { LoginRepository } from 'src/app/repositories/login.repository';
 import { GetCompanyService } from 'src/app/services/get-company.service';
-import { nameCookieAccessToken } from 'src/environments/environment';
+import { nameCookieAccessToken, nameCookieIsAdm, nameCookieAccesss } from 'src/environments/environment';
 import { UsersModel } from '../model/users.model';
 
 @Injectable({
@@ -19,6 +19,8 @@ export class AuthService {
   private _isError = false;
   private _isErrorSubject = new Subject<boolean>();
   isLoading: boolean = false;
+  // access: number[] = [];
+  // isAdm: boolean;
 
   onSaveSuccess: EventEmitter<void> = new EventEmitter<void>();
 
@@ -36,7 +38,11 @@ export class AuthService {
       next: (res: any) => {
         this.companyService.setCompany(res);
         this.onSaveSuccess.emit();
-        this.cookieService.set(nameCookieAccessToken, res.authorization);
+        const now = new Date();
+        now.setHours(now.getHours() + 3);
+        this.cookieService.set(nameCookieAccessToken, res.authorization, now, '/');
+        this.cookieService.set(nameCookieAccesss, res.access_permissions, now, '/');
+        this.cookieService.set(nameCookieIsAdm, res.is_adm, now, '/');
         this.router.navigate(['/']);
         this.isLoading = false;
       },
@@ -66,6 +72,23 @@ export class AuthService {
   doLogout() {
     this.removeAccessTokenFromCookie();
     window.location.reload();
+  }
+
+  isAccess(access: number| undefined): Boolean{
+    if (access == undefined){
+      return true
+    }
+
+    const isAdm = this.cookieService.get(nameCookieIsAdm);
+    if (isAdm === "true"){
+      return true
+    }
+    const accessCookie = this.cookieService.get(nameCookieAccesss);
+    if (accessCookie !== ""){
+      const accessPermissions = accessCookie.split(',').map(Number);
+      return accessPermissions.includes(access)
+    }
+    return false;
   }
 
 
