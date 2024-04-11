@@ -15,9 +15,6 @@
   @include mat.all-component-colors($darkbluetheme);
 }
 
-// .dark-theme .aqua_theme {
-//   @include mat.all-component-colors($darkaquatheme);
-// }
 
 .orange_theme {
   @import "themecolors/orange_theme";
@@ -44,26 +41,16 @@
   @include mat.all-component-colors($cyantheme);
 }
 
-//container layout
 @import "overrides/materialoverrides";
-@import "dark/dark";
 @import "container";
 @import "layouts/layouts";
 @import "grid/grid";
 @import "helpers/custom-flex";
 @import "helpers/index";
 
-// horizontal
 @import "horizontal/horizontal";
-
-// apps
-@import "apps/calendar";
-@import "apps/email";
-
 // pages
 @import "pages/dashboards";
 @import "pages/auth";
-@import "pages/landingpage";
 
-// RTL Theme
-@import "rtl/rtl";
+

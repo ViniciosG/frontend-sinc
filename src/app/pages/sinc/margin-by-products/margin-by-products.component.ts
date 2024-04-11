@@ -37,7 +37,7 @@ export class MarginByProductsComponent implements AfterViewInit {
   quantidadeItems: string;
   margem: string;
   grafico: any;
-  loading: boolean;
+  loading: boolean = false;
 
   constructor(private repository: MarginByProductsRepository,
     private readonly elementRef: ElementRef,

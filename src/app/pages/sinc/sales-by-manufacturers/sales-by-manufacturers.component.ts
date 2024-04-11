@@ -34,7 +34,7 @@ export class SalesByManufacturersComponent implements AfterViewInit {
   params: any;
   camposFiltro: any
   grafico: any;
-  loading: boolean;
+  loading: boolean = false;
 
   constructor(private repository: SalesByManufacturersRepository, private readonly elementRef: ElementRef) {
     const dataAtual = new Date();

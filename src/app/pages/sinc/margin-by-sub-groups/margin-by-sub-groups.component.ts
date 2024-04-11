@@ -37,7 +37,7 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
   quantidadeItems: string;
   margem: string;
   grafico: any;
-  loading: boolean;
+  loading: boolean = false;
 
   constructor(private repository: MarginBySubGroupsRepository,
     private readonly elementRef: ElementRef,

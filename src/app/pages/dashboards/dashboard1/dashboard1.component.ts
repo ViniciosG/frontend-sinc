@@ -13,7 +13,6 @@ import { AppTopCardsComponent } from '../../../components/dashboard1/top-cards/t
 import { AppTopProjectsComponent } from '../../../components/dashboard1/top-projects/top-projects.component';
 import { AppWeeklyStatsComponent } from '../../../components/dashboard1/weekly-stats/weekly-stats.component';
 import { AppYearlyBreakupComponent } from '../../../components/dashboard1/yearly-breakup/yearly-breakup.component';
-import { AppProductsComponent } from '../../../components/dashboard2/products/products.component';
 
 @Component({
   selector: 'app-dashboard1',
@@ -27,7 +26,6 @@ import { AppProductsComponent } from '../../../components/dashboard2/products/pr
     AppMonthlyEarningsComponent,
     AppEmployeeSalaryComponent,
     AppCustomersComponent,
-    AppProductsComponent,
     AppSellingProductComponent,
     AppWeeklyStatsComponent,
     AppTopProjectsComponent,

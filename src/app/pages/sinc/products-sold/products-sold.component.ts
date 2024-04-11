@@ -34,7 +34,7 @@ export class ProductsSoldComponent implements AfterViewInit {
   params: any;
   camposFiltro: any
   grafico: any
-  loading: boolean;
+  loading: boolean = false;
 
   constructor(private repository: ProductsSoldsRepository, private readonly elementRef: ElementRef,
     private cdref: ChangeDetectorRef

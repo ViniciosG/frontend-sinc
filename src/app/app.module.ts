@@ -20,7 +20,6 @@ import { MaterialModule } from './material.module';
 import { BlankComponent } from './layouts/blank/blank.component';
 import { FullComponent } from './layouts/full/full.component';
 
-import { FilterPipe } from './pipe/filter.pipe';
 
 import { CommonModule } from '@angular/common';
 import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -36,7 +35,7 @@ export function HttpLoaderFactory(http: HttpClient): any {
 }
 
 @NgModule({
-  declarations: [AppComponent, BlankComponent, FilterPipe],
+  declarations: [AppComponent, BlankComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
