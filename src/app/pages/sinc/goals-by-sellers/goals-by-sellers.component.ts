@@ -165,17 +165,16 @@ export class GoalsBySellersComponent implements OnInit {
       series: [percentage],
       chart: {
         type: "radialBar",
-        offsetY: 0,
-        height: 175
+         offsetY: 0,
+         height: 200
       },
       plotOptions: {
         radialBar: {
           startAngle: -90,
           endAngle: 90,
           track: {
-            background: "#ff414e",
+            background: "#f93643",
             strokeWidth: "100%",
-            margin: 6,
             dropShadow: {
               enabled: true,
               top: 2,
@@ -190,7 +189,8 @@ export class GoalsBySellersComponent implements OnInit {
             },
             value: {
               offsetY: -5,
-              fontSize: "16px"
+              fontSize: "18px",
+              color: "#fff", // Definir a cor como branco
             }
           }
         }
@@ -205,7 +205,7 @@ export class GoalsBySellersComponent implements OnInit {
           opacityTo: 1,
           stops: [0, 50, 53, 91]
         },
-        colors: ["#7edfb4"],
+        colors: ["#1a995d"],
       },
     };
 

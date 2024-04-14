@@ -1,13 +1,14 @@
-import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Data, NavigationEnd, Router, RouterModule } from '@angular/router';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { CookieService } from 'ngx-cookie-service';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { filter, map, mergeMap } from 'rxjs/operators';
 import { AppSettings } from 'src/app/app.config';
 import { MaterialModule } from 'src/app/material.module';
 import { AuthService } from 'src/app/pages/authentication/service/auth.service';
@@ -17,10 +18,10 @@ import { AppHorizontalSidebarComponent } from './horizontal/sidebar/sidebar.comp
 import { AppBreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
 import { CustomizerComponent } from './shared/customizer/customizer.component';
 import { HeaderComponent } from './vertical/header/header.component';
+import { NavItem } from './vertical/sidebar/nav-item/nav-item';
 import { AppNavItemComponent } from './vertical/sidebar/nav-item/nav-item.component';
 import { navItems } from './vertical/sidebar/sidebar-data';
 import { SidebarComponent } from './vertical/sidebar/sidebar.component';
-import { NavItem } from './vertical/sidebar/nav-item/nav-item';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -67,6 +68,7 @@ interface quicklinks {
 export class FullComponent implements OnInit {
 
   navItems: NavItem[] = [];
+  pageInfo: Data | any = Object.create(null);
 
   
 
@@ -87,17 +89,17 @@ export class FullComponent implements OnInit {
 
   constructor(
     private settings: CoreService,
-    private mediaMatcher: MediaMatcher,
     private authService: AuthService,
     protected cookieService: CookieService,
+    private breakpointObserver: BreakpointObserver,
     private router: Router,
-    private breakpointObserver: BreakpointObserver
+    private activatedRoute: ActivatedRoute,
+    private titleService: Title,
   ) {
     this.htmlElement = document.querySelector('html')!;
     this.layoutChangesSubscription = this.breakpointObserver
       .observe([MOBILE_VIEW, TABLET_VIEW, MONITOR_VIEW])
       .subscribe((state) => {
-        // SidenavOpened must be reset true when layout changes
         this.options.sidenavOpened = true;
         this.isMobileScreen = state.breakpoints[MOBILE_VIEW];
         if (this.options.sidenavCollapsed == false) {
@@ -106,14 +108,30 @@ export class FullComponent implements OnInit {
         this.isContentWidthFixed = state.breakpoints[MONITOR_VIEW];
       });
 
-    // Initialize project theme with options
     this.receiveOptions(this.options);
 
-    // This is for scroll to top
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((e) => {
         this.content.scrollTo({ top: 0 });
+      });
+
+      this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .pipe(map(() => this.activatedRoute))
+      .pipe(
+        map((route) => {
+          while (route.firstChild) {
+            route = route.firstChild;
+          }
+          return route;
+        }),
+      )
+      .pipe(filter((route) => route.outlet === 'primary'))
+      .pipe(mergeMap((route) => route.data))
+      .subscribe((event) => {
+        this.titleService.setTitle(event['title']);
+        this.pageInfo = event;
       });
   }
 

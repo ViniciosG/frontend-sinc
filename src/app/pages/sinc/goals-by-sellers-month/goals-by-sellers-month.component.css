@@ -4,37 +4,43 @@
     position: relative;
   }
   
-  .card-overlay {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 242px;
-  }
+
   
   .text-decoration-line-through {
     text-decoration: line-through;
   }
-  
-  .cart-btn {
-    position: absolute;
-    right: 16px;
-    top: -21px;
-  }
+
   
   .seller-id-negative {
-    background-color: #e3fff6;
+    background-color: #1b2847;
   }
   
   .fixed-height-card {
-    height: 250px!important; /* Defina a altura desejada */
+    height: auto!important; /* Defina a altura desejada */
     overflow: hidden!important;
-    margin-bottom: 3%;
+    margin-bottom: 5px;
   }
 
   @media (max-width: 768px) {
     .rounded-circle {
         display: inline-block !important;
     }
+}
+
+.background {
+  background-color: #253662!important;
+  color: white!important;
+}
+
+.icon-corner {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.textCard {
+  white-space: nowrap;
+  overflow: hidden!important
 }
 
   

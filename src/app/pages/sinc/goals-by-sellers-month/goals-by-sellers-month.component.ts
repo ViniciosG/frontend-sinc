@@ -50,7 +50,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
   loading: boolean = false;
   metaGeral: any;
   public yearlyChart!: Partial<yearlyChart> | any;
-  public chartOptions!: Partial<customerChart> | any;;
+  public chartOptions!: Partial<customerChart> | any;
 
   constructor(private repository: GoalsBySellersByMonthRepository) {
     const dataAtual = new Date();
@@ -92,33 +92,26 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
   abreviarNome(nome: string): string {
     if (!nome || nome.trim().length === 0) {
-      return "SEM NOME"; // Retorna "SEM NOME" se o nome estiver em branco ou for nulo
+        return "SEM NOME";
     }
 
     if (nome.includes('.')) {
-      return nome; // Retornar o nome original se contiver ponto
+        return nome;
     }
 
-    if (nome.trim().length === 4) {
-      return nome; // Retornar o nome original se tiver apenas 4 letras
-    }
+    const partesNome = nome.trim().split(' ');
 
-    const partesNome = nome.split(' ');
-
-    if (partesNome.length > 2) {
-      // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
-      if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
-        // Se o segundo nome tiver apenas 2 letras, retornar o terceiro nome
-        return partesNome[0] + ' ' + partesNome[2];
-      } else {
-        // Caso contrário, manter apenas a primeira e a segunda parte
-        return partesNome[0] + ' ' + partesNome[1];
-      }
+    if (partesNome.length >= 2) {
+        if (partesNome[1].length <= 3) {
+            return partesNome[0] + ' ' + partesNome[partesNome.length - 1];
+        } else {
+            return partesNome[0] + ' ' + partesNome[1];
+        }
     } else {
-      // Se houver duas partes no nome, retorne o nome original
-      return nome;
+        return nome;
     }
-  }
+}
+
 
 
   receberFiltros(event: any) {
@@ -167,17 +160,16 @@ export class GoalsBySellersMonthComponent implements OnInit {
       series: [percentage],
       chart: {
         type: "radialBar",
-        offsetY: 0,
-        height: 175
+         offsetY: 0,
+         height: 200
       },
       plotOptions: {
         radialBar: {
           startAngle: -90,
           endAngle: 90,
           track: {
-            background: "#ff414e",
+            background: "#f93643",
             strokeWidth: "100%",
-            margin: 6,
             dropShadow: {
               enabled: true,
               top: 2,
@@ -192,7 +184,8 @@ export class GoalsBySellersMonthComponent implements OnInit {
             },
             value: {
               offsetY: -5,
-              fontSize: "16px"
+              fontSize: "18px",
+              color: "#fff", // Definir a cor como branco
             }
           }
         }
@@ -207,7 +200,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
           opacityTo: 1,
           stops: [0, 50, 53, 91]
         },
-        colors: ["#7edfb4"],
+        colors: ["#1a995d"],
       },
     };
 

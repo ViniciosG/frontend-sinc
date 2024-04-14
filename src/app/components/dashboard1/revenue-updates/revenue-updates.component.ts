@@ -219,7 +219,6 @@ const sourceData = item.map((data: any) => {
         },
       },
       tooltip: {
-        theme: 'dark',
         fillSeriesColor: false,
       },
     };

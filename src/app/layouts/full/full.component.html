@@ -110,7 +110,10 @@
         (toggleCollapsed)="toggleCollapsed()"
         (toggleMobileNav)="sidenav.toggle()"
         (doLogout)="doLogout()"
-      ></app-header>
+        *ngIf="
+        pageInfo?.['title'] != 'Metas / Mês' && 
+        pageInfo?.['title'] != 'Metas'
+      "></app-header>
     </ng-container>
 
     <!-- horizontal header -->
