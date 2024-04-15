@@ -10,6 +10,7 @@ import { yearlyChart } from 'src/app/components/dashboard1/yearly-breakup/yearly
 import { MaterialModule } from 'src/app/material.module';
 import { GoalsBySellersModel } from 'src/app/models/goals-by-sellers.model';
 import { GoalsBySellersRepository } from 'src/app/repositories/goals-by-sellers.repository';
+import { CoreService } from 'src/app/services/core.service';
 import { FiltersComponent } from '../components/filters/filters.component';
 
 export interface customerChart {
@@ -50,10 +51,12 @@ export class GoalsBySellersComponent implements OnInit {
   somaArredondada: any;
   loading: boolean = false;
   metaGeral: any;
+  options = this.settings.getOptions();
+
   public yearlyChart!: Partial<yearlyChart> | any;
   public chartOptions!: Partial<customerChart> | any;;
 
-  constructor(private repository: GoalsBySellersRepository) {
+  constructor(private repository: GoalsBySellersRepository, private settings: CoreService,) {
     const dataAtual = new Date();
 
     const startDate = startOfDay(dataAtual);
@@ -86,7 +89,12 @@ export class GoalsBySellersComponent implements OnInit {
         ], id: 'dateSelector'
       },
     ];
+
+    this.options.sidenavCollapsed = true;
+    this.settings.setOptions(this.options);
   }
+
+
 
   abreviarNome(nome: string): string {
     if (!nome || nome.trim().length === 0) {
@@ -166,7 +174,7 @@ export class GoalsBySellersComponent implements OnInit {
       chart: {
         type: "radialBar",
          offsetY: 0,
-         height: 200
+         height: 300
       },
       plotOptions: {
         radialBar: {
@@ -174,7 +182,6 @@ export class GoalsBySellersComponent implements OnInit {
           endAngle: 90,
           track: {
             background: "#f93643",
-            strokeWidth: "100%",
             dropShadow: {
               enabled: true,
               top: 2,
@@ -189,8 +196,8 @@ export class GoalsBySellersComponent implements OnInit {
             },
             value: {
               offsetY: -5,
-              fontSize: "18px",
-              color: "#fff", // Definir a cor como branco
+              fontSize: "30px",
+              color: "#fff",
             }
           }
         }
@@ -276,7 +283,7 @@ export class GoalsBySellersComponent implements OnInit {
 
 
   toggleValorVisibility() {
-    this.isValorVisible = !this.isValorVisible; // Alternar a visibilidade do valor
+    this.isValorVisible = !this.isValorVisible; 
   }
 
 

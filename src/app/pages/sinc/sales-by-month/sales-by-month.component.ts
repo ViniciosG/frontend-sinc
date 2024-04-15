@@ -11,6 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { SalesByMonthModel } from 'src/app/models/sales-by-month.model';
 import { SalesByMonthRepository } from 'src/app/repositories/sales-by-month.repository';
+import { CoreService } from 'src/app/services/core.service';
 import { FiltersComponent } from '../components/filters/filters.component';
 
 export type ChartOptions = {
@@ -71,11 +72,11 @@ export class SalesByMonthComponent implements OnInit {
   params: any;
   camposFiltro:any;
   loading: boolean = false;
-
+  options = this.settings.getOptions();
   public areaChartOptions: Partial<ChartOptions> | any;
   public chartOptionsMixed: Partial<ChartOptions> | any;
 
-  constructor(private repository: SalesByMonthRepository) {
+  constructor(private repository: SalesByMonthRepository,private settings: CoreService,) {
 
     const dataAtual = new Date();
     dataAtual.setDate(1);
@@ -116,6 +117,9 @@ export class SalesByMonthComponent implements OnInit {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
     };
+
+    this.options.sidenavCollapsed = false;
+    this.settings.setOptions(this.options);
   }
 
   ngOnInit(): void {

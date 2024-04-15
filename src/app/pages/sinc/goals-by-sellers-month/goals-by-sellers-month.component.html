@@ -1,26 +1,32 @@
-
 <div *ngIf="loading"
-class="d-flex align-items-center justify-content-center loading">
-<mat-spinner diameter="50"></mat-spinner>
+	class="d-flex align-items-center justify-content-center loading">
+	<mat-spinner diameter="50"></mat-spinner>
 </div>
-<div class="background" *ngIf="!loading">
+<div *ngIf="!loading" class="background">
 	<mat-card class="cardWithShadow background">
 		<mat-card-header class="textCard">
-			<mat-card-title>Total do Mês</mat-card-title>
+			<mat-card-title class="d-flex align-items-center m-t-16">Total do Mês </mat-card-title>
+			<div (click)="toggleValorVisibility()" class="d-flex align-items-center m-t-16" style="margin-left: 10px; cursor: pointer;">
+				<mat-icon class="text-primary icon-22 mr-2" style="display: flex; align-items: center;">
+					remove_red_eye
+				</mat-icon>
+			</div>
+
 		</mat-card-header>
 		<mat-card-content>
-			<div class="row m-t-24">
-				<div *ngIf="isValorVisible"
-					class="col-7"
-					style="cursor: pointer;">
-					<h4 class="mat-headline-5 background">
-						{{ formatarParaReais(somaArredondada) }}
-					</h4>
-					<div class="d-flex align-items-center m-t-16">
-						<i-tabler name="target-arrow"
-							class="text-primary icon-16 mr-2"
-							style="display: flex; align-items: center;"></i-tabler>
-						<div class="mat-body-1 f-w-600 m-l-12 background">
+			<div class="row m-t-24 align-items-center">
+				<div class="col-7" >
+					<div class="d-flex align-items-center m-t-16" *ngIf="isValorVisible">
+						<mat-icon class="text-primary icon-22 mr-2" style="display: flex; align-items: center;">
+							remove_red_eye
+						</mat-icon>
+						<div  class="mat-body-1 f-w-600 m-l-12 background" style="font-size: 22px;">
+							{{ formatarParaReais(somaArredondada) }}
+						</div>
+					</div>
+					<div *ngIf="isValorVisible" class="d-flex align-items-center m-t-16">
+						<i-tabler name="target-arrow" class="text-primary icon-16 mr-2" style="display: flex; align-items: center;"></i-tabler>
+						<div class="mat-body-1 f-w-600 m-l-12 background" >
 							{{ formatarParaReais(metaTotalGeral) }}
 						</div>
 					</div>
@@ -30,28 +36,29 @@ class="d-flex align-items-center justify-content-center loading">
 	</mat-card>
 
 
-	<div *ngIf="goals?.items"
-		class="row justify-content-center">
-		<div *ngFor="let cardimg of goals.items; let i = index"
-			class="col-sm-5 col-lg-2">
-			<div [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}"
-				class="cardWithShadow card2 position-relative card-hover fixed-height-card back">
-
-
+	<div *ngIf="goals?.items" class="row justify-content-center">
+		<div  *ngFor="let cardimg of goals.items; let i = index"
+			class=" col-8 col-sm-5 col-lg-2">
+			
+			<div [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}" [ngClass]="{'auto-fixed-height-card': isValorVisible}"
+				class="cardWithShadow position-relative card-hover fixed-height-card back">
 
 				<mat-card-header class="d-flex align-items-start justify-content-between textCard">
+
 					<mat-card-title *ngIf="cardimg.sellerId === -999"
-						style="font-size: 16px;"
-						class="mb-0 ">
-						{{  abreviarNome(cardimg.sellerName) }}
+					style="font-size: 17px;text-overflow: ellipsis!important;; ">
+					<b>
+							{{  abreviarNome(cardimg.sellerName) }}
+						</b>
 					</mat-card-title>
 
 
-
 					<mat-card-title *ngIf="cardimg.sellerId !== -999"
-						style="font-size: 16px;">
+						style="font-size: 17px; text-overflow: ellipsis!important;;">
 						<span *ngIf="goals.items.length > 1">{{i}}°</span>
-						{{  abreviarNome(cardimg.sellerName) }}
+						<b style="text-overflow: ellipsis;">
+							{{  abreviarNome(cardimg.sellerName) }}
+						</b>
 					</mat-card-title>
 					<div class="icon-corner">
 						<div class="align-self-start ">
@@ -59,7 +66,10 @@ class="d-flex align-items-center justify-content-center loading">
 								src="assets/images/profile/médio.png"
 								class="rounded-circle"
 								width="30"
-								style="margin-right: 5px; opacity: 0.8;">
+								style="margin-right: 5px; opacity: 0.7;">
+
+
+
 
 							<img *ngIf="(cardimg.value / cardimg.goal) * 100 <= 50 && (cardimg.value / cardimg.goal) * 100 >= 0 && cardimg.goal !=0"
 								src="assets/images/profile/triste.png"
@@ -67,11 +77,17 @@ class="d-flex align-items-center justify-content-center loading">
 								width="30"
 								style="margin-right: 5px; opacity: 0.7;">
 
+
+
+
 							<img *ngIf="(cardimg.value / cardimg.goal) * 100 > 99 && cardimg.goal != 0"
 								src="assets/images/profile/feliz.png"
 								class="rounded-circle"
 								width="30"
 								style="margin-right: 5px; opacity: 0.7;">
+
+
+
 
 							<img *ngIf="cardimg.goal ===0"
 								src="assets/images/profile/triste.png"
@@ -80,32 +96,32 @@ class="d-flex align-items-center justify-content-center loading">
 								style="margin-right: 5px; opacity: 0.7;">
 
 
+
+
+
 						</div>
 					</div>
-
-
-
 				</mat-card-header>
 
-
-
-				<div [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}"
-					(click)="toggleValorVisibility()"
+				<div [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}" 
 					class="f-s-18 f-w-700 m-y-8 m-r-8 d-flex align-items-center justify-content-center"
-					style="margin-bottom: 8px; cursor: pointer;">
+					style="margin-bottom: 8px;" *ngIf="isValorVisible">
 					<mat-icon class="text-primary mr-2"
 						style="display: flex; align-items: center; font-size: 16px">
 						remove_red_eye
 					</mat-icon>
 					<span>
-						<b *ngIf="isValorVisible">
+						<b>
 							{{ formatarParaReais(cardimg.value)}}
 						</b>
 					</span>
 				</div>
+
+
+
 				<div [ngClass]="{'seller-id-negative': cardimg.sellerId === -999}"
 					class="f-s-12 f-w-600 m-y-8 m-r-8 d-flex align-items-center justify-content-center"
-					style="margin-bottom: 0;">
+					style="margin-bottom: 0;" *ngIf="isValorVisible">
 					<mat-icon class="text-primary mr-2"
 						style="display: flex; align-items: center; font-size: 16px">
 						gps_fixed
@@ -115,8 +131,10 @@ class="d-flex align-items-center justify-content-center loading">
 						{{ formatarParaReais(cardimg.goal) }}
 					</span>
 				</div>
-				<div id="{{ graficoIds[i] }}"
-					class="col-12 d-flex align-items-center ">
+
+
+
+				<div id="{{ graficoIds[i] }}">
 					<apx-chart [series]="graficos[i].series"
 						[chart]="graficos[i].chart"
 						[plotOptions]="graficos[i].plotOptions"

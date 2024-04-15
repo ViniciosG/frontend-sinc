@@ -8,6 +8,7 @@ import * as echarts from 'echarts';
 import { MaterialModule } from 'src/app/material.module';
 import { SalesByManufacturersModel } from 'src/app/models/sales-by-manufacturers.model';
 import { SalesByManufacturersRepository } from 'src/app/repositories/sales-by-manufacturers.repsository';
+import { CoreService } from 'src/app/services/core.service';
 import { FiltersComponent } from '../components/filters/filters.component';
 
 @Component({
@@ -35,8 +36,9 @@ export class SalesByManufacturersComponent implements AfterViewInit {
   camposFiltro: any
   grafico: any;
   loading: boolean = false;
+  options = this.settings.getOptions();
 
-  constructor(private repository: SalesByManufacturersRepository, private readonly elementRef: ElementRef) {
+  constructor(private repository: SalesByManufacturersRepository, private readonly elementRef: ElementRef,private settings: CoreService,) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -69,10 +71,9 @@ export class SalesByManufacturersComponent implements AfterViewInit {
       { label: 'Data Fim', placeholder: 'Data Fim', type: 'date', visivel: true, value: this.endDate, id: "registerFinal" },
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
-
-
-
     ];
+    this.options.sidenavCollapsed = false;
+    this.settings.setOptions(this.options);
   }
 
   ngAfterViewInit(): void {

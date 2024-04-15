@@ -1,47 +1,54 @@
 .user-category {
-    margin-top: -45px;
-    z-index: 1;
-    position: relative;
-  }
-  
+  margin-top: -45px;
+  z-index: 1;
+  position: relative;
+}
 
-  
-  .text-decoration-line-through {
-    text-decoration: line-through;
-  }
 
-  
-  .seller-id-negative {
-    background-color: #1b2847;
-  }
-  
-  .fixed-height-card {
-    height: auto!important; /* Defina a altura desejada */
-    overflow: hidden!important;
-    margin-bottom: 5px;
-  }
 
-  @media (max-width: 768px) {
-    .rounded-circle {
-        display: inline-block !important;
-    }
+.text-decoration-line-through {
+  text-decoration: line-through;
+}
+
+
+.seller-id-negative {
+  background-color: #1b2847;
+}
+
+.fixed-height-card {
+  height: 190px;
+  margin-bottom: 5px;
+}
+
+.auto-fixed-height-card {
+  height: 260px;
+  margin-bottom: 5px;
+  background-color: #1b2847;
+}
+
+
+@media (max-width: 768px) {
+  .rounded-circle {
+      display: inline-block !important;
+  }
 }
 
 .background {
-  background-color: #253662!important;
-  color: white!important;
+background-color: #253662!important;
+color: white!important;
 }
 
 .icon-corner {
-  position: absolute;
-  bottom: 0;
-  right: 0;
+position: absolute;
+top: 10px;
+right: 0;
 }
 
 .textCard {
-  white-space: nowrap;
-  overflow: hidden!important
+white-space: nowrap;
+overflow: hidden!important;
+text-overflow: ellipsis!important;;
+width: 85%;
 }
 
-  
-  
+

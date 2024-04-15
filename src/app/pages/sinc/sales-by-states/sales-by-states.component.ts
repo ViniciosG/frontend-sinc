@@ -32,7 +32,7 @@ export class SalesByStatesComponent implements OnInit {
   endContext: string
   params: any;
   camposFiltro:any
-  fontSize = 12;
+  fontSize = 10;
 
   constructor(private repository: SalesByStatesRepository) {    
     const dataAtual = new Date();
@@ -116,7 +116,9 @@ export class SalesByStatesComponent implements OnInit {
           const stateData = this.states.items.find(item => item.uf === uf);
           return {
             name: stateMap[uf],
-            value: stateData ? stateData.value : 0 // Se não houver dados, definir como null
+            value: stateData ? stateData.value : 0,
+            qty: stateData ? stateData.qty : 0, 
+            qtyItems: stateData ? stateData.qtyItems : 0 
           };
         });
   
@@ -177,7 +179,6 @@ export class SalesByStatesComponent implements OnInit {
           },
           tooltip: {
             trigger: 'item',
-            //formatter: '{b}: {c}'
           },
           visualMap: {
             max: maxValor,
@@ -207,19 +208,27 @@ export class SalesByStatesComponent implements OnInit {
               roam: true,
               label: {
                 show: true,
-                formatter: function(params) {
-                  const value = (typeof params.value === 'number' || typeof params.value === 'string') ? parseFloat(params.value.toString()) : undefined;
-                  if (value !== undefined && !isNaN(value)) {
-                    const valueFormatted = value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                    return `{b|${params.name}}\n{c|${valueFormatted}}`; // Utilizando formatação para nome e valor
-                  } else {
-                    return `{b|${params.name}}\n{c|${params.value}}`; // Utilizando o valor original se não for possível converter para número
-                  }
+                formatter(params:any) {
+                      // Extrair os valores das propriedades
+                      const { qty, qtyItems } = params.data;
+                
+                      const qtyString = `${qty}`
+                      const qtyItemsString = `${qtyItems}`
+                
+                      const valueFormated = (typeof params.value === 'number' || typeof params.value === 'string') ? parseFloat(params.value.toString()) : undefined;
+                                  
+                      if (valueFormated !== undefined && valueFormated != null) {
+                        const valueFormatted = valueFormated?.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                        const formattedLabel = `{c|${params.name}}\n{c|${valueFormatted}}\n{b|Vendas: ${qtyString}}\n{b|Qtd Itens: ${qtyItemsString}}`;
+                        return formattedLabel;
+                      } else {
+                        return `{b|${params.name}}\n{c|${params.value}}`;
+                      }
                 },
                 rich: {
                   c: {
-                    fontWeight: 'bold', // Negrito para o valor
-                    fontSize: this.fontSize // Tamanho da fonte do valor (em pixels)
+                    fontWeight: 'bold',
+                    fontSize: this.fontSize 
                   }
                 }
               },

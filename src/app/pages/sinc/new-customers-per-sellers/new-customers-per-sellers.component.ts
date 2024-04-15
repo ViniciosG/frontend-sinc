@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { MaterialModule } from 'src/app/material.module';
 import { NewCustomersPerSellersModel } from 'src/app/models/new-customers-per-sellers.model';
+import { CoreService } from 'src/app/services/core.service';
 import { FiltersComponent } from '../components/filters/filters.component';
 import { NewCustomersPerSellersRepository } from './../../../repositories/new-customers-per-sellers.repository';
 
@@ -32,8 +33,9 @@ export class NewCustomersPerSellersComponent implements OnInit {
   errorTrue: boolean = false;
   quantidadeClientes: string;
   totalValue: string;
+  options = this.settings.getOptions();
 
-  constructor(private repository: NewCustomersPerSellersRepository) {
+  constructor(private repository: NewCustomersPerSellersRepository,private settings: CoreService,) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -68,6 +70,8 @@ export class NewCustomersPerSellersComponent implements OnInit {
     { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
     { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
   ];
+  this.options.sidenavCollapsed = false;
+  this.settings.setOptions(this.options);
    }
 
 
