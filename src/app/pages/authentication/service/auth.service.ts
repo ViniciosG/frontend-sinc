@@ -5,7 +5,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { Subject, throwError } from 'rxjs';
 import { LoginRepository } from 'src/app/repositories/login.repository';
 import { GetCompanyService } from 'src/app/services/get-company.service';
-import { nameCookieAccessToken, nameCookieIsAdm, nameCookieAccesss } from 'src/environments/environment';
+import { nameCookieAccessToken, nameCookieIsAdm, nameCookieAccesss, nameCookieContextId } from 'src/environments/environment';
 import { UsersModel } from '../model/users.model';
 
 @Injectable({
@@ -43,6 +43,7 @@ export class AuthService {
         this.cookieService.set(nameCookieAccessToken, res.authorization, now, '/');
         this.cookieService.set(nameCookieAccesss, res.access_permissions, now, '/');
         this.cookieService.set(nameCookieIsAdm, res.is_adm, now, '/');
+        this.cookieService.set(nameCookieContextId, res?.context?.id, now, '/');
         this.router.navigate(['/']);
         this.isLoading = false;
       },

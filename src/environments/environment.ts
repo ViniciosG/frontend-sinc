@@ -25,3 +25,5 @@ export const nameCookieAccessToken = "sessionTokenCookie";
 export const nameCookieAccesss = "permissions";
 
 export const nameCookieIsAdm = "isAdm";
+
+export const nameCookieContextId = "contextId";

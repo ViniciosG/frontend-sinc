@@ -21,6 +21,7 @@ import { AppNavItemComponent } from './vertical/sidebar/nav-item/nav-item.compon
 import { navItems } from './vertical/sidebar/sidebar-data';
 import { SidebarComponent } from './vertical/sidebar/sidebar.component';
 import { NavItem } from './vertical/sidebar/nav-item/nav-item';
+import { nameCookieContextId } from 'src/environments/environment';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -119,6 +120,9 @@ export class FullComponent implements OnInit {
 
   ngOnInit(): void {
     this.navItems = navItems.filter((nav) => {
+      if (nav.context){
+          return nav.context === Number(this.cookieService.get(nameCookieContextId)) && this.authService.isAccess(nav.accesss)
+      }
       return this.authService.isAccess(nav.accesss)
     })
   }
