@@ -11,6 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { SalesByDayOfWeekModel } from 'src/app/models/sales-by-day-of-week.model';
 import { SalesByDayOfWeekRepository } from 'src/app/repositories/sales-by-day-of-week.repository';
+import { CoreService } from 'src/app/services/core.service';
 import { FiltersComponent } from '../components/filters/filters.component';
 
 @Component({
@@ -40,9 +41,9 @@ export class SalesByDayOfWeekComponent implements OnInit {
   camposFiltro:any;
   legendStateInitialized = false;
   loading: boolean = false;
+  options = this.settings.getOptions();
 
-
-  constructor(private repository: SalesByDayOfWeekRepository) {
+  constructor(private repository: SalesByDayOfWeekRepository,private settings: CoreService,) {
     const dataAtual = new Date();
     const primeiroDiaSemana = startOfWeek(dataAtual, { weekStartsOn: 0 }); // 0 para domingo, 1 para segunda, e assim por diante
     
@@ -67,6 +68,8 @@ export class SalesByDayOfWeekComponent implements OnInit {
       registerInitial: this.date_inital,
       registerFinal:  this.date_final,
     };
+    this.options.sidenavCollapsed = false;
+    this.settings.setOptions(this.options);
   }
   
 

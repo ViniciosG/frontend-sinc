@@ -8,6 +8,7 @@ import * as echarts from 'echarts';
 import { MaterialModule } from 'src/app/material.module';
 import { MarginByProductsModel } from 'src/app/models/margin-by-products.model';
 import { MarginByProductsRepository } from 'src/app/repositories/margin-by-products.repository';
+import { CoreService } from 'src/app/services/core.service';
 import { FiltersComponent } from '../components/filters/filters.component';
 
 @Component({
@@ -38,10 +39,11 @@ export class MarginByProductsComponent implements AfterViewInit {
   margem: string;
   grafico: any;
   loading: boolean = false;
-
+  options = this.settings.getOptions();
   constructor(private repository: MarginByProductsRepository,
     private readonly elementRef: ElementRef,
-    private cdref: ChangeDetectorRef) {
+    private cdref: ChangeDetectorRef,
+    private settings: CoreService,) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -78,6 +80,8 @@ export class MarginByProductsComponent implements AfterViewInit {
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
 
     ];
+    this.options.sidenavCollapsed = false;
+    this.settings.setOptions(this.options);
   }
 
 

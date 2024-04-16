@@ -19,6 +19,7 @@ interface topcards {
   standalone: true,
   imports: [MaterialModule, NgFor,MatChipsModule],
   templateUrl: './top-cards.component.html',
+  styleUrls: ['./top-cards.component.css']
 })
 export class AppTopCardsComponent {
   startDate: Date = new Date();

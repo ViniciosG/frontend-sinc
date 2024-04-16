@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
@@ -8,6 +8,7 @@ import * as echarts from 'echarts';
 import { MaterialModule } from 'src/app/material.module';
 import { SubGroupSoldModel } from 'src/app/models/sub-group-sold.model';
 import { SubGroupSoldRepository } from 'src/app/repositories/sub-group-sold.repository';
+import { CoreService } from 'src/app/services/core.service';
 import { FiltersComponent } from '../components/filters/filters.component';
 
 @Component({
@@ -34,8 +35,10 @@ export class SubGroupsSoldComponent implements AfterViewInit {
   quantidadeItems: string;
   grafico: any;
   loading: boolean = false;
+  options = this.settings.getOptions();
 
   constructor(private repository: SubGroupSoldRepository, private readonly elementRef: ElementRef,
+    private settings: CoreService,
     private cdref: ChangeDetectorRef
   ) {
     const dataAtual = new Date();
@@ -71,6 +74,9 @@ export class SubGroupsSoldComponent implements AfterViewInit {
       { label: 'Vendedor', placeholder: 'Vendedor', type: 'text', visivel: true, id: "sellerName" },
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
     ];
+
+    this.options.sidenavCollapsed = false;
+    this.settings.setOptions(this.options);
   }
 
 

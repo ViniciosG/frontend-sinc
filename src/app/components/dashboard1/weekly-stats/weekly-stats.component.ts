@@ -80,9 +80,6 @@ export class AppWeeklyStatsComponent {
       markers: {
         size: 0,
       },
-      tooltip: {
-        theme: 'dark',
-      },
     };
   }
 

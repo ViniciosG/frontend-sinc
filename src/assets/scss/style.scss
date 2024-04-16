@@ -16,31 +16,6 @@
 }
 
 
-.orange_theme {
-  @import "themecolors/orange_theme";
-  @include mat.all-component-colors($orangetheme);
-}
-
-.aqua_theme {
-  @import "themecolors/aqua_theme";
-  @include mat.all-component-colors($aquatheme);
-}
-
-.purple_theme {
-  @import "themecolors/purple_theme";
-  @include mat.all-component-colors($purpletheme);
-}
-
-.green_theme {
-  @import "themecolors/green_theme";
-  @include mat.all-component-colors($greentheme);
-}
-
-.cyan_theme {
-  @import "themecolors/cyan_theme";
-  @include mat.all-component-colors($cyantheme);
-}
-
 @import "overrides/materialoverrides";
 @import "container";
 @import "layouts/layouts";

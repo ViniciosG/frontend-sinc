@@ -10,6 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { NewCustomersPerMonthModel } from 'src/app/models/new-customers-per-month.model';
 import { NewCustomersPerMonthsRepository } from 'src/app/repositories/new-customers.per-month.repository';
+import { CoreService } from 'src/app/services/core.service';
 import { FiltersComponent } from '../components/filters/filters.component';
 
 @Component({
@@ -40,8 +41,9 @@ export class NewCustomersPerMonthComponent implements OnInit {
   camposFiltro:any
   totalValue: string;
   loading: boolean = false;
+  options = this.settings.getOptions();
 
-  constructor(private repository: NewCustomersPerMonthsRepository) {
+  constructor(private repository: NewCustomersPerMonthsRepository,private settings: CoreService,) {
     const dataAtual = new Date();
 
     dataAtual.setFullYear(new Date().getFullYear(), 0, 1); // Janeiro é representado por 0
@@ -80,6 +82,8 @@ export class NewCustomersPerMonthComponent implements OnInit {
       { label: 'Ranking', placeholder: 'Ranking', type: 'select',value: '12', visivel: false, options: ['5', '10', '20','30'], id: "_limit" },
 
     ];
+    this.options.sidenavCollapsed = false;
+    this.settings.setOptions(this.options);
   }
 
   ngOnInit(): void {

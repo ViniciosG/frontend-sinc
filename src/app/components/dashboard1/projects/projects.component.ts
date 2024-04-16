@@ -1,18 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import {
+  ApexAxisChartSeries,
   ApexChart,
-  ChartComponent,
+  ApexGrid,
+  ApexPlotOptions,
   ApexStroke,
   ApexTooltip,
-  ApexAxisChartSeries,
-  ApexPlotOptions,
-  ApexGrid,
   ApexXAxis,
   ApexYAxis,
+  ChartComponent,
   NgApexchartsModule,
 } from 'ng-apexcharts';
 import { MaterialModule } from '../../../material.module';
-import { TablerIconsModule } from 'angular-tabler-icons';
 
 export interface projectsChart {
   series: ApexAxisChartSeries;
@@ -100,7 +100,6 @@ export class AppProjectsComponent {
         opacity: 1,
       },
       tooltip: {
-        theme: 'dark',
         x: {
           show: false,
         },

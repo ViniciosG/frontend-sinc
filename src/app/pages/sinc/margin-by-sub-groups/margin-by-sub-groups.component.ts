@@ -8,6 +8,7 @@ import * as echarts from 'echarts';
 import { MaterialModule } from 'src/app/material.module';
 import { MarginBySubGroupsModel } from 'src/app/models/margin-by-sub-groups.model';
 import { MarginBySubGroupsRepository } from 'src/app/repositories/margin-by-sub-groups.repository';
+import { CoreService } from 'src/app/services/core.service';
 import { FiltersComponent } from '../components/filters/filters.component';
 
 @Component({
@@ -38,9 +39,11 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
   margem: string;
   grafico: any;
   loading: boolean = false;
+  options = this.settings.getOptions();
 
   constructor(private repository: MarginBySubGroupsRepository,
     private readonly elementRef: ElementRef,
+    private settings: CoreService,
     private cdref: ChangeDetectorRef
   ) {
     const dataAtual = new Date();
@@ -79,6 +82,8 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
       { label: 'Tipo', placeholder: 'Tipo', type: 'text', visivel: true, id: "sellerType" },
 
     ];
+    this.options.sidenavCollapsed = false;
+    this.settings.setOptions(this.options);
   }
 
 

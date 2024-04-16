@@ -141,7 +141,6 @@ if (quantities.length >= 2) {
         size: 0,
       },
       tooltip: {
-        theme: 'dark',
         x: {
           show: false,
         },
