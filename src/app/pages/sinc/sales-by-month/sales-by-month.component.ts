@@ -73,6 +73,8 @@ export class SalesByMonthComponent implements OnInit {
   camposFiltro:any;
   loading: boolean = false;
   options = this.settings.getOptions();
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
   public areaChartOptions: Partial<ChartOptions> | any;
   public chartOptionsMixed: Partial<ChartOptions> | any;
 
@@ -141,10 +143,22 @@ export class SalesByMonthComponent implements OnInit {
     this.obterDadosERenderizarGrafico();
   }
 
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
+  }
+
   obterDadosERenderizarGrafico() {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          this.loading = false;
+          return; 
+        } else {
+          this.mostrarMensagem('');
+        }
         this.loading = false;
         this.sales = resp;
   

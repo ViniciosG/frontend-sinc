@@ -52,7 +52,9 @@ export class GoalsBySellersMonthComponent implements OnInit {
   metaGeral: any;
   public yearlyChart!: Partial<yearlyChart> | any;
   public chartOptions!: Partial<customerChart> | any;
-  constructor(private repository: GoalsBySellersByMonthRepository) {
+  options = this.settings.getOptions();
+
+  constructor(private repository: GoalsBySellersByMonthRepository,private settings: CoreService,) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -89,8 +91,8 @@ export class GoalsBySellersMonthComponent implements OnInit {
       },
     ];
 
-    // this.options.sidenavCollapsed = true;
-    // this.settings.setOptions(this.options);
+    this.options.sidenavCollapsed = true;
+    this.settings.setOptions(this.options);
   }
 
   abreviarNome(nome: string): string {

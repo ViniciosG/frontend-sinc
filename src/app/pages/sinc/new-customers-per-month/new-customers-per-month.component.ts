@@ -42,7 +42,8 @@ export class NewCustomersPerMonthComponent implements OnInit {
   totalValue: string;
   loading: boolean = false;
   options = this.settings.getOptions();
-
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
   constructor(private repository: NewCustomersPerMonthsRepository,private settings: CoreService,) {
     const dataAtual = new Date();
 
@@ -94,6 +95,14 @@ export class NewCustomersPerMonthComponent implements OnInit {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          this.loading = false;
+          return; 
+        } else {
+          this.mostrarMensagem('');
+        }
         this.loading = false;
         this.customers = resp;
 
@@ -111,6 +120,10 @@ export class NewCustomersPerMonthComponent implements OnInit {
         console.log(error);
       }
     });
+  }
+
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
   }
 
   receberFiltros(event: any) {

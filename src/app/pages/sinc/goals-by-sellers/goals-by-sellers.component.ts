@@ -53,6 +53,7 @@ export class GoalsBySellersComponent implements OnInit {
   metaGeral: any;
   public yearlyChart!: Partial<yearlyChart> | any;
   public chartOptions!: Partial<customerChart> | any;;
+  options = this.settings.getOptions();
 
   constructor(private repository: GoalsBySellersRepository, private settings: CoreService,) {
     const dataAtual = new Date();
@@ -88,8 +89,8 @@ export class GoalsBySellersComponent implements OnInit {
       },
     ];
 
-    // this.options.sidenavCollapsed = true;
-    // this.settings.setOptions(this.options);
+    this.options.sidenavCollapsed = true;
+    this.settings.setOptions(this.options);
   }
 
 

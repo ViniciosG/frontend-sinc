@@ -1,6 +1,6 @@
 <app-filters [camposFiltro]="camposFiltro" (filtrosEnviados)="receberFiltros($event)"></app-filters>
 <br>
-<mat-card class="cardWithShadow">
+<mat-card class="cardWithShadow" *ngIf="isVisible">
   <mat-card-header class="d-flex align-items-center">
     <mat-card-title>Dados do ano</mat-card-title>
     <div class="m-l-auto">
@@ -27,13 +27,24 @@
 <br>
 <div class="grafico-echarts" id="grafico-echarts" style="width: 100%; height: 450px;"></div>
 <br>
-
-<div *ngIf="loading" class="d-flex align-items-center justify-content-center loading">
-  <mat-spinner diameter="50"></mat-spinner>
+<div class="d-flex align-items-center justify-content-center" *ngIf="mensagemNaTela" class="mensagem-erro">
+  <i-tabler name="info-circle" class="icon-20"></i-tabler>
+  <b>{{ mensagemNaTela }}</b>
 </div>
+
+
+<div *ngIf="!loading; else loadingTemplate">
+</div>
+
+<ng-template #loadingTemplate>
+  <div class="d-flex align-items-center justify-content-center">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+</ng-template>
 
 <apx-chart *ngIf="areaChartOptions?.series" [series]="areaChartOptions.series" [chart]="areaChartOptions.chart"
   [xaxis]="areaChartOptions.xaxis" [yaxis]="areaChartOptions.yaxis" [grid]="areaChartOptions.grid"
   [stroke]="areaChartOptions.stroke" [tooltip]="areaChartOptions.tooltip" [dataLabels]="areaChartOptions.dataLabels"
   [legend]="areaChartOptions.legend" [colors]="areaChartOptions.colors" [markers]="areaChartOptions.markers">
 </apx-chart>
+

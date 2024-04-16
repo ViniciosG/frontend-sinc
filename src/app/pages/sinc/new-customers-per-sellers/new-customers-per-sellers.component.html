@@ -1,6 +1,6 @@
 <app-filters [camposFiltro]="camposFiltro" (filtrosEnviados)="receberFiltros($event)"></app-filters>
 <br>
-<mat-card class="cardWithShadow">
+<mat-card class="cardWithShadow" *ngIf="isVisible">
     <mat-card-header class="d-flex align-items-center">
       <mat-card-title>Resultado</mat-card-title>
       <div class="m-l-auto"></div>
@@ -10,7 +10,7 @@
     </mat-card-content>
   </mat-card>
 <br>
-<mat-card class="cardWithShadow">
+<mat-card class="cardWithShadow" *ngIf="isVisible">
   <mat-card-content class="p-y-30" *ngIf="!isLoading && !errorTrue;">
     <div class="d-flex align-items-center justify-content-between">
 
@@ -21,12 +21,6 @@
       <div class="d-flex flex-column align-items-center justify-content-center">
         <mat-card-title>Novos clientes</mat-card-title>
         </div>
-      <!-- <div>
-        <b>De:</b>
-        {{inititalContext}}
-        <b>à</b>
-        {{endContext}}
-      </div> -->
     </div>
     <div *ngFor="let item of customers.items" class="m-t-32">
       <div class="d-flex align-items-center m-b-24">
@@ -49,9 +43,19 @@
     </button>
   </mat-card-content>
 
+  <div class="d-flex align-items-center justify-content-center" *ngIf="mensagemNaTela" class="mensagem-erro">
+    <i-tabler name="info-circle" class="icon-20"></i-tabler>
+    <b>{{ mensagemNaTela }}</b>
+  </div>
+  
+  
+  <div *ngIf="!isLoading; else loadingTemplate">
+  </div>
 
-  <div *ngIf="isLoading" class="d-flex align-items-center justify-content-center loading">
+<ng-template #loadingTemplate>
+  <div class="d-flex align-items-center justify-content-center">
     <mat-spinner diameter="50"></mat-spinner>
   </div>
+</ng-template>
 
 </mat-card>

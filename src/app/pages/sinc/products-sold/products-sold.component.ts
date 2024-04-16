@@ -37,7 +37,8 @@ export class ProductsSoldComponent implements AfterViewInit {
   grafico: any
   loading: boolean = false;
   options = this.settings.getOptions();
-
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
   constructor(private repository: ProductsSoldsRepository, private readonly elementRef: ElementRef,
     private settings: CoreService,
     private cdref: ChangeDetectorRef
@@ -107,6 +108,16 @@ export class ProductsSoldComponent implements AfterViewInit {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.grafico.nativeElement.style.display = 'none';
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          this.loading = false;
+          return; 
+        } else {
+          this.mostrarMensagem('');
+        }
         this.SALVAR_RESPOSTA = resp;
         this.productsSolds = { ...resp, items: [...resp.items] };
 
@@ -122,6 +133,10 @@ export class ProductsSoldComponent implements AfterViewInit {
       error: error => {
         this.loading = false;      }
     });
+  }
+
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
   }
 
   executar(items: any, graficoEcharts: HTMLElement): void {

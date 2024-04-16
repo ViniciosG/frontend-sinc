@@ -40,7 +40,8 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
   grafico: any;
   loading: boolean = false;
   options = this.settings.getOptions();
-
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
   constructor(private repository: MarginBySubGroupsRepository,
     private readonly elementRef: ElementRef,
     private settings: CoreService,
@@ -113,6 +114,17 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.graficoEcharts.nativeElement.style.display = 'none';
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          this.loading = false;
+          return; 
+        } else {
+          this.graficoEcharts.nativeElement.style.display = '';
+          this.mostrarMensagem('');
+        }
+
         this.SALVAR_RESPOSTA.items = []
         this.subGroups.items = []
         if (resp?.items){
@@ -138,6 +150,11 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
       }
     });
 
+  }
+
+  
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
   }
 
   executar(items: any, graficoEcharts: HTMLElement): void {

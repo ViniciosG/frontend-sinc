@@ -37,7 +37,8 @@ export class SalesByManufacturersComponent implements AfterViewInit {
   grafico: any;
   loading: boolean = false;
   options = this.settings.getOptions();
-
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
   constructor(private repository: SalesByManufacturersRepository, private readonly elementRef: ElementRef,private settings: CoreService,) {
     const dataAtual = new Date();
 
@@ -76,6 +77,10 @@ export class SalesByManufacturersComponent implements AfterViewInit {
     this.settings.setOptions(this.options);
   }
 
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
+  }
+
   ngAfterViewInit(): void {
     this.grafico = this.elementRef.nativeElement.querySelector('#grafico-echarts');
     this.grafico.style.minHeight = '1px';
@@ -102,7 +107,14 @@ export class SalesByManufacturersComponent implements AfterViewInit {
     this.loading = true
     this.repository.call(this.params).subscribe({
       next: resp => {
-
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          this.loading = false;
+          return; 
+        } else {
+          this.mostrarMensagem('');
+        }
         this.SALVAR_RESPOSTA = resp;
         this.manufacturers = { ...resp, items: [...resp.items] };
 

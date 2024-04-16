@@ -1,6 +1,7 @@
 import { CommonModule, NgForOf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { MaterialModule } from 'src/app/material.module';
@@ -12,7 +13,7 @@ import { NewCustomersPerSellersRepository } from './../../../repositories/new-cu
 @Component({
   selector: 'app-new-customers-per-sellers',
   standalone: true,
-  imports: [MaterialModule, CommonModule, FormsModule,NgForOf, FiltersComponent],
+  imports: [MaterialModule, CommonModule, FormsModule,NgForOf, FiltersComponent,TablerIconsModule],
   templateUrl: './new-customers-per-sellers.component.html',
   styleUrls: ['./new-customers-per-sellers.component.css']
 })
@@ -34,7 +35,8 @@ export class NewCustomersPerSellersComponent implements OnInit {
   quantidadeClientes: string;
   totalValue: string;
   options = this.settings.getOptions();
-
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
   constructor(private repository: NewCustomersPerSellersRepository,private settings: CoreService,) {
     const dataAtual = new Date();
 
@@ -81,16 +83,11 @@ export class NewCustomersPerSellersComponent implements OnInit {
 
   receberFiltros(event: any) {
     this.camposFiltro.forEach((campo: any) => {
-      // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
-        // Verificar se o campo é do tipo "date"
         if (campo.type === 'date') {
-          // Formatando a data usando o date-fns
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-          // Atualizar o valor correspondente no objeto params com base no id do campo
           this.params[campo.id] = dataFormatada;
         } else {
-          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
           this.params[campo.id] = campo.value;
         }
       }
@@ -104,6 +101,14 @@ export class NewCustomersPerSellersComponent implements OnInit {
     this.isLoading = true; // Definir como verdadeira antes de iniciar a solicitação
     this.repository.call(this.params).subscribe({
       next: resp => {
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          this.isLoading = false;
+          return; 
+        } else {
+          this.mostrarMensagem('');
+        }
         this.isLoading = false;
         if (resp === null) {
           this.errorTrue = true;
@@ -127,6 +132,10 @@ export class NewCustomersPerSellersComponent implements OnInit {
         console.log(error);
       }
     });
+  }
+
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
   }
   
   calcularCorGradient(index: number, total: number): string {

@@ -4,15 +4,13 @@
   position: relative;
 }
 
-
-
 .text-decoration-line-through {
   text-decoration: line-through;
 }
 
 
 .seller-id-negative {
-  background-color: #1b2847;
+  background-color: #263145;
 }
 
 .fixed-height-card {
@@ -23,9 +21,8 @@
 .auto-fixed-height-card {
   height: 260px;
   margin-bottom: 5px;
-  background-color: #1b2847;
+  background-color: #263145;
 }
-
 
 @media (max-width: 768px) {
   .rounded-circle {
@@ -33,12 +30,9 @@
   }
 }
 
-.main{
-  height: 100vh;
-}
 
 .background {
-  background-color: #253662 !important;
+  background-color: #2a3447 !important;
   color: white !important;
 }
 
@@ -52,6 +46,5 @@
   white-space: nowrap;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  ;
   width: 85%;
 }

@@ -42,7 +42,8 @@ export class SalesByDayOfWeekComponent implements OnInit {
   legendStateInitialized = false;
   loading: boolean = false;
   options = this.settings.getOptions();
-
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
   constructor(private repository: SalesByDayOfWeekRepository,private settings: CoreService,) {
     const dataAtual = new Date();
     const primeiroDiaSemana = startOfWeek(dataAtual, { weekStartsOn: 0 }); // 0 para domingo, 1 para segunda, e assim por diante
@@ -80,16 +81,11 @@ export class SalesByDayOfWeekComponent implements OnInit {
   receberFiltros(event: any) {
     console.log(event)
     this.camposFiltro.forEach((campo: any) => {
-      // Verificar se o campo tem um valor e um id definido
       if (campo.id && campo.value !== undefined) {
-        // Verificar se o campo é do tipo "date"
         if (campo.type === 'date') {
-          // Formatando a data usando o date-fns
           const dataFormatada = format(campo.value, "yyyy-MM-dd'T'HH:mm:ssXXX");
-          // Atualizar o valor correspondente no objeto params com base no id do campo
           this.params[campo.id] = dataFormatada;
         } else {
-          // Se não for um campo de data, atribuir o valor diretamente ao objeto params
           this.params[campo.id] = campo.value;
         }
       }
@@ -103,6 +99,14 @@ export class SalesByDayOfWeekComponent implements OnInit {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          this.loading = false;
+          return; 
+        } else {
+          this.mostrarMensagem('');
+        }
         this.loading = false;
         this.sales = resp;
   
@@ -124,7 +128,9 @@ export class SalesByDayOfWeekComponent implements OnInit {
       }
     });
   }
-
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
+  }
   executarGraficoBarras(item: any): echarts.EChartsOption {
     
     item.sort((a: any, b: any) => parseInt(a.dayOfWeek) - parseInt(b.dayOfWeek));

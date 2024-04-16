@@ -1,6 +1,7 @@
 <app-filters [camposFiltro]="camposFiltro" (filtrosEnviados)="receberFiltros($event)"></app-filters>
 <br>
-<mat-card class="cardWithShadow">
+
+<mat-card class="cardWithShadow" *ngIf="isVisible">
   <mat-card-header class="d-flex align-items-center">
     <mat-card-title>Dados</mat-card-title>
     <div class="m-l-auto">
@@ -28,10 +29,18 @@
   </mat-card-content>
 </mat-card>
 <br>
+
+<div class="d-flex align-items-center justify-content-center" *ngIf="mensagemNaTela" class="mensagem-erro">
+  <i-tabler name="info-circle" class="icon-20"></i-tabler>
+  <b>{{ mensagemNaTela }}</b>
+</div>
+
+
 <div *ngIf="!loading; else loadingTemplate">
 </div>
 
 <div #graficoEcharts id="grafico-echarts" ></div>
+
 <ng-template #loadingTemplate>
   <div class="d-flex align-items-center justify-content-center">
     <mat-spinner diameter="50"></mat-spinner>

@@ -36,7 +36,9 @@ export class SubGroupsSoldComponent implements AfterViewInit {
   grafico: any;
   loading: boolean = false;
   options = this.settings.getOptions();
-
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
+  
   constructor(private repository: SubGroupSoldRepository, private readonly elementRef: ElementRef,
     private settings: CoreService,
     private cdref: ChangeDetectorRef
@@ -79,6 +81,10 @@ export class SubGroupsSoldComponent implements AfterViewInit {
     this.settings.setOptions(this.options);
   }
 
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
+  }
+
 
   receberFiltros(event: any) {
     this.camposFiltro.forEach((campo: any) => {
@@ -106,6 +112,14 @@ export class SubGroupsSoldComponent implements AfterViewInit {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          this.loading = false;
+          return; 
+        } else {
+          this.mostrarMensagem('');
+        }
         this.SALVAR_RESPOSTA = resp;
         this.subGroups = { ...resp, items: [...resp.items] };
 

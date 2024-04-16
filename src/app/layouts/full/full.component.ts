@@ -13,6 +13,7 @@ import { AppSettings } from 'src/app/app.config';
 import { MaterialModule } from 'src/app/material.module';
 import { AuthService } from 'src/app/pages/authentication/service/auth.service';
 import { CoreService } from 'src/app/services/core.service';
+import { nameCookieContextId } from 'src/environments/environment';
 import { AppHorizontalHeaderComponent } from './horizontal/header/header.component';
 import { AppHorizontalSidebarComponent } from './horizontal/sidebar/sidebar.component';
 import { AppBreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
@@ -22,7 +23,6 @@ import { NavItem } from './vertical/sidebar/nav-item/nav-item';
 import { AppNavItemComponent } from './vertical/sidebar/nav-item/nav-item.component';
 import { navItems } from './vertical/sidebar/sidebar-data';
 import { SidebarComponent } from './vertical/sidebar/sidebar.component';
-import { nameCookieContextId } from 'src/environments/environment';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -133,6 +133,13 @@ export class FullComponent implements OnInit {
       .subscribe((event) => {
         this.titleService.setTitle(event['title']);
         this.pageInfo = event;
+        if(this.pageInfo.title === "Metas / Mês" || this.pageInfo.title === "Metas") {
+          this.htmlElement.classList.add('dark-theme');
+          this.htmlElement.classList.remove('light-theme');
+        } else {
+          this.htmlElement.classList.remove('dark-theme');
+          this.htmlElement.classList.add('light-theme');
+        }
       });
   }
 

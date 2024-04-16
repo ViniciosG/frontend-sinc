@@ -33,7 +33,8 @@ export class SalesByStatesComponent implements OnInit {
   params: any;
   camposFiltro:any
   fontSize = 10;
-
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
   constructor(private repository: SalesByStatesRepository) {    
     const dataAtual = new Date();
 
@@ -76,10 +77,21 @@ export class SalesByStatesComponent implements OnInit {
     this.obterDadosERenderizarGrafico();
   }
 
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
+  }
+
   obterDadosERenderizarGrafico() {
 
     this.repository.call(this.params).subscribe({
       next: resp => {
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          return; 
+        } else {
+          this.mostrarMensagem('');
+        }
         const stateMap: { [key: string]: string } = {
           'AC': 'Acre',
           'AL': 'Alagoas',

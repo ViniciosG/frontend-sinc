@@ -40,6 +40,8 @@ export class MarginByProductsComponent implements AfterViewInit {
   grafico: any;
   loading: boolean = false;
   options = this.settings.getOptions();
+  mensagemNaTela: string = '';
+  isVisible: boolean = true
   constructor(private repository: MarginByProductsRepository,
     private readonly elementRef: ElementRef,
     private cdref: ChangeDetectorRef,
@@ -111,7 +113,20 @@ export class MarginByProductsComponent implements AfterViewInit {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
+
+        if (resp === null || resp === undefined) {
+          this.isVisible = false
+          this.graficoEcharts.nativeElement.style.display = 'none';
+          this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
+          this.loading = false;
+          return; 
+        } else {
+          this.graficoEcharts.nativeElement.style.display = '';
+          this.mostrarMensagem('');
+        }
+
         this.SALVAR_RESPOSTA = resp;
+        
         this.subGroups = { ...resp, items: [...resp.items] };
 
         const value = this.subGroups.items.reduce((total, item) => total + item.value, 0);
@@ -126,10 +141,15 @@ export class MarginByProductsComponent implements AfterViewInit {
         this.loading = false;
       },
       error: error => {
+        console.error('Erro ao obter dados:', error);
+        this.mostrarMensagem('Ocorreu um erro ao obter os dados. Por favor, tente novamente mais tarde.');
         this.loading = false;
-        console.log(error);
       }
     });
+  }
+
+  mostrarMensagem(mensagem: string): void {
+    this.mensagemNaTela = mensagem;
   }
 
   executar(items: any, graficoEcharts: HTMLElement): void {
@@ -227,11 +247,6 @@ export class MarginByProductsComponent implements AfterViewInit {
     meuGrafico.resize();
     meuGrafico.setOption(opcoes);
   }
-
-
-
-
-
   onSelectChange(event: number) {
     this.obterDadosERenderizarGrafico();
   }
