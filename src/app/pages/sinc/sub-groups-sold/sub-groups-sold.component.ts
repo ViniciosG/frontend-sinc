@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
@@ -19,6 +19,8 @@ import { FiltersComponent } from '../components/filters/filters.component';
   styleUrls: ['./sub-groups-sold.component.css']
 })
 export class SubGroupsSoldComponent implements AfterViewInit {
+  @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
+
   startDate: Date = new Date();
   endDate: Date = new Date();
   subGroups: SubGroupSoldModel;
@@ -118,6 +120,7 @@ export class SubGroupsSoldComponent implements AfterViewInit {
           this.loading = false;
           return; 
         } else {
+          this.isVisible = true
           this.mostrarMensagem('');
         }
         this.SALVAR_RESPOSTA = resp;
@@ -132,6 +135,9 @@ export class SubGroupsSoldComponent implements AfterViewInit {
         this.loading = false;
       },
       error: error => {
+        this.isVisible = false
+        this.graficoEcharts.nativeElement.style.display = 'none';
+        this.mostrarMensagem('Não foi possível obter os dados.');
         this.loading = false;
         console.log(error);
       }

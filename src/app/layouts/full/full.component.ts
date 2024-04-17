@@ -114,7 +114,7 @@ export class FullComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((e) => {
-        this.content.scrollTo({ top: 0 });
+       // this.content.scrollTo({ top: 0 });
       });
 
       this.router.events

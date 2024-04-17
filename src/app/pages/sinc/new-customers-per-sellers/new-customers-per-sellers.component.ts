@@ -98,7 +98,7 @@ export class NewCustomersPerSellersComponent implements OnInit {
   }
 
   obterDadosERenderizarGrafico() {
-    this.isLoading = true; // Definir como verdadeira antes de iniciar a solicitação
+    this.isLoading = true; 
     this.repository.call(this.params).subscribe({
       next: resp => {
         if (resp === null || resp === undefined) {
@@ -107,6 +107,7 @@ export class NewCustomersPerSellersComponent implements OnInit {
           this.isLoading = false;
           return; 
         } else {
+          this.isVisible = true
           this.mostrarMensagem('');
         }
         this.isLoading = false;
@@ -118,7 +119,6 @@ export class NewCustomersPerSellersComponent implements OnInit {
             index: index + 1,
             color: this.calcularCorGradient(index, resp.items.length)
           }));
-          // Atualizar o objeto 'resp' com o novo array de items
           resp.items = itemsComNovosCampos;
           this.customers = resp;
           this.quantidadeClientes = this.customers.items.reduce((total, item) => total + item.qty, 0).toLocaleString('pt-BR');
@@ -127,8 +127,9 @@ export class NewCustomersPerSellersComponent implements OnInit {
         }
       },
       error: error => {
-        this.errorTrue = true;
-        this.isLoading = false; // Definir como falsa em caso de erro
+        this.isVisible = false
+        this.mostrarMensagem('Não foi possível obter os dados.');
+        this.isLoading = false;
         console.log(error);
       }
     });
@@ -139,16 +140,13 @@ export class NewCustomersPerSellersComponent implements OnInit {
   }
   
   calcularCorGradient(index: number, total: number): string {
-    // Calcular uma cor gradient entre verde e vermelho
     const verde = [144, 238, 144]; // Verde pastel
     const vermelho = [255, 99, 71]; // Vermelho pastel
   
-    // Calcular os valores RGB para cada índice
     const r = Math.round((vermelho[0] - verde[0]) * (index / total) + verde[0]);
     const g = Math.round((vermelho[1] - verde[1]) * (index / total) + verde[1]);
     const b = Math.round((vermelho[2] - verde[2]) * (index / total) + verde[2]);
   
-    // Formatar a cor RGB como uma string hexadecimal
     return '#' + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
   }
   

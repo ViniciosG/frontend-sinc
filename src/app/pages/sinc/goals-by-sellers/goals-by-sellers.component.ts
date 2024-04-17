@@ -89,7 +89,7 @@ export class GoalsBySellersComponent implements OnInit {
       },
     ];
 
-    this.options.sidenavCollapsed = true;
+    this.options.sidenavCollapsed = false;
     this.settings.setOptions(this.options);
   }
 
@@ -219,10 +219,6 @@ export class GoalsBySellersComponent implements OnInit {
 
   formatarParaReais(valor: number): string {
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }
-
-  isInfinity(value: any) {
-    console.log((value.value / value.goal) * 100)
   }
 
   getGoalsBySellers() {

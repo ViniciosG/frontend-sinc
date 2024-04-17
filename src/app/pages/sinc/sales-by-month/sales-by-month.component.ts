@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format, parse } from 'date-fns';
@@ -54,6 +54,7 @@ export type ChartOptionsMixed2 = {
 export class SalesByMonthComponent implements OnInit {
 
   private destroy$: Subject<void> = new Subject<void>();
+  @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
 
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -157,6 +158,7 @@ export class SalesByMonthComponent implements OnInit {
           this.loading = false;
           return; 
         } else {
+          this.isVisible = true
           this.mostrarMensagem('');
         }
         this.loading = false;
@@ -178,7 +180,11 @@ export class SalesByMonthComponent implements OnInit {
         }
       },
       error: error => {
+        this.isVisible = false
+        this.graficoEcharts.nativeElement.style.display = 'none';
+        this.mostrarMensagem('Não foi possível obter os dados.');
         this.loading = false;
+        console.log(error);
       }
     });
   }

@@ -1,5 +1,5 @@
 import { CommonModule, NgForOf } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -19,6 +19,7 @@ import { FiltersComponent } from '../components/filters/filters.component';
 })
 export class SalesByStatesComponent implements OnInit {
   chartInstance: echarts.ECharts;
+  @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
 
   states: SalesByStatesModel;
   selectValue: number = 28;
@@ -90,6 +91,7 @@ export class SalesByStatesComponent implements OnInit {
           this.mostrarMensagem('Não foi possível obter dados para os filtros aplicados.');
           return; 
         } else {
+          this.isVisible = true
           this.mostrarMensagem('');
         }
         const stateMap: { [key: string]: string } = {
@@ -137,6 +139,9 @@ export class SalesByStatesComponent implements OnInit {
         this.executarMapa(allStatesData);
       },
       error: error => {
+        this.isVisible = false
+        this.graficoEcharts.nativeElement.style.display = 'none';
+        this.mostrarMensagem('Não foi possível obter os dados.');
         console.log(error);
       }
     });
@@ -153,7 +158,6 @@ export class SalesByStatesComponent implements OnInit {
   }
 
     receberFiltros(event: any) {
-    console.log(event)
     this.camposFiltro.forEach((campo: any) => {
       if (campo.id && campo.value !== undefined) {
         if (campo.type === 'date') {

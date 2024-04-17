@@ -91,7 +91,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
       },
     ];
 
-    this.options.sidenavCollapsed = true;
+    this.options.sidenavCollapsed = false;
     this.settings.setOptions(this.options);
   }
 

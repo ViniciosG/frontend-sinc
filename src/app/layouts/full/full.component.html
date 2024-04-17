@@ -15,9 +15,7 @@
   }"
   [dir]="options.dir!"
 >
-  <!-- ============================================================== -->
-  <!-- Vertical Sidebar -->
-  <!-- ============================================================== -->
+
 
   <mat-sidenav
     #leftsidenav
@@ -112,7 +110,6 @@
         (doLogout)="doLogout()"></app-header>
     </ng-container>
 
-    <!-- horizontal header -->
     <ng-template #horizontalheader>
       <app-horizontal-header
         (toggleMobileNav)="sidenav.toggle()"
@@ -132,10 +129,10 @@
     </main>
   </mat-sidenav-content>
 
-  <!-- <mat-sidenav #customizerRight mode="over" position="end">
+  <mat-sidenav #customizerRight mode="over" position="end">
     <app-customizer (optionsChange)="receiveOptions($event)"></app-customizer>
   </mat-sidenav>
-</mat-sidenav-container> -->
+</mat-sidenav-container>
 
 <!-- ------------------------------------------------------------------
     Mobile Apps Sidebar

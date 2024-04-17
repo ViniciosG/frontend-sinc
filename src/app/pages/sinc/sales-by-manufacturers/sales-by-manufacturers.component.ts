@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, HostListener } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
@@ -19,6 +19,7 @@ import { FiltersComponent } from '../components/filters/filters.component';
   styleUrls: ['./sales-by-manufacturers.component.css']
 })
 export class SalesByManufacturersComponent implements AfterViewInit {
+  @ViewChild('graficoEcharts', { static: false }) graficoEcharts: ElementRef<HTMLDivElement>;
 
   startDate: Date = new Date();
   endDate: Date = new Date();
@@ -113,6 +114,7 @@ export class SalesByManufacturersComponent implements AfterViewInit {
           this.loading = false;
           return; 
         } else {
+          this.isVisible = true
           this.mostrarMensagem('');
         }
         this.SALVAR_RESPOSTA = resp;
@@ -128,7 +130,10 @@ export class SalesByManufacturersComponent implements AfterViewInit {
         this.loading = false
       },
       error: error => {
-        this.loading = false
+        this.isVisible = false
+        this.graficoEcharts.nativeElement.style.display = 'none';
+        this.mostrarMensagem('Não foi possível obter os dados.');
+        this.loading = false;
         console.log(error);
       }
     });

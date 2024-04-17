@@ -34,7 +34,7 @@
   <div *ngIf="!loading; else loadingTemplate">
   </div>
   
-  <div class="grafico-echarts" id="grafico-echarts" style="width: 100%; height: 400px;"></div>
+  <div #graficoEcharts class="grafico-echarts" id="grafico-echarts" style="width: 100%; height: 400px;"></div>
   
   <ng-template #loadingTemplate>
     <div class="d-flex align-items-center justify-content-center">

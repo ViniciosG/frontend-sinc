@@ -141,8 +141,9 @@ export class MarginByProductsComponent implements AfterViewInit {
         this.loading = false;
       },
       error: error => {
-        console.error('Erro ao obter dados:', error);
-        this.mostrarMensagem('Ocorreu um erro ao obter os dados. Por favor, tente novamente mais tarde.');
+        this.isVisible = false
+        this.graficoEcharts.nativeElement.style.display = 'none';
+        this.mostrarMensagem('Não foi possível obter os dados.');
         this.loading = false;
       }
     });

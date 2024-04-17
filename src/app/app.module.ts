@@ -59,7 +59,7 @@ export function HttpLoaderFactory(http: HttpClient): any {
   ],
   providers: [HttpClientModule, CookieService,
     { provide: MAT_DATE_FORMATS, useValue: { parse: { dateInput: 'LL' }, display: { dateInput: 'DD/MM/YYYY', monthYearLabel: 'MMM YYYY', dateA11yLabel: 'LL', monthYearA11yLabel: 'MMMM YYYY' } } },
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, // Define a localização para pt-BR
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, 
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

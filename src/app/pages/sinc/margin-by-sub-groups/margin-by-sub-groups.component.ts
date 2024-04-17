@@ -145,6 +145,9 @@ export class MarginBySubGroupsComponent implements AfterViewInit {
         this.loading = false;
       },
       error: error => {
+        this.isVisible = false
+        this.graficoEcharts.nativeElement.style.display = 'none';
+        this.mostrarMensagem('Não foi possível obter os dados.');
         this.loading = false;
         console.log(error);
       }
