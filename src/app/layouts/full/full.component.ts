@@ -28,21 +28,6 @@ const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
 const MONITOR_VIEW = 'screen and (min-width: 1024px)';
 
-// for mobile app sidebar
-interface apps {
-  id: number;
-  img: string;
-  title: string;
-  subtitle: string;
-  link: string;
-}
-
-interface quicklinks {
-  id: number;
-  title: string;
-  link: string;
-}
-
 @Component({
   selector: 'app-full',
   standalone: true,
@@ -113,9 +98,7 @@ export class FullComponent implements OnInit {
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe((e) => {
-       // this.content.scrollTo({ top: 0 });
-      });
+      .subscribe((e) => {      });
 
       this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))

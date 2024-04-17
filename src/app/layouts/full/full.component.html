@@ -1,8 +1,4 @@
-<mat-sidenav-container
-  class="mainWrapper"
-  autosize
-  autoFocus
-  [ngClass]="{
+<mat-sidenav-container class="mainWrapper" autosize autoFocus [ngClass]="{
     'sidebarNav-mini': options.sidenavCollapsed && options.navPos !== 'top',
     'sidebarNav-horizontal': options.horizontal,
     cardBorder: options.cardBorder,
@@ -12,119 +8,47 @@
     purple_theme: options.activeTheme == 'purple_theme',
     green_theme: options.activeTheme == 'green_theme',
     cyan_theme: options.activeTheme == 'cyan_theme'
-  }"
-  [dir]="options.dir!"
->
+  }" [dir]="options.dir!">
 
 
-  <mat-sidenav
-    #leftsidenav
-    [mode]="isOver ? 'over' : 'side'"
-    [opened]="
+  <mat-sidenav #leftsidenav [mode]="isOver ? 'over' : 'side'" [opened]="
       options.navPos === 'side' &&
       options.sidenavOpened &&
       !isOver
-    "
-    *ngIf="!options.horizontal"
-    (openedChange)="onSidenavOpenedChange($event)"
-    (closedStart)="onSidenavClosedStart()"
-    class="sidebarNav"
-  >
+    " *ngIf="!options.horizontal" (openedChange)="onSidenavOpenedChange($event)" (closedStart)="onSidenavClosedStart()"
+    class="sidebarNav">
     <div class="flex-layout">
       <app-sidebar></app-sidebar>
       <ng-scrollbar class="position-relative" style="height: 100%">
-        <mat-nav-list class="sidebar-list" >
-          <app-nav-item
-            *ngFor="let item of navItems"
-            [item]="item"
-
-            (notify)="sidenav.toggle()"
-          >
+        <mat-nav-list class="sidebar-list">
+          <app-nav-item *ngFor="let item of navItems" [item]="item" (notify)="sidenav.toggle()">
           </app-nav-item>
         </mat-nav-list>
+        <div></div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div></div>
       </ng-scrollbar>
-    </div>
-  </mat-sidenav>
-
-  <!-- ============================================================== -->
-  <!-- horizontal Sidebar -->
-  <!-- ============================================================== -->
-  <mat-sidenav
-    #leftsidenav
-    [mode]="isOver ? 'over' : 'side'"
-    [opened]="
-      options.navPos === 'side' &&
-      options.sidenavOpened &&
-      !isOver &&
-      !options.horizontal
-    "
-    *ngIf="options.horizontal"
-    (openedChange)="onSidenavOpenedChange($event)"
-    (closedStart)="onSidenavClosedStart()"
-    class="sidebarNav"
-  >
-    <app-sidebar> </app-sidebar>
-    <ng-scrollbar class="position-relative" style="height: 100%">
-      <mat-nav-list class="sidebar-list">
-        <app-nav-item
-          *ngFor="let item of navItems"
-          [item]="item"
-          (notify)="sidenav.toggle()"
-        >
-        </app-nav-item>
-      </mat-nav-list>
-    </ng-scrollbar>
-    <div class="p-24 m-t-auto profile-bar">
-      <div class="bg-light-accent d-flex align-items-center rounded p-16">
-        <img
-          src="assets/images/profile/user-1.jpg"
-          class="rounded-circle"
-          width="40"
-        />
-        <div class="m-l-16">
-          <h5 class="mat-subtitle-2 f-w-600">Mathew</h5>
-          <span class="f-s-12">Designer</span>
-        </div>
-        <div class="m-l-auto">
-          <a
-            mat-icon-button
-            [routerLink]="['/authentication/side-login']"
-            class="d-flex justify-content-center"
-          >
-            <i-tabler
-              name="power"
-              class="text-primary icon-18 d-flex"
-            ></i-tabler>
-          </a>
-        </div>
-      </div>
     </div>
   </mat-sidenav>
 
   <mat-sidenav-content class="contentWrapper" #content>
     <ng-container *ngIf="!options.horizontal; else horizontalheader">
-      <app-header
-        [showToggle]="!isOver"
-        (toggleCollapsed)="toggleCollapsed()"
-        (toggleMobileNav)="sidenav.toggle()"
+      <app-header [showToggle]="!isOver" (toggleCollapsed)="toggleCollapsed()" (toggleMobileNav)="sidenav.toggle()"
         (doLogout)="doLogout()"></app-header>
     </ng-container>
 
     <ng-template #horizontalheader>
-      <app-horizontal-header
-        (toggleMobileNav)="sidenav.toggle()"
-      ></app-horizontal-header>
+      <app-horizontal-header (toggleMobileNav)="sidenav.toggle()"></app-horizontal-header>
     </ng-template>
 
     <app-horizontal-sidebar *ngIf="options.horizontal"></app-horizontal-sidebar>
 
-    <main
-      class="pageWrapper"
-      [ngClass]="{
+    <main class="pageWrapper" [ngClass]="{
         maxWidth: options.boxed
-      }"
-    >
-      <app-breadcrumb></app-breadcrumb>
+      }">
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>
@@ -134,8 +58,5 @@
   </mat-sidenav>
 </mat-sidenav-container>
 
-<!-- ------------------------------------------------------------------
-    Mobile Apps Sidebar
-    ------------------------------------------------------------------ -->
 <mat-drawer #filterNavRight mode="over" position="end" class="filter-sidebar" [hidden]=true>
 </mat-drawer>

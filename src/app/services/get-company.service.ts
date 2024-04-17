@@ -6,11 +6,8 @@ import { Injectable } from '@angular/core';
 export class GetCompanyService {
   private company: any;
   private storageKey = 'company';
-
   constructor() {
-
   }
-
   setCompany(company: any) {
     this.company = company;
     localStorage.setItem(this.storageKey, JSON.stringify(company));
