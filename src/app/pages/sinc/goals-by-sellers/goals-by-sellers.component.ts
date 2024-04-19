@@ -220,11 +220,13 @@ export class GoalsBySellersComponent implements OnInit {
   }
 
   getGoalsBySellers() {
+    this.graficos.push([]);
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
         const respString = JSON.stringify(resp);
         if (respString !== this.SALVAR_RESPOSTA) {
+          console.log("atualizando")
           this.SALVAR_RESPOSTA = respString;
           this.goals = resp;
           this.graficos = [];

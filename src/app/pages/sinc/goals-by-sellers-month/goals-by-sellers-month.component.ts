@@ -216,11 +216,13 @@ export class GoalsBySellersMonthComponent implements OnInit {
   }
 
   getGoalsBySellers() {
+    this.graficos.push([]);
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
         const respString = JSON.stringify(resp);
         if (respString !== this.SALVAR_RESPOSTA) {
+          console.log("atualizando")
           this.SALVAR_RESPOSTA = respString;
           this.goals = resp;
           this.graficos = [];
@@ -271,7 +273,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
 
   toggleValorVisibility() {
-    this.isValorVisible = !this.isValorVisible; // Alternar a visibilidade do valor
+    this.isValorVisible = !this.isValorVisible; 
   }
 
 
