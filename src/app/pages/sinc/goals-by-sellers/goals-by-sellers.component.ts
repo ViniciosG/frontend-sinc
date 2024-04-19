@@ -226,7 +226,6 @@ export class GoalsBySellersComponent implements OnInit {
       next: resp => {
         const respString = JSON.stringify(resp);
         if (respString !== this.SALVAR_RESPOSTA) {
-          console.log("atualizando")
           this.SALVAR_RESPOSTA = respString;
           this.goals = resp;
           this.graficos = [];
