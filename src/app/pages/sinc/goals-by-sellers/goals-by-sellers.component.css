@@ -10,7 +10,7 @@
 
 
 .seller-id-negative {
-  background-color: #263145;
+  background-color: #fcfcfc;
 }
 
 .fixed-height-card {
@@ -21,7 +21,7 @@
 .auto-fixed-height-card {
   height: 260px;
   margin-bottom: 5px;
-  background-color: #263145;
+  background-color: #fcfcfc;
 }
 
 @media (max-width: 768px) {
@@ -32,8 +32,8 @@
 
 
 .background {
-  background-color: #2a3447 !important;
-  color: white !important;
+  /* background-color: #2a3447 !important;
+  color: white !important; */
 }
 
 .icon-corner {

@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TablerIconsModule } from 'angular-tabler-icons';
 import { format, startOfDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, NgApexchartsModule } from 'ng-apexcharts';
-import { Subject, interval, switchMap, takeUntil } from 'rxjs';
-import { yearlyChart } from 'src/app/components/dashboard1/yearly-breakup/yearly-breakup.component';
+import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
+import { Subject, interval, takeUntil } from 'rxjs';
 import { MaterialModule } from 'src/app/material.module';
 import { GoalsBySellersModel } from 'src/app/models/goals-by-sellers.model';
 import { GoalsBySellersRepository } from 'src/app/repositories/goals-by-sellers.repository';
@@ -24,7 +23,7 @@ export interface customerChart {
 @Component({
   selector: 'app-goals-by-sellers',
   standalone: true,
-  imports: [NgApexchartsModule, MaterialModule, TablerIconsModule, CommonModule, FormsModule, FiltersComponent],
+  imports: [NgApexchartsModule, MaterialModule, TablerIconsModule, CommonModule, FormsModule, FiltersComponent,NgApexchartsModule],
   templateUrl: './goals-by-sellers.component.html',
   styleUrls: ['./goals-by-sellers.component.css']
 })
@@ -51,15 +50,17 @@ export class GoalsBySellersComponent implements OnInit {
   somaArredondada: any;
   loading: boolean = false;
   metaGeral: any;
-  public yearlyChart!: Partial<yearlyChart> | any;
-  public chartOptions!: Partial<customerChart> | any;;
+  isLoadingInitial: boolean = false;
+  
   options = this.settings.getOptions();
+  @ViewChild("chart", { static: false }) chart: ChartComponent;
+  public chartOptions!: Partial<customerChart>;
 
   constructor(private repository: GoalsBySellersRepository, private settings: CoreService,) {
     const dataAtual = new Date();
-
     const startDate = startOfDay(dataAtual);
     const endDate = new Date();
+    endDate.setHours(23, 59, 59, 0);
 
     this.date_inital = format(startDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
     this.date_final = format(endDate, "yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -97,30 +98,26 @@ export class GoalsBySellersComponent implements OnInit {
 
   abreviarNome(nome: string): string {
     if (!nome || nome.trim().length === 0) {
-      return "SEM NOME"; // Retorna "SEM NOME" se o nome estiver em branco ou for nulo
+      return "SEM NOME"; 
     }
 
     if (nome.includes('.')) {
-      return nome; // Retornar o nome original se contiver ponto
+      return nome; 
     }
 
     if (nome.trim().length === 4) {
-      return nome; // Retornar o nome original se tiver apenas 4 letras
+      return nome; 
     }
 
     const partesNome = nome.split(' ');
 
     if (partesNome.length > 2) {
-      // Se houver mais de duas partes no nome, verificar se o segundo nome tem apenas 2 letras
       if (partesNome[1].trim().length === 2 || partesNome[1].trim().length === 3) {
-        // Se o segundo nome tiver apenas 2 letras, retornar o terceiro nome
         return partesNome[0] + ' ' + partesNome[2];
       } else {
-        // Caso contrário, manter apenas a primeira e a segunda parte
         return partesNome[0] + ' ' + partesNome[1];
       }
     } else {
-      // Se houver duas partes no nome, retorne o nome original
       return nome;
     }
   }
@@ -146,19 +143,20 @@ export class GoalsBySellersComponent implements OnInit {
     this.destroy$.complete();
   }
 
+  
   ngOnInit(): void {
     this.getGoalsBySellers();
-
-    interval(30000)
-      .pipe(
-        switchMap(() => this.repository.call(this.params)),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
+      interval(30000)
+        .pipe(
+          takeUntil(this.destroy$)
+        )
+        .subscribe(() => {
+          this.getGoalsBySellers();
+        });
   }
 
+  montarGrafico(item: any) {7
 
-  montarGrafico(item: any) {
     var percentage;
     if (item.value !== 0 && item.goal !== 0) {
       percentage = Math.round((item.value / item.goal) * 100);
@@ -168,6 +166,7 @@ export class GoalsBySellersComponent implements OnInit {
     } else {
       percentage = 0
     }
+
     return this.chartOptions = {
       series: [percentage],
       chart: {
@@ -196,7 +195,7 @@ export class GoalsBySellersComponent implements OnInit {
             value: {
               offsetY: -5,
               fontSize: "30px",
-              color: "#fff",
+              color: "#000",
             }
           }
         }
@@ -214,7 +213,6 @@ export class GoalsBySellersComponent implements OnInit {
         colors: ["#1a995d"],
       },
     };
-
   }
 
   formatarParaReais(valor: number): string {
@@ -225,7 +223,6 @@ export class GoalsBySellersComponent implements OnInit {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
-        this.loading = false;
         const respString = JSON.stringify(resp);
         if (respString !== this.SALVAR_RESPOSTA) {
           this.SALVAR_RESPOSTA = respString;
@@ -267,6 +264,7 @@ export class GoalsBySellersComponent implements OnInit {
           for (const item of this.goals.items) {
             this.graficos.push(this.montarGrafico(item));
           }
+          this.loading = false;
         }
       },
       error: error => {

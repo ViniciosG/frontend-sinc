@@ -5,7 +5,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { ApexChart, ApexFill, ApexNonAxisChartSeries, ApexPlotOptions, NgApexchartsModule } from 'ng-apexcharts';
-import { Subject, interval, switchMap, takeUntil } from 'rxjs';
+import { Subject, interval, takeUntil } from 'rxjs';
 import { yearlyChart } from 'src/app/components/dashboard1/yearly-breakup/yearly-breakup.component';
 import { MaterialModule } from 'src/app/material.module';
 import { GoalsBySellersModel } from 'src/app/models/goals-by-sellers.model';
@@ -141,17 +141,18 @@ export class GoalsBySellersMonthComponent implements OnInit {
 
   ngOnInit(): void {
     this.getGoalsBySellers();
-
-    interval(30000)
-      .pipe(
-        switchMap(() => this.repository.call(this.params)),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
+      interval(30000)
+        .pipe(
+          takeUntil(this.destroy$)
+        )
+        .subscribe(() => {
+          this.getGoalsBySellers();
+        });
   }
 
 
-  montarGrafico(item: any) {
+  montarGrafico(item: any) {7
+
     var percentage;
     if (item.value !== 0 && item.goal !== 0) {
       percentage = Math.round((item.value / item.goal) * 100);
@@ -161,6 +162,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
     } else {
       percentage = 0
     }
+
     return this.chartOptions = {
       series: [percentage],
       chart: {
@@ -189,7 +191,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
             value: {
               offsetY: -5,
               fontSize: "30px",
-              color: "#fff",
+              color: "#000",
             }
           }
         }
@@ -207,7 +209,6 @@ export class GoalsBySellersMonthComponent implements OnInit {
         colors: ["#1a995d"],
       },
     };
-
   }
 
   formatarParaReais(valor: number): string {
@@ -218,16 +219,14 @@ export class GoalsBySellersMonthComponent implements OnInit {
     this.loading = true;
     this.repository.call(this.params).subscribe({
       next: resp => {
-        this.loading = false;
-        const respString = JSON.stringify(resp); // Convertendo a resposta atual para uma string JSON
-        if (respString !== this.SALVAR_RESPOSTA) { // Comparando com a string JSON da resposta anterior
-          this.SALVAR_RESPOSTA = respString; // Atualizando a string JSON da resposta anterior
+        const respString = JSON.stringify(resp);
+        if (respString !== this.SALVAR_RESPOSTA) {
+          this.SALVAR_RESPOSTA = respString;
           this.goals = resp;
           this.graficos = [];
           let somaValues = 0;
 
           for (const item of resp.items) {
-            // Verifica se item.value e item.goal são nulos e, se forem, atribui 0 a eles
             if (item.value === null || item.value === undefined) {
               item.value = 0;
             }
@@ -248,7 +247,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
           if (this.goals.items.length > 1) {
             const sellerData = {
               sellerId: -999,
-              sellerName: "META MENSAL",
+              sellerName: "META DIÁRIA",
               value: somaArredondada,
               qty: 1,
               qtyItems: 1,
@@ -257,9 +256,11 @@ export class GoalsBySellersMonthComponent implements OnInit {
             this.goals.items.unshift(sellerData);
           }
 
+
           for (const item of this.goals.items) {
             this.graficos.push(this.montarGrafico(item));
           }
+          this.loading = false;
         }
       },
       error: error => {

@@ -116,13 +116,13 @@ export class FullComponent implements OnInit {
       .subscribe((event) => {
         this.titleService.setTitle(event['title']);
         this.pageInfo = event;
-        if(this.pageInfo.title === "Metas / Mês" || this.pageInfo.title === "Metas") {
-          this.htmlElement.classList.add('dark-theme');
-          this.htmlElement.classList.remove('light-theme');
-        } else {
-          this.htmlElement.classList.remove('dark-theme');
-          this.htmlElement.classList.add('light-theme');
-        }
+        // if(this.pageInfo.title === "Metas / Mês" || this.pageInfo.title === "Metas") {
+        //   // this.htmlElement.classList.add('dark-theme');
+        //   this.htmlElement.classList.remove('light-theme');
+        // } else {
+        //   // this.htmlElement.classList.remove('dark-theme');
+        //   this.htmlElement.classList.add('light-theme');
+        // }
       });
   }
 

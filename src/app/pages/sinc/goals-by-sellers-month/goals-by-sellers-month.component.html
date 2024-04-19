@@ -1,13 +1,14 @@
-<div *ngIf="loading" class="d-flex align-items-center justify-content-center loading">
+<div *ngIf="loading && SALVAR_RESPOSTA === undefined" class="d-flex align-items-center justify-content-center loading">
 	<mat-spinner diameter="50"></mat-spinner>
 </div>
-<div *ngIf="!loading" class="background">
+
+<div *ngIf="!loading || SALVAR_RESPOSTA !== undefined" class="background">
 	<mat-card class="background">
 		<mat-card-header class="textCard">
 			<mat-card-title class="d-flex align-items-center m-t-16">Total do Mês </mat-card-title>
 			<div (click)="toggleValorVisibility()" class="d-flex align-items-center m-t-16"
 				style="margin-left: 10px; cursor: pointer;">
-				<mat-icon class="text-primary icon-22 mr-2" style="display: flex; align-items: center;">
+				<mat-icon class="text-primary icon-24 mr-2" style="display: flex; align-items: center;">
 					remove_red_eye
 				</mat-icon>
 			</div>
@@ -123,17 +124,13 @@
 
 
 
-				<div id="{{ graficoIds[i] }}">
-					<apx-chart [series]="graficos[i].series" [chart]="graficos[i].chart"
+					<apx-chart #chart  [series]="graficos[i].series" [chart]="graficos[i].chart"
 						[plotOptions]="graficos[i].plotOptions" [labels]="graficos[i].labels"
 						[fill]="graficos[i].fill"></apx-chart>
-				</div>
 			</div>
 		</div>
 	</div>
 </div>
-
-
 <div></div>
 <br>
 <br>
