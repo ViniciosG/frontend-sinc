@@ -229,7 +229,7 @@ export class GoalsBySellersComponent implements OnInit {
           this.SALVAR_RESPOSTA = respString;
           this.goals = resp;
           this.graficos = [];
-          let somaValues = 0;
+          let somaValues = 0; 
 
           for (const item of resp.items) {
             if (item.value === null || item.value === undefined) {

@@ -265,6 +265,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
         }
       },
       error: error => {
+        this.graficos = [];
         this.loading = false;
       }
     });
