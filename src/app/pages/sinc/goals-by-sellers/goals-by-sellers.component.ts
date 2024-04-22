@@ -269,6 +269,7 @@ export class GoalsBySellersComponent implements OnInit {
         }
       },
       error: error => {
+        this.graficos = [];
         this.loading = false;
       }
     });
