@@ -78,7 +78,6 @@ export class HeaderComponent {
   }
 ngOnInit(): void {
   this.company = this.companyService.getCompany();
-  
 }
 
   openDialog() {

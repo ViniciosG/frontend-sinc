@@ -38,7 +38,7 @@
   </div>
 <!-- ATACADO -->
 
-<div class="col-lg-2 col-sm-4 col-6">
+<div class="col-lg-2 col-sm-4 col-6" [hidden]="!company.is_adm">
   <mat-card class="shadow-none text-center bg-light-success shadow-none">
     <mat-card-content class="p-32">
       <h4 class="mat-subtitle-2 f-w-600 text-success m-t-8">
@@ -51,7 +51,7 @@
   </mat-card>
 </div>
 
-  <div class="col-lg-2 col-sm-4 col-6">
+  <div class="col-lg-2 col-sm-4 col-6" [hidden]="!company.is_adm">
     <mat-card class="shadow-none text-center bg-light-error shadow-none">
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-error m-t-8">
@@ -64,7 +64,7 @@
     </mat-card>
   </div>
 
-  <div class="col-lg-2 col-sm-4 col-6">
+  <div class="col-lg-2 col-sm-4 col-6" [hidden]="!company.is_adm">
     <mat-card class="shadow-none text-center bg-light-warning shadow-none">
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-warning m-t-8" >

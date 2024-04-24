@@ -48,3 +48,8 @@
   text-overflow: ellipsis !important;
   width: 85%;
 }
+
+.card {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Adiciona sombra */
+  border-radius: 8px; /* Adiciona borda arredondada (opcional) */
+}

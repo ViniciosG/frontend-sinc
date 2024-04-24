@@ -3,7 +3,9 @@ import { Component } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { format } from 'date-fns';
 import { SellersByCustomersModel } from 'src/app/models/sellers-br-customers.model';
+import { AuthService } from 'src/app/pages/authentication/service/auth.service';
 import { SellersByCustomersRepository } from 'src/app/repositories/sellers-by-customers.repository';
+import { GetCompanyService } from 'src/app/services/get-company.service';
 import { MaterialModule } from '../../../material.module';
 
 interface topcards {
@@ -36,6 +38,7 @@ export class AppTopCardsComponent {
   clientesAtivosAtacado:any
   clientesInativosAtacado:any
   clientesInativosComOrcamentoAtacado:any
+  company: any;
   topcards: topcards[] = [
     {
       id: 1,
@@ -81,7 +84,9 @@ export class AppTopCardsComponent {
     },
   ];
 
-  constructor(private repository: SellersByCustomersRepository) {
+  constructor(private repository: SellersByCustomersRepository,    
+    private companyService: GetCompanyService,
+    private auth: AuthService,) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -106,6 +111,14 @@ export class AppTopCardsComponent {
 
     this.obterDados();
     this.obterDadosAtacado();
+
+    this.auth.onSaveSuccess.subscribe(() => {
+      this.company = this.companyService.getCompany();
+    });
+  }
+
+  ngOnInit(): void {
+    this.company = this.companyService.getCompany();
   }
 
   obterDados() {
