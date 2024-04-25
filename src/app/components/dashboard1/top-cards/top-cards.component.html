@@ -1,36 +1,11 @@
 <h3 class="p-t-20 f-s-18">Clientes</h3>
 <div class="row">
-  <div class="col-lg-6 col-sm-4 col-9">
-    <mat-card class="shadow-none text-center bg-light-primary shadow-none">
-      <mat-card-content class="p-32">
-        <h4 class="mat-subtitle-2 f-w-600 text-primary m-t-8">
-           Ativos (%)
-        </h4>
-        <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-primary m-t-8">
-          {{clientesAtivosPorcentagem }} %
-        </h6>
-      </mat-card-content>
-    </mat-card>
-  </div>
-
-  <div class="col-lg-6 col-sm-4 col-9"[hidden]="!company.is_adm">
-    <mat-card class="shadow-none text-center bg-light-primary shadow-none">
-      <mat-card-content class="p-32">
-        <h4 class="mat-subtitle-2 f-w-600 text-primary m-t-8">
-           Ativos - Atacado (%)
-        </h4>
-        <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-primary m-t-8">
-          {{clientesAtivosPorcentagemAtacado }} %
-        </h6>
-      </mat-card-content>
-    </mat-card>
-  </div>
 
   <div class="col-lg-2 col-sm-4 col-6">
     <mat-card class="shadow-none text-center bg-light-success shadow-none">
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-success m-t-8">
-           Ativos
+           Ativos - (<b>{{clientesAtivosPorcentagem}}%</b>) 
         </h4>
         <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-success m-t-8">
           {{ clientesAtivos }}
@@ -67,7 +42,7 @@
   <mat-card class="shadow-none text-center bg-light-success shadow-none">
     <mat-card-content class="p-32">
       <h4 class="mat-subtitle-2 f-w-600 text-success m-t-8">
-         Atacado - Ativos
+         Atacado - Ativos - (<b>{{clientesAtivosPorcentagemAtacado}}%</b>) 
       </h4>
       <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-success m-t-8">
         {{ clientesAtivosAtacado }}
