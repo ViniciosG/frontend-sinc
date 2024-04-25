@@ -130,11 +130,11 @@ export class AppTopCardsComponent {
 
         const valueAtivos = this.customers.items.reduce((total, item) => total + item.active, 0);
         const valueInativos = this.customers.items.reduce((total, item) => total + item.inactive, 0);
+        const valueInativosCOrcamento = this.customers.items.reduce((total, item) => total + item.inactiveWithBudget, 0);
 
-        const totalClientes = valueAtivos + valueInativos;
+        const totalClientes = valueAtivos + valueInativos + valueInativosCOrcamento;
         const porcentagemAtivos = (valueAtivos / totalClientes) * 100;
 
-        const valueInativosCOrcamento = this.customers.items.reduce((total, item) => total + item.inactiveWithBudget, 0);
 
         this.clientesAtivosPorcentagem = porcentagemAtivos.toFixed(2)
         this.clientesAtivos = valueAtivos.toLocaleString();
@@ -157,14 +157,11 @@ export class AppTopCardsComponent {
         const valueInativosAtacado = this.customers.items.reduce((total, item) => total + item.inactive, 0);
         const valueInativosCOrcamentoAtacado = this.customers.items.reduce((total, item) => total + item.inactiveWithBudget, 0);
 
-        const totalClientes = valueAtivosAtacado + valueInativosAtacado;
+        const totalClientes = valueAtivosAtacado + valueInativosAtacado + valueInativosCOrcamentoAtacado;
         const porcentagemAtivos = (valueAtivosAtacado / totalClientes) * 100;
 
-        const valueInativosCOrcamento = this.customers.items.reduce((total, item) => total + item.inactiveWithBudget, 0);
 
         this.clientesAtivosPorcentagemAtacado = porcentagemAtivos.toFixed(2)
-        valueInativosCOrcamento
-        valueInativosCOrcamento
         this.clientesAtivosAtacado = valueAtivosAtacado.toLocaleString();
         this.clientesInativosAtacado = valueInativosAtacado.toLocaleString();
         this.clientesInativosComOrcamentoAtacado = valueInativosCOrcamentoAtacado.toLocaleString();
