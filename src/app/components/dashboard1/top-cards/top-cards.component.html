@@ -2,7 +2,7 @@
 <div class="row">
 
   <div class="col-lg-2 col-sm-4 col-6">
-    <mat-card class="shadow-none text-center bg-light-success shadow-none">
+    <mat-card class="shadow-none text-center bg-light-success shadow-none heigh">
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-success m-t-8">
            Ativos - (<b>{{clientesAtivosPorcentagem}}%</b>) 
@@ -14,10 +14,10 @@
     </mat-card>
   </div>
   <div class="col-lg-2 col-sm-4 col-6">
-    <mat-card class="shadow-none text-center bg-light-error shadow-none">
+    <mat-card class="shadow-none text-center bg-light-error shadow-none heigh">
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-error m-t-8">
-           Inativos
+           Inativos - (<b>{{clientesInativosPorcentagem}}%</b>) 
         </h4>
         <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-error m-t-8">
           {{ clientesInativos }}
@@ -26,7 +26,7 @@
     </mat-card>
   </div>
   <div class="col-lg-2 col-sm-4 col-6">
-    <mat-card class="shadow-none text-center bg-light-warning shadow-none">
+    <mat-card class="shadow-none text-center bg-light-warning shadow-none heigh">
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-warning m-t-8">
           Inativos C/ Orçamento
@@ -39,7 +39,7 @@
   </div>
 <!-- ATACADO -->
 <div class="col-lg-2 col-sm-4 col-6" [hidden]="!company.is_adm">
-  <mat-card class="shadow-none text-center bg-light-success shadow-none">
+  <mat-card class="shadow-none text-center bg-light-success shadow-none heigh">
     <mat-card-content class="p-32">
       <h4 class="mat-subtitle-2 f-w-600 text-success m-t-8">
          Atacado - Ativos - (<b>{{clientesAtivosPorcentagemAtacado}}%</b>) 
@@ -52,10 +52,10 @@
 </div>
 
   <div class="col-lg-2 col-sm-4 col-6" [hidden]="!company.is_adm">
-    <mat-card class="shadow-none text-center bg-light-error shadow-none">
+    <mat-card class="shadow-none text-center bg-light-error shadow-none heigh" >
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-error m-t-8">
-          Atacado - Inativos
+          Atacado - Inativos - (<b>{{clientesInativosPorcentagemAtacado}}%</b>) 
         </h4>
         <h6 class="m-t-4 mat-subtitle-1 f-w-600 text-error m-t-8">
           {{ clientesInativosAtacado }}
@@ -65,7 +65,7 @@
   </div>
 
   <div class="col-lg-2 col-sm-4 col-6" [hidden]="!company.is_adm">
-    <mat-card class="shadow-none text-center bg-light-warning shadow-none">
+    <mat-card class="shadow-none text-center bg-light-warning shadow-none heigh">
       <mat-card-content class="p-32">
         <h4 class="mat-subtitle-2 f-w-600 text-warning m-t-8" >
           Atacado - Inativos C/ Orçamento
