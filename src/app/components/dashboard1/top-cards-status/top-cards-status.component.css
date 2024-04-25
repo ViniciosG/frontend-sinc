@@ -2,3 +2,7 @@
     display: flex;
     /* Other grid properties as needed */
   }
+
+  .height {
+height: 150px;
+  }
