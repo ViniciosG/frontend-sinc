@@ -13,7 +13,6 @@ import { AppSettings } from 'src/app/app.config';
 import { MaterialModule } from 'src/app/material.module';
 import { AuthService } from 'src/app/pages/authentication/service/auth.service';
 import { CoreService } from 'src/app/services/core.service';
-import { nameCookieContextId } from 'src/environments/environment';
 import { AppHorizontalHeaderComponent } from './horizontal/header/header.component';
 import { AppHorizontalSidebarComponent } from './horizontal/sidebar/sidebar.component';
 import { AppBreadcrumbComponent } from './shared/breadcrumb/breadcrumb.component';
@@ -75,7 +74,7 @@ export class FullComponent implements OnInit {
 
   constructor(
     private settings: CoreService,
-    private authService: AuthService,
+    public authService: AuthService,
     protected cookieService: CookieService,
     private breakpointObserver: BreakpointObserver,
     private router: Router,
@@ -116,24 +115,19 @@ export class FullComponent implements OnInit {
       .subscribe((event) => {
         this.titleService.setTitle(event['title']);
         this.pageInfo = event;
-        // if(this.pageInfo.title === "Metas / Mês" || this.pageInfo.title === "Metas") {
-        //   // this.htmlElement.classList.add('dark-theme');
-        //   this.htmlElement.classList.remove('light-theme');
-        // } else {
-        //   // this.htmlElement.classList.remove('dark-theme');
-        //   this.htmlElement.classList.add('light-theme');
-        // }
       });
   }
 
   ngOnInit(): void {
-    this.navItems = navItems.filter((nav) => {
-      if (nav.context){
-          return nav.context === Number(this.cookieService.get(nameCookieContextId)) && this.authService.isAccess(nav.accesss)
-      }
-      return this.authService.isAccess(nav.accesss)
-    })
+    this.navItems = navItems
+    // this.navItems = navItems.filter((nav) => {
+    //   if (nav.context){
+    //       return nav.context === this.authService.contextId && this.authService.isAccess(nav.accesss)
+    //   }
+    //   return this.authService.isAccess(nav.accesss)
+    // })
   }
+
 
   ngOnDestroy() {
     this.layoutChangesSubscription.unsubscribe();

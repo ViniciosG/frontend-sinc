@@ -20,6 +20,7 @@ import { TablerIconsModule } from 'angular-tabler-icons';
 import { MaterialModule } from 'src/app/material.module';
 import { NavService } from '../../../../../services/nav.service';
 import { NavItem } from './nav-item';
+import { AuthService } from 'src/app/pages/authentication/service/auth.service';
 
 @Component({
   selector: 'app-nav-item',
@@ -49,7 +50,9 @@ export class AppNavItemComponent implements OnChanges {
   @Input() item: NavItem | any;
   @Input() depth: any;
 
-  constructor(public navService: NavService, public router: Router) {
+  constructor(public navService: NavService,
+    public router: Router,
+    public authService: AuthService) {
     if (this.depth === undefined) {
       this.depth = 0;
     }
@@ -64,10 +67,17 @@ export class AppNavItemComponent implements OnChanges {
     });
   }
 
+  isVisible() {
+    if (this.item.context) {
+      return this.item.context === this.authService.contextId && this.authService.isAccess(this.item.accesss)
+    }
+    return this.authService.isAccess(this.item.accesss)
+  }
+
   onItemSelected(item: NavItem) {
     if (!item.children || !item.children.length) {
       this.router.navigate([item.route]);
-      
+
     }
     if (item.children && item.children.length) {
       this.expanded = !this.expanded;
@@ -78,15 +88,15 @@ export class AppNavItemComponent implements OnChanges {
       left: 0,
       behavior: 'smooth',
     });
-    if (!this.expanded){
-    if (window.innerWidth < 1024) {
-      this.notify.emit();
+    if (!this.expanded) {
+      if (window.innerWidth < 1024) {
+        this.notify.emit();
+      }
     }
-  }
   }
 
   onSubItemSelected(item: NavItem) {
-    if (!item.children || !item.children.length){
+    if (!item.children || !item.children.length) {
       if (this.expanded && window.innerWidth < 1024) {
         this.notify.emit();
       }

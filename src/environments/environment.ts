@@ -12,18 +12,10 @@ export const environment = {
   apiUrlLogin: BASE_URL_LOGIN
 };
 
-export const cookieOptions: any = {
-  expires: null,
-  path: null,
-  domain: null,
-  secure: true,
-  sameSite: 'Strict'
-}
+// export const nameCookieAccessToken = "sessionTokenCookie";
 
-export const nameCookieAccessToken = "sessionTokenCookie";
+// export const nameCookieAccesss = "permissions";
 
-export const nameCookieAccesss = "permissions";
+// export const nameCookieIsAdm = "isAdm";
 
-export const nameCookieIsAdm = "isAdm";
-
-export const nameCookieContextId = "contextId";
+// export const nameCookieContextId = "contextId";

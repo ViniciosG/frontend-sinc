@@ -16,9 +16,6 @@ import { NgScrollbarModule } from 'ngx-scrollbar';
 //Import all material modules
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
-//Import Layouts
-import { BlankComponent } from './layouts/blank/blank.component';
-import { FullComponent } from './layouts/full/full.component';
 
 
 import { CommonModule } from '@angular/common';
@@ -29,6 +26,10 @@ import { CookieService } from 'ngx-cookie-service';
 import { AuthGuard } from './pages/authentication/guard/auth.guard';
 import { AuthInterceptor } from './pages/authentication/guard/authconfig.interceptor';
 import { AuthService } from './pages/authentication/service/auth.service';
+
+//Import Layouts
+import { BlankComponent } from './layouts/blank/blank.component';
+import { FullComponent } from './layouts/full/full.component';
 
 export function HttpLoaderFactory(http: HttpClient): any {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');

@@ -17,7 +17,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-    const authToken = this.authService.getAccessTokenFromCookie();
+    const authToken = this.authService.getAccessToken();
     if (authToken) {
       const isTokenExpired = this.authService.isTokenExpired(authToken);
 

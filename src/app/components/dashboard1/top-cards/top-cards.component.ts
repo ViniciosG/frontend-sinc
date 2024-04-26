@@ -5,7 +5,6 @@ import { format } from 'date-fns';
 import { SellersByCustomersModel } from 'src/app/models/sellers-br-customers.model';
 import { AuthService } from 'src/app/pages/authentication/service/auth.service';
 import { SellersByCustomersRepository } from 'src/app/repositories/sellers-by-customers.repository';
-import { GetCompanyService } from 'src/app/services/get-company.service';
 import { MaterialModule } from '../../../material.module';
 
 interface topcards {
@@ -19,7 +18,7 @@ interface topcards {
 @Component({
   selector: 'app-top-cards',
   standalone: true,
-  imports: [MaterialModule, NgFor,MatChipsModule],
+  imports: [MaterialModule, NgFor, MatChipsModule],
   templateUrl: './top-cards.component.html',
   styleUrls: ['./top-cards.component.css']
 })
@@ -27,72 +26,25 @@ export class AppTopCardsComponent {
   startDate: Date = new Date();
   endDate: Date = new Date();
   customers: SellersByCustomersModel;
-  customersAtacado: SellersByCustomersModel;  
+  customersAtacado: SellersByCustomersModel;
   date_inital: string;
   date_final: string;
   params: any
   paramsAtacado: any
-  clientesAtivos:any
-  clientesAtivosPorcentagem:any
-  clientesInativosPorcentagem:any
+  clientesAtivos: any
+  clientesAtivosPorcentagem: any
+  clientesInativosPorcentagem: any
 
-  clientesInativos:any
-  clientesInativosComOrcamento:any
-  clientesAtivosAtacado:any
-  clientesInativosAtacado:any
-  clientesInativosComOrcamentoAtacado:any
-  clientesAtivosPorcentagemAtacado:any
-  clientesInativosPorcentagemAtacado:any
+  clientesInativos: any
+  clientesInativosComOrcamento: any
+  clientesAtivosAtacado: any
+  clientesInativosAtacado: any
+  clientesInativosComOrcamentoAtacado: any
+  clientesAtivosPorcentagemAtacado: any
+  clientesInativosPorcentagemAtacado: any
 
-  company: any;
-  topcards: topcards[] = [
-    {
-      id: 1,
-      color: 'primary',
-      img: '/assets/images/svgs/icon-user-male.svg',
-      title: 'Employees',
-      subtitle: '96',
-    },
-    {
-      id: 2,
-      color: 'warning',
-      img: '/assets/images/svgs/icon-briefcase.svg',
-      title: 'Clients',
-      subtitle: '3,650',
-    },
-    {
-      id: 3,
-      color: 'accent',
-      img: '/assets/images/svgs/icon-mailbox.svg',
-      title: 'Projects',
-      subtitle: '356',
-    },
-    {
-      id: 4,
-      color: 'error',
-      img: '/assets/images/svgs/icon-favorites.svg',
-      title: 'Events',
-      subtitle: '696',
-    },
-    {
-      id: 5,
-      color: 'success',
-      img: '/assets/images/svgs/icon-speech-bubble.svg',
-      title: 'Payroll',
-      subtitle: '$96k',
-    },
-    {
-      id: 6,
-      color: 'accent',
-      img: '/assets/images/svgs/icon-connect.svg',
-      title: 'Reports',
-      subtitle: '59',
-    },
-  ];
-
-  constructor(private repository: SellersByCustomersRepository,    
-    private companyService: GetCompanyService,
-    private auth: AuthService,) {
+  constructor(private repository: SellersByCustomersRepository,
+    public auth: AuthService) {
     const dataAtual = new Date();
 
     dataAtual.setDate(1);
@@ -106,25 +58,20 @@ export class AppTopCardsComponent {
 
     this.params = {
       registerInitial: this.date_inital,
-      registerFinal:  this.date_final,
+      registerFinal: this.date_final,
     }
 
     this.paramsAtacado = {
       registerInitial: this.date_inital,
-      registerFinal:  this.date_final,
+      registerFinal: this.date_final,
       sellerType: 'ATACADO'
     }
 
     this.obterDados();
     this.obterDadosAtacado();
-
-    this.auth.onSaveSuccess.subscribe(() => {
-      this.company = this.companyService.getCompany();
-    });
   }
 
   ngOnInit(): void {
-    this.company = this.companyService.getCompany();
   }
 
   obterDados() {
@@ -135,12 +82,12 @@ export class AppTopCardsComponent {
         const valueAtivos = this.customers.items.reduce((total, item) => total + item.active, 0);
         const valueInativos = this.customers.items.reduce((total, item) => total + item.inactive, 0);
         const valueInativosCOrcamento = this.customers.items.reduce((total, item) => total + item.inactiveWithBudget, 0);
-        
+
         const totalClientes = valueAtivos + valueInativos + valueInativosCOrcamento;
         const porcentagemAtivos = (valueAtivos / totalClientes) * 100;
         const inativos = valueInativosCOrcamento + valueInativos
         const porcentagemInativos = (inativos / totalClientes) * 100;
-        
+
         this.clientesAtivosPorcentagem = porcentagemAtivos.toFixed(2);
         this.clientesInativosPorcentagem = porcentagemInativos.toFixed(2);
         this.clientesAtivos = valueAtivos.toLocaleString();

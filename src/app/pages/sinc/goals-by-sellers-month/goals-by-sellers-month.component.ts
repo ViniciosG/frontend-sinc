@@ -248,7 +248,7 @@ export class GoalsBySellersMonthComponent implements OnInit {
           if (this.goals.items.length > 1) {
             const sellerData = {
               sellerId: -999,
-              sellerName: "META DIÁRIA",
+              sellerName: "META MENSAL",
               value: somaArredondada,
               qty: 1,
               qtyItems: 1,
